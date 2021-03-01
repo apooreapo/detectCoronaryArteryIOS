@@ -269,6 +269,21 @@ class ViewController: UIViewController {
         for i in 0..<(2 * degree + 1) {
             print(bCoeffs[i])
         }
+        var outputs : UnsafeMutablePointer<Double>
+        var input: [CDouble] = [0.000036, 0.000037, 0.000039, 0.00004, 0.000042, 0.000043,
+                0.000045, 0.000047, 0.000048, 0.00005, 0.000052, 0.000053, 0.000055, 0.000057, 0.000058, 0.000060, 0.000061, 0.000063, 0.000064, 0.000066]
+        let n: Int32 = Int32(input.count)
+        var a_Coeffs : [CDouble] = [0.16666, 0.5, 0.5, 0.16666]
+        let na: Int32 = Int32(a_Coeffs.count)
+        var b_Cooeffs : [CDouble] = [1.0, 0, 0.33333, 0]
+        let nb: Int32 = Int32(b_Cooeffs.count)
+        
+        
+        outputs = filtfiltWrapper().filterfilter(&input, n: n, aCoeffs: &a_Coeffs, na: na, bCoeffs: &b_Cooeffs, nb: nb )
+        for i in 0..<Int(n) {
+            print("Output")
+            print(String(format: "%f", outputs[i]))
+        }
             
         
         

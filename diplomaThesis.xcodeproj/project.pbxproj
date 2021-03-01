@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		CBF2D8D346627446074260CD /* Pods_diplomaThesis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */; };
+		CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */; };
+		CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */; };
 		CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */; };
 		CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */; };
 		CEA96C8B25EC04DE00FCD8C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */; };
@@ -24,6 +26,10 @@
 		8000690465D26A04E71F7966 /* Pods-diplomaThesis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.release.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.release.xcconfig"; sourceTree = "<group>"; };
 		A84C288E00C5ED0065186D11 /* Pods-diplomaThesis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.debug.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.debug.xcconfig"; sourceTree = "<group>"; };
 		C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_diplomaThesis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filtfilt.cpp; sourceTree = "<group>"; };
+		CE971DDE25EDA94600D88DC4 /* filtfilt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filtfilt.hpp; sourceTree = "<group>"; };
+		CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = filtfiltWrapper.mm; sourceTree = "<group>"; };
+		CE971DE225EDA9AA00D88DC4 /* filtfiltWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filtfiltWrapper.h; sourceTree = "<group>"; };
 		CEA96C8325EC04DE00FCD8C5 /* diplomaThesis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = diplomaThesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +80,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CE971DDC25EDA91C00D88DC4 /* C++ Files */ = {
+			isa = PBXGroup;
+			children = (
+				CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */,
+				CE971DDE25EDA94600D88DC4 /* filtfilt.hpp */,
+				CE971DE225EDA9AA00D88DC4 /* filtfiltWrapper.h */,
+				CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */,
+			);
+			path = "C++ Files";
+			sourceTree = "<group>";
+		};
 		CEA96C7A25EC04DE00FCD8C5 = {
 			isa = PBXGroup;
 			children = (
@@ -98,6 +115,7 @@
 		CEA96C8525EC04DE00FCD8C5 /* diplomaThesis */ = {
 			isa = PBXGroup;
 			children = (
+				CE971DDC25EDA91C00D88DC4 /* C++ Files */,
 				CECEDF7625ED0AD50057653D /* C Files */,
 				CEA96CA125EC070700FCD8C5 /* diplomaThesis.entitlements */,
 				CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */,
@@ -238,10 +256,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CECEDF7925ED0B0D0057653D /* liir.c in Sources */,
+				CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */,
 				CEA96C8B25EC04DE00FCD8C5 /* ViewController.swift in Sources */,
 				CECEDF7D25ED0C070057653D /* bwbp.c in Sources */,
 				CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */,
 				CEA96CA825EC084C00FCD8C5 /* panTompkins.c in Sources */,
+				CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */,
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -394,6 +414,11 @@
 				CODE_SIGN_ENTITLEMENTS = diplomaThesis/diplomaThesis.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3Y6U8D3WW2;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Charts/Charts.framework/Headers\"",
+					"$(PROJECT_DIR)/eigen-3.3.9",
+				);
 				INFOPLIST_FILE = diplomaThesis/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -418,6 +443,11 @@
 				CODE_SIGN_ENTITLEMENTS = diplomaThesis/diplomaThesis.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3Y6U8D3WW2;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_CONFIGURATION_BUILD_DIR}/Charts/Charts.framework/Headers\"",
+					"$(PROJECT_DIR)/eigen-3.3.9",
+				);
 				INFOPLIST_FILE = diplomaThesis/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
