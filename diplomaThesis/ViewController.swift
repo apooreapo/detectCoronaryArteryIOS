@@ -229,21 +229,80 @@ class ViewController: UIViewController {
         print("Analyze button pressed!")
         let selected = pickerView.selectedRow(inComponent: 0)
         let sz = ecgSamples[self.indices[selected].0].count
-//        let fs = 100 / (ecgSamples[self.indices[selected].0][100].1 - ecgSamples[self.indices[selected].0][0].1)
+        let fs = 100 / (ecgSamples[self.indices[selected].0][100].1 - ecgSamples[self.indices[selected].0][0].1)
         var selectedECG : [CDouble] = []
         var rPeaks : [Int32] = []
         for i in 0...(sz - 1) {
             selectedECG.append(ecgSamples[self.indices[selected].0][i].0)
         }
         print("Got here, good luck!")
+//        self.createCSVX(from: selectedECG)
 //        var test : [Double] = [0.01234, 0.12345, 0.23456, 0.34567, 0.45678, 0.56789, 0.67890]
 //        var test2 : [CDouble] = [0.1, 0.2, 0.3, 0.4]
-        initPan(&selectedECG, Int32(sz), &rPeaks)
-        panTompkins()
+//        initPan(&selectedECG, Int32(sz), &rPeaks)
+//        panTompkins()
+        panTompkinsAlgorithm(input: selectedECG, fs: fs)
+        
         
         
 //        print(self.ecgSamples[self.indices[selected].0][513])
 //        fs = 512.414
+    }
+    
+    func panTompkinsAlgorithm(input: [CDouble], fs: Double){
+        var coeffs : UnsafeMutablePointer<Double>
+        var aCoeffs : [CDouble] = []
+        var bCoeffs : [CDouble] = []
+        let degree = 3
+        let lowFreq = CDouble(0.5)
+        let highFreq = CDouble(0.7)
+        coeffs = bwbpCoeffs(Int32(degree), Int32(1), lowFreq, highFreq)
+        for i in 0..<(2 * degree + 1) {
+            aCoeffs.append(coeffs[i])
+            bCoeffs.append(coeffs[i + 2 * degree + 1])
+        }
+        print("a coeffs")
+        for i in 0..<(2 * degree + 1) {
+            print(aCoeffs[i])
+        }
+        print("b coeffs")
+        for i in 0..<(2 * degree + 1) {
+            print(bCoeffs[i])
+        }
+            
+        
+        
+        
+    }
+    
+    func createCSVX(from recArray:[CDouble]) {
+        
+        var strings : [String] = []
+
+        for i in 0..<recArray.count {
+            strings.append(String(format: "%f", recArray[i]))
+        }
+        let csvString = strings.joined(separator: ",\n")
+
+
+        let fileManager = FileManager.default
+
+        do {
+
+            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil , create: false )
+
+            let fileURL = path.appendingPathComponent("myECG.csv")
+
+            try csvString.write(to: fileURL, atomically: true , encoding: .utf8)
+            
+            print("Done writing .csv file!")
+        } catch {
+
+            print("error creating file")
+
+        }
+
+
     }
 
     
