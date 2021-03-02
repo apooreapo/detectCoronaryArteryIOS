@@ -18,6 +18,7 @@
 		CEA96C9325EC04E100FCD8C5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CEA96C9125EC04E100FCD8C5 /* LaunchScreen.storyboard */; };
 		CEA96CA325EC070700FCD8C5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA96CA225EC070700FCD8C5 /* HealthKit.framework */; };
 		CEA96CA825EC084C00FCD8C5 /* panTompkins.c in Sources */ = {isa = PBXBuildFile; fileRef = CEA96CA725EC084C00FCD8C5 /* panTompkins.c */; };
+		CEC1D73025EE8FBB00920197 /* convolve.c in Sources */ = {isa = PBXBuildFile; fileRef = CEC1D72F25EE8FBB00920197 /* convolve.c */; };
 		CECEDF7925ED0B0D0057653D /* liir.c in Sources */ = {isa = PBXBuildFile; fileRef = CECEDF7825ED0B0D0057653D /* liir.c */; };
 		CECEDF7D25ED0C070057653D /* bwbp.c in Sources */ = {isa = PBXBuildFile; fileRef = CECEDF7C25ED0C070057653D /* bwbp.c */; };
 /* End PBXBuildFile section */
@@ -43,6 +44,8 @@
 		CEA96CA525EC084C00FCD8C5 /* diplomaThesis-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "diplomaThesis-Bridging-Header.h"; sourceTree = "<group>"; };
 		CEA96CA625EC084C00FCD8C5 /* panTompkins.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = panTompkins.h; path = diplomaThesis/panTompkins.h; sourceTree = "<group>"; };
 		CEA96CA725EC084C00FCD8C5 /* panTompkins.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = panTompkins.c; path = diplomaThesis/panTompkins.c; sourceTree = "<group>"; };
+		CEC1D72E25EE8FBB00920197 /* convolve.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = convolve.h; sourceTree = "<group>"; };
+		CEC1D72F25EE8FBB00920197 /* convolve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = convolve.c; sourceTree = "<group>"; };
 		CECEDF7725ED0B0D0057653D /* liir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = liir.h; sourceTree = "<group>"; };
 		CECEDF7825ED0B0D0057653D /* liir.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = liir.c; sourceTree = "<group>"; };
 		CECEDF7B25ED0C070057653D /* bwbp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bwbp.h; sourceTree = "<group>"; };
@@ -132,6 +135,8 @@
 		CECEDF7625ED0AD50057653D /* C Files */ = {
 			isa = PBXGroup;
 			children = (
+				CEC1D72E25EE8FBB00920197 /* convolve.h */,
+				CEC1D72F25EE8FBB00920197 /* convolve.c */,
 				CECEDF7725ED0B0D0057653D /* liir.h */,
 				CECEDF7825ED0B0D0057653D /* liir.c */,
 				CECEDF7B25ED0C070057653D /* bwbp.h */,
@@ -263,6 +268,7 @@
 				CEA96CA825EC084C00FCD8C5 /* panTompkins.c in Sources */,
 				CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */,
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,
+				CEC1D73025EE8FBB00920197 /* convolve.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

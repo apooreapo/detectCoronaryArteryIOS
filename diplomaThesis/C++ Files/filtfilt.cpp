@@ -207,15 +207,14 @@ double *filter_zero_phase(double *input, int n, double *aCoeffs, int na, double 
     }
     
     filtfilt(b_coeff, a_coeff, input_signal, y_filtfilt_out);
-    printf("Reached here!\n");
     double *output = (double*) malloc(n * sizeof(double));
     for (int ii = 0; ii < n; ii++) {
         output[ii] = y_filtfilt_out[ii];
         if (abs(output[ii]) > max){
             max = abs(output[ii]);
         }
-        printf("Hello\n");
-        printf("%3lf\n", y_filtfilt_out[ii]);
+//        printf("Hello\n");
+//        printf("%3lf\n", y_filtfilt_out[ii]);
     }
     if (normalize == 1){
         for (int ii = 0; ii < n; ii++){

@@ -267,7 +267,8 @@ class ViewController: UIViewController {
             bCoeffs.append(coeffs[i])
             aCoeffs.append(coeffs[i + 2 * degree + 1])
         }
-        var outputs : UnsafeMutablePointer<Double>
+        var outputs1 : UnsafeMutablePointer<Double>
+        var outputs2 : UnsafeMutablePointer<Double>
 
         let n: Int32 = Int32(input.count)
         let na: Int32 = Int32(aCoeffs.count)
@@ -275,18 +276,49 @@ class ViewController: UIViewController {
         
         // impplement zero-phase-filter
         
-        outputs = filtfiltWrapper().filterfilter(&input2, n: n, aCoeffs: &aCoeffs, na: na, bCoeffs: &bCoeffs, nb: nb, normalize: Int32(1) )
+        outputs1 = filtfiltWrapper().filterfilter(&input2, n: n, aCoeffs: &aCoeffs, na: na, bCoeffs: &bCoeffs, nb: nb, normalize: Int32(1) )
         
 //        for i in 0..<Int(n) {
 //            print("Output")
 //            print(String(format: "%f", outputs[i]))
 //        }
-        var testOut : [(Double, Double)] = []
+        
+        // Apply derivative filter
+        // Original autoregressive filter: 1/[1, 2, 0, -2, -1]
+        
+        let factor1 : Double = fs / 8
+        let derArray1 : [Double] = [1.0*factor1, 2.0*factor1, 0, -2*factor1, -1*factor1]
+        var b1 = self.interpolate(inputArray:derArray1, step: Double(4.0 / (fs / 40.0)))
+        let b1size = Int32(b1.count)
+        var a1: [CDouble] = [1]
+        outputs2 = filtfiltWrapper().filterfilter(outputs1, n: n, aCoeffs: &a1, na: 1, bCoeffs: &b1, nb: b1size, normalize: Int32(1) )
+        
+        //Square to get more obvious peaks
+        
         for i in 0..<Int(n) {
-            testOut.append((Double(outputs[i]), Double(i) / fs))
+            outputs2[i] = pow(outputs2[i], 2)
+        }
+        
+        // convolution - moving average
+        
+        var ones : [CDouble] = []
+        let ones1 = Int(round(fs * Double(0.15)))
+        for _ in 0..<ones1 {
+            ones.append(1.0 / Double(ones1))
+        }
+        var outputs3 : UnsafeMutablePointer<Double>
+        var n2 : Int32 = Int32(0)
+        outputs3 = convolve(outputs2, &ones, Int32(n), Int32(ones1), &n2)
+        print("Hello convolution")
+        
+        
+        // print result
+        
+        var testOut : [(Double, Double)] = []
+        for i in 0..<Int(n2) {
+            testOut.append((Double(outputs3[i]), Double(i) / fs))
         }
         self.updateCharts(ecgSamples: testOut, animated: false)
-        
         
         
         
@@ -363,6 +395,32 @@ extension ViewController : UIPickerViewDelegate {
             
         }
     }
+}
+
+//MARK: - Helping functions
+
+extension ViewController {
+    func interpolate(inputArray: [Double], step: Double) -> [Double]{
+        var inputIndex: [Double] = []
+        let inputArraySize = inputArray.count
+        for i in stride(from: 0.0, through: Double(inputArraySize - 1), by: step){
+            inputIndex.append(i)
+        }
+        var output : [CDouble] = []
+        for ind in inputIndex {
+            let fl = Int(floor(ind))
+            let ce = Int(ceil(ind))
+            let down = ind - floor(ind)
+            if ind == Double(inputArraySize - 1){
+                output.append(CDouble(inputArray.last ?? 0.0))
+            } else {
+                output.append(CDouble(Double(down)*(inputArray[ce] - inputArray[fl]) + inputArray[fl]))
+            }
+            
+        }
+        return output
+}
+    
 }
 
 
