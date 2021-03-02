@@ -1,3 +1,12 @@
+//
+// Algorithm for implementing a digital filter, and a zero-phase digital filter.
+// Zero phase digital filters are non-casual filters that eliminate phase shift.
+// For info on the algorithm, visit https://stackoverflow.com/questions/17675053/matlabs-filtfilt-algorithm
+//
+// Implementation: out = filtfiltWrapper().filter_zero_phase(double *input, int n, double *aCoeffs, int na, double *bCoeffs, int nb, int normalize)
+//
+
+
 #include <vector>
 #include <exception>
 #include <algorithm>
@@ -181,8 +190,11 @@ void filtfilt(vectord B, vectord A, const vectord &X, vectord &Y)
 }
 //To test it you could use the following code:
 
-double *filter_zero_phase(double *input, int n, double *aCoeffs, int na, double *bCoeffs, int nb) {
-    printf("Hello World from C++!\n");
+double *filter_zero_phase(double *input, int n, double *aCoeffs, int na, double *bCoeffs, int nb, int normalize) {
+    
+    // The function for implementing zero-phase filter. Outputs an array of doubles
+    //
+    double max = 0;
     vectord b_coeff;
     vectord a_coeff;
     vectord input_signal(input, input + n);
@@ -199,8 +211,16 @@ double *filter_zero_phase(double *input, int n, double *aCoeffs, int na, double 
     double *output = (double*) malloc(n * sizeof(double));
     for (int ii = 0; ii < n; ii++) {
         output[ii] = y_filtfilt_out[ii];
+        if (abs(output[ii]) > max){
+            max = abs(output[ii]);
+        }
         printf("Hello\n");
         printf("%3lf\n", y_filtfilt_out[ii]);
+    }
+    if (normalize == 1){
+        for (int ii = 0; ii < n; ii++){
+            output[ii] /= max;
+        }
     }
     return output;
 }

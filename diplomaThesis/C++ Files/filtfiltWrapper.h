@@ -13,7 +13,7 @@
 @interface filtfiltWrapper : NSObject
 
 - (int) printNumber;
-- (double *) filterfilter:(double *)input n:(int)n aCoeffs:(double *)aCoeffs na:(int)na bCoeffs:(double *)bCoeffs nb:(int)nb;
+- (double *) filterfilter:(double *)input n:(int)n aCoeffs:(double *)aCoeffs na:(int)na bCoeffs:(double *)bCoeffs nb:(int)nb normalize:(int)normalize;
 
 @end
 

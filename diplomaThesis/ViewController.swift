@@ -241,6 +241,8 @@ class ViewController: UIViewController {
 //        var test2 : [CDouble] = [0.1, 0.2, 0.3, 0.4]
 //        initPan(&selectedECG, Int32(sz), &rPeaks)
 //        panTompkins()
+//        var input2: [CDouble] = [0.000036, 0.000037, 0.000039, 0.00004, 0.000042, 0.000043,
+//                0.000045, 0.000047, 0.000048, 0.00005, 0.000052, 0.000053, 0.000055, 0.000057, 0.000058, 0.000060, 0.000061, 0.000063, 0.000064, 0.000066]
         panTompkinsAlgorithm(input: selectedECG, fs: fs)
         
         
@@ -250,41 +252,42 @@ class ViewController: UIViewController {
     }
     
     func panTompkinsAlgorithm(input: [CDouble], fs: Double){
-        var coeffs : UnsafeMutablePointer<Double>
-        var aCoeffs : [CDouble] = []
-        var bCoeffs : [CDouble] = []
+        var coeffs : UnsafeMutablePointer<Double> // double array of b and a coeffs
+        var aCoeffs : [CDouble] = []  // double array of a coeffs of butterworth filter
+        var bCoeffs : [CDouble] = []  // double array of b coeffs of butterworth filter
+        let lowFreq = CDouble(5.0 * 2 / fs) // 5 Hz, as a fraction of pi
+        let highFreq = CDouble(15.0 * 2 / fs) // 15 Hz, as a fraction of pi
+        var input2 = input // A trick to pass immutable var to C++ function
+        
+        // We implement a bandpass butterworth filter of 3rd degree, with cutoff
+        // frequencies at 5 and 15 H`
         let degree = 3
-        let lowFreq = CDouble(0.5)
-        let highFreq = CDouble(0.7)
         coeffs = bwbpCoeffs(Int32(degree), Int32(1), lowFreq, highFreq)
         for i in 0..<(2 * degree + 1) {
-            aCoeffs.append(coeffs[i])
-            bCoeffs.append(coeffs[i + 2 * degree + 1])
-        }
-        print("a coeffs")
-        for i in 0..<(2 * degree + 1) {
-            print(aCoeffs[i])
-        }
-        print("b coeffs")
-        for i in 0..<(2 * degree + 1) {
-            print(bCoeffs[i])
+            bCoeffs.append(coeffs[i])
+            aCoeffs.append(coeffs[i + 2 * degree + 1])
         }
         var outputs : UnsafeMutablePointer<Double>
-        var input: [CDouble] = [0.000036, 0.000037, 0.000039, 0.00004, 0.000042, 0.000043,
-                0.000045, 0.000047, 0.000048, 0.00005, 0.000052, 0.000053, 0.000055, 0.000057, 0.000058, 0.000060, 0.000061, 0.000063, 0.000064, 0.000066]
+
         let n: Int32 = Int32(input.count)
-        var a_Coeffs : [CDouble] = [0.16666, 0.5, 0.5, 0.16666]
-        let na: Int32 = Int32(a_Coeffs.count)
-        var b_Cooeffs : [CDouble] = [1.0, 0, 0.33333, 0]
-        let nb: Int32 = Int32(b_Cooeffs.count)
+        let na: Int32 = Int32(aCoeffs.count)
+        let nb: Int32 = Int32(bCoeffs.count)
         
+        // impplement zero-phase-filter
         
-        outputs = filtfiltWrapper().filterfilter(&input, n: n, aCoeffs: &a_Coeffs, na: na, bCoeffs: &b_Cooeffs, nb: nb )
+        outputs = filtfiltWrapper().filterfilter(&input2, n: n, aCoeffs: &aCoeffs, na: na, bCoeffs: &bCoeffs, nb: nb, normalize: Int32(1) )
+        
+//        for i in 0..<Int(n) {
+//            print("Output")
+//            print(String(format: "%f", outputs[i]))
+//        }
+        var testOut : [(Double, Double)] = []
         for i in 0..<Int(n) {
-            print("Output")
-            print(String(format: "%f", outputs[i]))
+            testOut.append((Double(outputs[i]), Double(i) / fs))
         }
-            
+        self.updateCharts(ecgSamples: testOut, animated: false)
+        
+        
         
         
         

@@ -30,6 +30,6 @@
     inline int max_val(const vectori& vec);
     void filter(vectord B, vectord A, const vectord &X, vectord &Y, vectord &Zi);
     void filtfilt(vectord B, vectord A, const vectord &X, vectord &Y);
-    double *filter_zero_phase(double *input, int n, double *aCoeffs, int na, double *bCoeffs, int nb);
+    double *filter_zero_phase(double *input, int n, double *aCoeffs, int na, double *bCoeffs, int nb, int normalize);
 
 #endif /* filtfilt_hpp */
