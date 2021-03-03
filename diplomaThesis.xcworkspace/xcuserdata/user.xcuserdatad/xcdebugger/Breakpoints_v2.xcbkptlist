@@ -14,8 +14,8 @@
             filePath = "diplomaThesis/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "744"
-            endingLineNumber = "744"
+            startingLineNumber = "745"
+            endingLineNumber = "745"
             landmarkName = "mean(input:start:end:)"
             landmarkType = "7">
          </BreakpointContent>

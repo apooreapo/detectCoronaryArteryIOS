@@ -332,19 +332,19 @@ class ViewController: UIViewController {
         var ser_back : Int = 0
         
         let LLp = rpeaks.count
-        var qrs_c = Array<Double>(repeating: 0.0, count: LLp)
-        var qrs_i = Array<Int>(repeating: 0, count: LLp)
-        var qrs_i_raw = Array<Int>(repeating: 0, count: LLp)
-        var qrs_amp_raw = Array<Double>(repeating: 0.0, count: LLp)
-        var nois_c = Array<Double>(repeating: 0.0, count: LLp)
-        var nois_i = Array<Int>(repeating: 0, count: LLp)
+        var qrs_c : [Double] = []
+        var qrs_i : [Int] = []
+        var qrs_i_raw : [Int] = []
+        var qrs_amp_raw : [Double] = []
+        var nois_c : [Double] = []
+        var nois_i : [Int] = []
         
-        var sigl_buf = Array<Double>(repeating: 0, count: LLp)
-        var noisl_buf = Array<Double>(repeating: 0, count: LLp)
-        var thrs_buf = Array<Double>(repeating: 0, count: LLp)
-        var sigl_buf1 = Array<Double>(repeating: 0, count: LLp)
-        var noisl_buf1 = Array<Double>(repeating: 0, count: LLp)
-        var thrs_buf1 = Array<Double>(repeating: 0, count: LLp)
+        var sigl_buf : [Double] = []
+        var noisl_buf : [Double] = []
+        var thrs_buf : [Double] = []
+        var sigl_buf1 : [Double] = []
+        var noisl_buf1 : [Double] = []
+        var thrs_buf1 : [Double] = []
         
         //initialize parameters for thresholds
         
@@ -415,9 +415,10 @@ class ViewController: UIViewController {
             if beat_C >= 9 {
     //            var diffRR : [Int] = []
                 var tempSum1 : Int = 0
-                for j in stride(from: beat_C - 9, through: beat_C - 1, by: 1) {
+                for j in stride(from: beat_C - 9, through: beat_C - 2, by: 1) {
                     tempSum1 += (qrs_i[j+1] - qrs_i[j])
                 }
+                tempSum1 -= qrs_i[beat_C - 2]
                 mean_RR = Double(tempSum1) / Double(9) // mean of differences
                 let comp : Int = qrs_i[beat_C - 1] - qrs_i[beat_C - 2]
                 
@@ -450,8 +451,8 @@ class ViewController: UIViewController {
                     
                     if pks_temp > thr_noise {
                         beat_C += 1
-                        qrs_c[beat_C - 1] = pks_temp
-                        qrs_i[beat_C - 1] = locs_temp
+                        qrs_c.append(pks_temp)
+                        qrs_i.append(locs_temp)
                         // locate in filtered sig
                         var y_i_t : Double
                         var x_i_t : Int
@@ -463,8 +464,8 @@ class ViewController: UIViewController {
                         // Band pass sig threshold
                         if y_i_t > thr_noise1 {
                             beat_C1 += 1
-                            qrs_i_raw[beat_C1 - 1] = locs_temp - Int(round(0.15 * fs)) + x_i_t - 1
-                            qrs_amp_raw[beat_C1 - 1] = y_i_t
+                            qrs_i_raw.append(locs_temp - Int(round(0.15 * fs)) + x_i_t)
+                            qrs_amp_raw.append(y_i_t)
                             sig_level1 = 0.25 * y_i_t + 0.75 * sig_level1
                         }
                         sig_level = 0.25*pks_temp + 0.75*sig_level
@@ -480,11 +481,11 @@ class ViewController: UIViewController {
                     if rpeaks[i].0 - qrs_i[beat_C - 1] <= Int(round(0.36 * fs)) {
                         let diff1 = diff(input: outputs3, length: Int(n2))
                         let slope1 = mean(input: diff1, start: rpeaks[i].0 - Int(round(0.075 * fs)), end: rpeaks[i].0)
-                        let slope2 = mean(input: outputs3, start: qrs_i[beat_C - 1] - Int(round(0.075 * fs)), end: qrs_i[beat_C])
+                        let slope2 = mean(input: outputs3, start: qrs_i[beat_C - 1] - Int(round(0.075 * fs)), end: qrs_i[beat_C - 1])
                         if abs(slope1) <= abs(0.5 * slope2) {
                             noise_count += 1
-                            nois_c[noise_count - 1] = rpeaks[i].1
-                            nois_i[noise_count - 1] = rpeaks[i].0
+                            nois_c.append(rpeaks[i].1)
+                            nois_i.append(rpeaks[i].0)
                             skip = 1
                             // adjust noise levels
                             noise_level1 = 0.125 * y_i + 0.875 * noise_level1
@@ -497,18 +498,18 @@ class ViewController: UIViewController {
                 // skip is 1 when a T wave is detected
                 if skip == 0 {
                     beat_C += 1
-                    qrs_c[beat_C - 1] = rpeaks[i].1
-                    qrs_i[beat_C - 1] = rpeaks[i].0
+                    qrs_c.append(rpeaks[i].1)
+                    qrs_i.append(rpeaks[i].0)
                 
                     // bandpass filter check threshold
                     if y_i >= thr_sig1 {
                         beat_C1 += 1
                         if ser_back == 1 {
-                            qrs_i_raw[beat_C1 - 1] = x_i
+                            qrs_i_raw.append(x_i)
                         } else {
-                            qrs_i_raw[beat_C1 - 1] = rpeaks[i].0 - Int(round(0.15 * fs)) + x_i - 1
+                            qrs_i_raw.append(rpeaks[i].0 - Int(round(0.15 * fs)) + x_i)
                         }
-                        qrs_amp_raw[beat_C1 - 1] = y_i
+                        qrs_amp_raw.append(y_i)
                         sig_level1 = 0.125 * y_i + 0.875 * sig_level1
                     }
                     sig_level = 0.125 * rpeaks[i].1 + 0.875 * sig_level
@@ -518,8 +519,8 @@ class ViewController: UIViewController {
                 noise_level = 0.125 * rpeaks[i].1 + 0.875 * noise_level
             } else if rpeaks[i].1 < thr_noise {
                 noise_count += 1
-                nois_c[noise_count - 1] = rpeaks[i].1
-                nois_i[noise_count - 1] = rpeaks[i].0
+                nois_c.append(rpeaks[i].1)
+                nois_i.append(rpeaks[i].0)
                 noise_level1 = 0.125 * y_i + 0.875 * noise_level1
                 noise_level = 0.125 * rpeaks[i].1 + 0.875 * noise_level
             }
@@ -539,14 +540,14 @@ class ViewController: UIViewController {
             }
             
             // take a track of thresholds of smoothed signal
-            sigl_buf[i] = sig_level
-            noisl_buf[i] = noise_level
-            thrs_buf[i] = thr_sig
+            sigl_buf.append(sig_level)
+            noisl_buf.append(noise_level)
+            thrs_buf.append(thr_sig)
            
             // take a track of thresholds of filtered signal
-            sigl_buf1[i] = sig_level1
-            noisl_buf1[i] = noise_level1
-            thrs_buf1[i] = thr_sig1
+            sigl_buf1.append(sig_level1)
+            noisl_buf1.append(noise_level1)
+            thrs_buf1.append(thr_sig1)
             
             //reset parameters
             skip = 0
