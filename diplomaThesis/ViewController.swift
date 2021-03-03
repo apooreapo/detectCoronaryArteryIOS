@@ -19,7 +19,9 @@ class ViewController: UIViewController {
     
     let healthStore = HKHealthStore()
     lazy var mainTitleLabel = UILabel()
-    lazy var currentECGLineChart = LineChartView()
+//    lazy var currentECGLineChart = LineChartView()
+//    lazy var currentECGLineChart = ScatterChartView()
+    lazy var currentECGLineChart = CombinedChartView()
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
     var pickerView = UIPickerView()
@@ -75,7 +77,7 @@ class ViewController: UIViewController {
                 //authorization succesful
                 
                 self.getECGsCount { (ecgsCount) in
-                    print("Result is \(ecgsCount)")
+//                    print("Result is \(ecgsCount)")
                     if ecgsCount < 1 {
                         print("You have no ecgs available")
                         return
@@ -211,7 +213,10 @@ class ViewController: UIViewController {
             set1.colors = [UIColor.systemRed]
             set1.drawCirclesEnabled = false
             let data = LineChartData(dataSet: set1)
-            self.currentECGLineChart.data = data
+            let combinedData = CombinedChartData()
+            combinedData.lineData = data
+            self.currentECGLineChart.data = combinedData
+//            self.currentECGLineChart.data = data
             currentECGLineChart.setVisibleXRangeMaximum(10)
             
             currentECGLineChart.rightAxis.enabled = false
@@ -225,33 +230,98 @@ class ViewController: UIViewController {
         
     }
     
+    func updateCharts(ecgSamples : [(Double,Double)], animated : Bool, peaks: [Int]) {
+        if !ecgSamples.isEmpty {
+            
+            // add line chart with constraints
+            
+            currentECGLineChart.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(currentECGLineChart)
+            currentECGLineChart.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
+            currentECGLineChart.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+            currentECGLineChart.topAnchor.constraint(equalTo: pickerView.bottomAnchor, constant: 10).isActive = true
+            currentECGLineChart.heightAnchor.constraint(equalToConstant: view.frame.size.width + -115).isActive = true
+            
+            analyzeButton.translatesAutoresizingMaskIntoConstraints = false
+            analyzeButton.setTitle("Analyze ECG", for: .normal)
+//            analyzeButton.setTitleColor(.label, for: .normal)
+//            analyzeButton.showsTouchWhenHighlighted = true
+            contentView.addSubview(analyzeButton)
+            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
+            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+//            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
+            analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 10).isActive = true
+            analyzeButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
+            analyzeButton.addTarget(self, action: #selector(analyzeButtonPressed), for: .touchUpInside)
+            
+            // customize line chart and add data
+            
+            
+            var entries = [ChartDataEntry] ()
+            for i in 0...ecgSamples.count-1 {
+                entries.append(ChartDataEntry(x: ecgSamples[i].1, y: ecgSamples[i].0))
+            }
+            let set1 = LineChartDataSet(entries: entries, label: "ECG data")
+            set1.colors = [UIColor.systemRed]
+            set1.drawCirclesEnabled = false
+            let data = LineChartData(dataSet: set1)
+            
+            var dataEntries2 : [ChartDataEntry] = []
+            for i in 0..<peaks.count {
+                let dataEntry = ChartDataEntry(x: ecgSamples[peaks[i]].1, y: ecgSamples[peaks[i]].0)
+                dataEntries2.append(dataEntry)
+            }
+
+            let dataSet2 = ScatterChartDataSet(entries: dataEntries2 ,label: "R peaks")
+            dataSet2.setColor(UIColor.blue)
+            dataSet2.setScatterShape(.x)
+            let data2 = ScatterChartData(dataSet: dataSet2)
+//            self.currentECGLineChart.data = data2
+            let combinedData = CombinedChartData()
+            combinedData.lineData = data
+            combinedData.scatterData = data2
+            self.currentECGLineChart.data = combinedData
+//            self.currentECGLineChart.data = data
+            currentECGLineChart.setVisibleXRangeMaximum(10)
+            
+            currentECGLineChart.rightAxis.enabled = false
+            //let yAxis = currentECGLineChart.leftAxis
+            if animated {
+                currentECGLineChart.animate(xAxisDuration: 1.0)
+            }
+            
+            currentECGLineChart.xAxis.labelPosition = .bottom
+            
+        }
+        
+    }
+    
     @objc func analyzeButtonPressed() {
-        print("Analyze button pressed!")
+        // Gets triggered when analyze button is pressed.
+        
         let selected = pickerView.selectedRow(inComponent: 0)
         let sz = ecgSamples[self.indices[selected].0].count
         let fs = 100 / (ecgSamples[self.indices[selected].0][100].1 - ecgSamples[self.indices[selected].0][0].1)
         var selectedECG : [CDouble] = []
-//        var rPeaks : [Int32] = []
         for i in 0...(sz - 1) {
             selectedECG.append(ecgSamples[self.indices[selected].0][i].0)
         }
-        print("Got here, good luck!")
-//        self.createCSVX(from: selectedECG)
-//        var test : [Double] = [0.01234, 0.12345, 0.23456, 0.34567, 0.45678, 0.56789, 0.67890]
-//        var test2 : [CDouble] = [0.1, 0.2, 0.3, 0.4]
-//        initPan(&selectedECG, Int32(sz), &rPeaks)
-//        panTompkins()
-//        var input2: [CDouble] = [0.000036, 0.000037, 0.000039, 0.00004, 0.000042, 0.000043,
-//                0.000045, 0.000047, 0.000048, 0.00005, 0.000052, 0.000053, 0.000055, 0.000057, 0.000058, 0.000060, 0.000061, 0.000063, 0.000064, 0.000066]
         panTompkinsAlgorithm(input: selectedECG, fs: fs)
-        
-        
-        
-//        print(self.ecgSamples[self.indices[selected].0][513])
-//        fs = 512.414
+       
+        // fs = 512.414
     }
     
-    func panTompkinsAlgorithm(input: [CDouble], fs: Double){
+    func panTompkinsAlgorithm(input: [CDouble], fs: Double) -> [Int] {
+        
+        // Implements Pan Tompkins algorithm
+        
+        // Includes some C++ code, for applying zero-phase filter, and some C code
+        // for calculating butterworth coefficients and implementing 1-d convolution
+        
+        // Thanks to Sedghamiz. H, for "Matlab Implementation of Pan Tompkins ECG QRS detector.", March 2014.
+        //        https://www.researchgate.net/publication/313673153_Matlab_Implementation_of_Pan_Tompkins_ECG_QRS_detect
+        
         var coeffs : UnsafeMutablePointer<Double> // double array of b and a coeffs
         var aCoeffs : [CDouble] = []  // double array of a coeffs of butterworth filter
         var bCoeffs : [CDouble] = []  // double array of b coeffs of butterworth filter
@@ -309,16 +379,6 @@ class ViewController: UIViewController {
         var outputs3 : UnsafeMutablePointer<Double>
         var n2 : Int32 = Int32(0)
         outputs3 = convolve(outputs2, &ones, Int32(n), Int32(ones1), &n2)
-        print("Hello convolution")
-        
-        
-        // print result
-        
-        var testOut : [(Double, Double)] = []
-        for i in 0..<Int(n2) {
-            testOut.append((Double(outputs3[i]), Double(i) / fs))
-        }
-        self.updateCharts(ecgSamples: testOut, animated: false)
         
         let rpeaks = findLocalMaxima(input: outputs3, n: Int(n2), minDist: Int(fs / 5.0))
         // minDist is 200 msec
@@ -418,8 +478,8 @@ class ViewController: UIViewController {
                 for j in stride(from: beat_C - 9, through: beat_C - 2, by: 1) {
                     tempSum1 += (qrs_i[j+1] - qrs_i[j])
                 }
-                tempSum1 -= qrs_i[beat_C - 2]
-                mean_RR = Double(tempSum1) / Double(9) // mean of differences
+//                tempSum1 -= qrs_i[beat_C - 2]
+                mean_RR = Double(tempSum1) / Double(8) // mean of differences
                 let comp : Int = qrs_i[beat_C - 1] - qrs_i[beat_C - 2]
                 
                 if Double(comp) <= 0.92*mean_RR || Double(comp) >= 1.16*mean_RR {
@@ -554,13 +614,13 @@ class ViewController: UIViewController {
             ser_back = 0
             
         }
-        print("It's time...")
-        for ii in qrs_i_raw {
-            print(ii)
+        var testOut : [(Double, Double)] = []
+        for i in 0..<Int(n) {
+            testOut.append((Double(input[i]), Double(i) / fs))
         }
-        for jj in qrs_i {
-            print(jj)
-        }
+        self.updateCharts(ecgSamples: testOut, animated: false, peaks: qrs_i_raw)
+        
+        return qrs_i_raw
         
         
         

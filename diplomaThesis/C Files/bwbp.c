@@ -89,15 +89,15 @@ double *bwbpCoeffs(int n, int sff, double f1f, double f2f)
     /* create the filter coefficient file */
 
     /* Output the file header */
-    printf("# Butterworth bandpass filter coefficients.\n" );
-    printf("# Produced by bwbp.\n" );
-    printf("# Filter order: %d\n", n );
-    printf("# Lower cutoff freq.: %1.15lf\n", f1f );
-    printf("# Upper cutoff freq.: %1.15lf\n", f2f );
-    printf("# Scaling factor: %1.15lf\n", sf );
+//    printf("# Butterworth bandpass filter coefficients.\n" );
+//    printf("# Produced by bwbp.\n" );
+//    printf("# Filter order: %d\n", n );
+//    printf("# Lower cutoff freq.: %1.15lf\n", f1f );
+//    printf("# Upper cutoff freq.: %1.15lf\n", f2f );
+//    printf("# Scaling factor: %1.15lf\n", sf );
 
     /* Output the c coefficients */
-    printf("%d\n", 2*n+1 );    // number of c coefficients
+//    printf("%d\n", 2*n+1 );    // number of c coefficients
     if( sff == 0 )
         for( i = 0; i <= 2*n; ++i) {
             result[i] = (double)ccof[i];
