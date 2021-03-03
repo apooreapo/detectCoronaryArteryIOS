@@ -231,7 +231,7 @@ class ViewController: UIViewController {
         let sz = ecgSamples[self.indices[selected].0].count
         let fs = 100 / (ecgSamples[self.indices[selected].0][100].1 - ecgSamples[self.indices[selected].0][0].1)
         var selectedECG : [CDouble] = []
-        var rPeaks : [Int32] = []
+//        var rPeaks : [Int32] = []
         for i in 0...(sz - 1) {
             selectedECG.append(ecgSamples[self.indices[selected].0][i].0)
         }
@@ -320,6 +320,250 @@ class ViewController: UIViewController {
         }
         self.updateCharts(ecgSamples: testOut, animated: false)
         
+        let rpeaks = findLocalMaxima(input: outputs3, n: Int(n2), minDist: Int(fs / 5.0))
+        // minDist is 200 msec
+        
+        //initialize arrays for thresholds
+        
+//        var delay: Double = round(0.15 * fs) / 2
+        var skip: Double = 0
+        var m_selected_RR: Double = 0
+        var mean_RR : Double = 0
+        var ser_back : Int = 0
+        
+        let LLp = rpeaks.count
+        var qrs_c = Array<Double>(repeating: 0.0, count: LLp)
+        var qrs_i = Array<Int>(repeating: 0, count: LLp)
+        var qrs_i_raw = Array<Int>(repeating: 0, count: LLp)
+        var qrs_amp_raw = Array<Double>(repeating: 0.0, count: LLp)
+        var nois_c = Array<Double>(repeating: 0.0, count: LLp)
+        var nois_i = Array<Int>(repeating: 0, count: LLp)
+        
+        var sigl_buf = Array<Double>(repeating: 0, count: LLp)
+        var noisl_buf = Array<Double>(repeating: 0, count: LLp)
+        var thrs_buf = Array<Double>(repeating: 0, count: LLp)
+        var sigl_buf1 = Array<Double>(repeating: 0, count: LLp)
+        var noisl_buf1 = Array<Double>(repeating: 0, count: LLp)
+        var thrs_buf1 = Array<Double>(repeating: 0, count: LLp)
+        
+        //initialize parameters for thresholds
+        
+        var thr_sig : Double = 0
+        var thr_noise : Double = 0
+        var sig_level : Double
+        var noise_level : Double
+        
+        // We initialize threshold parameters in the first two seconds
+        
+        for i in 0...Int(2*fs) {
+            thr_noise += outputs3[i]
+            if outputs3[i] > thr_sig {
+                thr_sig = outputs3[i]
+            }
+        }
+        thr_sig /= 3.0 // thr_sig = 1/3 * max(ecg in first 2 secs)
+        thr_noise /= 2.0 * Double(Int(2*fs) + 1) // thr_noise = 1/2 * mean(ecg in first 2)
+        sig_level = thr_sig
+        noise_level = thr_noise
+        
+        //initialize parameters for thresholds, bandpass filter
+        
+        var thr_sig1 : Double = 0
+        var thr_noise1 : Double = 0
+        var sig_level1 : Double
+        var noise_level1 : Double
+        
+        // We initialize bandpass threshold parameters in the first two seconds
+        
+        for i in 0...Int(2*fs) {
+            thr_noise1 += outputs1[i]
+            if outputs1[i] > thr_sig1 {
+                thr_sig1 = outputs1[i]
+            }
+        }
+        thr_sig1 /= 3.0 // thr_sig1 = 1/3 * max(ecg in first 2 secs)
+        thr_noise1 /= 2.0 * Double(Int(2*fs) + 1) // thr_noise = 1/2 * mean(ecg in first 2)
+        sig_level1 = thr_sig1
+        noise_level1 = thr_noise1
+        
+        // Thresholding and decision rule
+        
+        var beat_C = 0
+        var beat_C1 = 0
+        var noise_count = 0
+        for i in 0..<LLp {
+            // Locate the corresponding peak in the filtered signal
+            
+            var y_i : Double = 0
+            var x_i : Int = 0
+            
+            if rpeaks[i].0 - Int(round(0.15 * fs)) >= 1 && rpeaks[i].0 <= n {
+                (y_i, x_i) = maximum(input: outputs1, start: rpeaks[i].0 - Int(round(0.15 * fs)), end: rpeaks[i].0)
+            } else {
+                if i == 0 {
+                    (y_i, x_i) = maximum(input: outputs1, start: 0, end: rpeaks[i].0)
+                    ser_back = 1
+                } else if rpeaks[i].0 >=  n - 1 {
+                    (y_i, x_i) = maximum(input: outputs3, start: rpeaks[i].0 - Int(round(0.15 * fs)), end: Int(n2))
+
+                }
+            }
+        
+        
+            // Update the heart rate
+            
+            if beat_C >= 9 {
+    //            var diffRR : [Int] = []
+                var tempSum1 : Int = 0
+                for j in stride(from: beat_C - 9, through: beat_C - 1, by: 1) {
+                    tempSum1 += (qrs_i[j+1] - qrs_i[j])
+                }
+                mean_RR = Double(tempSum1) / Double(9) // mean of differences
+                let comp : Int = qrs_i[beat_C - 1] - qrs_i[beat_C - 2]
+                
+                if Double(comp) <= 0.92*mean_RR || Double(comp) >= 1.16*mean_RR {
+                    // lower down thresholds to detect better in MVI
+                    thr_sig *= 0.5
+                    thr_sig1 *= 0.5
+                } else {
+                    m_selected_RR = mean_RR // the latest regular beats mean
+                }
+            }
+            
+            // calculate the mean last 8 R waves to ensure that QRS is not nil
+            
+            var test_m : Double
+            if m_selected_RR > 0 {
+                test_m = m_selected_RR
+            } else if mean_RR > 0 && m_selected_RR == 0 {
+                test_m = mean_RR
+            } else {
+                test_m = 0.0
+            }
+            
+            if test_m > 0 {
+                if rpeaks[i].0 - qrs_i[beat_C - 1] >= Int(round(1.66 * test_m)) {
+                    var pks_temp : Double
+                    var locs_temp : Int
+                    (pks_temp, locs_temp) = maximum(input: outputs3, start: qrs_i[beat_C - 1] + Int(round(0.2 * fs)), end: rpeaks[i].0 - Int(round(0.2 * fs)))
+                    locs_temp = qrs_i[beat_C - 1] + Int(round(02 * fs)) + locs_temp - 1
+                    
+                    if pks_temp > thr_noise {
+                        beat_C += 1
+                        qrs_c[beat_C - 1] = pks_temp
+                        qrs_i[beat_C - 1] = locs_temp
+                        // locate in filtered sig
+                        var y_i_t : Double
+                        var x_i_t : Int
+                        if locs_temp <= Int(n) - 1 {
+                            (y_i_t, x_i_t) = maximum(input: outputs1, start: locs_temp - Int(round(0.15 * fs)) - 1, end: locs_temp - 1)
+                        } else {
+                            (y_i_t, x_i_t) = maximum(input: outputs1, start: locs_temp - Int(round(0.15 * fs)) - 1, end: Int(n) - 1)
+                        }
+                        // Band pass sig threshold
+                        if y_i_t > thr_noise1 {
+                            beat_C1 += 1
+                            qrs_i_raw[beat_C1 - 1] = locs_temp - Int(round(0.15 * fs)) + x_i_t - 1
+                            qrs_amp_raw[beat_C1 - 1] = y_i_t
+                            sig_level1 = 0.25 * y_i_t + 0.75 * sig_level1
+                        }
+                        sig_level = 0.25*pks_temp + 0.75*sig_level
+                    }
+                }
+            }
+            
+            // find noise and qrs peaks
+            
+            if rpeaks[i].1 >= thr_sig {
+                // if no qrs in 360ms of the previous qrs see if t wave
+                if beat_C >= 3 {
+                    if rpeaks[i].0 - qrs_i[beat_C - 1] <= Int(round(0.36 * fs)) {
+                        let diff1 = diff(input: outputs3, length: Int(n2))
+                        let slope1 = mean(input: diff1, start: rpeaks[i].0 - Int(round(0.075 * fs)), end: rpeaks[i].0)
+                        let slope2 = mean(input: outputs3, start: qrs_i[beat_C - 1] - Int(round(0.075 * fs)), end: qrs_i[beat_C])
+                        if abs(slope1) <= abs(0.5 * slope2) {
+                            noise_count += 1
+                            nois_c[noise_count - 1] = rpeaks[i].1
+                            nois_i[noise_count - 1] = rpeaks[i].0
+                            skip = 1
+                            // adjust noise levels
+                            noise_level1 = 0.125 * y_i + 0.875 * noise_level1
+                            noise_level = 0.125 * rpeaks[i].1 + 0.875 * noise_level
+                        } else {
+                            skip = 0
+                        }
+                    }
+                }
+                // skip is 1 when a T wave is detected
+                if skip == 0 {
+                    beat_C += 1
+                    qrs_c[beat_C - 1] = rpeaks[i].1
+                    qrs_i[beat_C - 1] = rpeaks[i].0
+                
+                    // bandpass filter check threshold
+                    if y_i >= thr_sig1 {
+                        beat_C1 += 1
+                        if ser_back == 1 {
+                            qrs_i_raw[beat_C1 - 1] = x_i
+                        } else {
+                            qrs_i_raw[beat_C1 - 1] = rpeaks[i].0 - Int(round(0.15 * fs)) + x_i - 1
+                        }
+                        qrs_amp_raw[beat_C1 - 1] = y_i
+                        sig_level1 = 0.125 * y_i + 0.875 * sig_level1
+                    }
+                    sig_level = 0.125 * rpeaks[i].1 + 0.875 * sig_level
+                }
+            } else if thr_noise <= rpeaks[i].1 && rpeaks[i].1 < thr_sig {
+                noise_level1 = 0.125 * y_i + 0.875 * noise_level1
+                noise_level = 0.125 * rpeaks[i].1 + 0.875 * noise_level
+            } else if rpeaks[i].1 < thr_noise {
+                noise_count += 1
+                nois_c[noise_count - 1] = rpeaks[i].1
+                nois_i[noise_count - 1] = rpeaks[i].0
+                noise_level1 = 0.125 * y_i + 0.875 * noise_level1
+                noise_level = 0.125 * rpeaks[i].1 + 0.875 * noise_level
+            }
+            
+            // adjust the threshold with SNR
+            
+            if noise_level != 0 || sig_level != 0 {
+                thr_sig = noise_level + 0.25 * (abs(sig_level - noise_level))
+                thr_noise *= 0.5
+            }
+            
+            // adjust the threshold with SNR for bandpassed signal
+            
+            if noise_level1 != 0 || sig_level1 != 0 {
+                thr_sig1 = noise_level1 + 0.25 * (abs(sig_level1 - noise_level1))
+                thr_noise1 *= 0.5
+            }
+            
+            // take a track of thresholds of smoothed signal
+            sigl_buf[i] = sig_level
+            noisl_buf[i] = noise_level
+            thrs_buf[i] = thr_sig
+           
+            // take a track of thresholds of filtered signal
+            sigl_buf1[i] = sig_level1
+            noisl_buf1[i] = noise_level1
+            thrs_buf1[i] = thr_sig1
+            
+            //reset parameters
+            skip = 0
+            ser_back = 0
+            
+        }
+        print("It's time...")
+        for ii in qrs_i_raw {
+            print(ii)
+        }
+        for jj in qrs_i {
+            print(jj)
+        }
+        
+        
+        
+        
         
         
         
@@ -400,7 +644,9 @@ extension ViewController : UIPickerViewDelegate {
 //MARK: - Helping functions
 
 extension ViewController {
-    func interpolate(inputArray: [Double], step: Double) -> [Double]{
+    func interpolate(inputArray: [Double], step: Double) -> [CDouble]{
+        // Make a 1-d linear interpolation on an array, with selected step
+        
         var inputIndex: [Double] = []
         let inputArraySize = inputArray.count
         for i in stride(from: 0.0, through: Double(inputArraySize - 1), by: step){
@@ -419,7 +665,125 @@ extension ViewController {
             
         }
         return output
-}
+    }
+    
+    func findLocalMaxima(input: UnsafeMutablePointer<Double>, n: Int, minDist: Int) -> [(Int,CDouble)]{
+        // A function that returns the local maxima of an input.
+        // input: The input signal
+        // n: The length of the signal
+        // minDist: The minimum allowed distance between successive peaks in samples
+        
+        var peaks : [(Int, CDouble)] = []
+        if n > 2 {
+            for i in 1..<(n-1) {
+                if input[i] > input[i-1] && input[i] > input[i+1] {
+                    // We have a local maximum, now check distance
+                    if peaks.isEmpty {
+                        peaks.append((i, input[i]))
+                    } else if i > minDist + peaks.last!.0 {
+                        peaks.append((i, input[i]))
+                    } else {
+                        if input[i] > peaks.last!.1 {
+                            peaks.removeLast()
+                            peaks.append((i, input[i]))
+                        }
+                    }
+                    
+                }
+            }
+        }
+        return peaks
+    }
+    
+    func maximum(input: UnsafeMutablePointer<Double>, start: Int, end: Int, ignoreStart: Bool = true) -> (Double, Int){
+        var tempMax : Double = 0.0
+        var tempMaxInd : Int = 0
+        for j in stride(from: start, through: end, by: 1) {
+            if tempMax < input[j] {
+                tempMax = input[j]
+                tempMaxInd = j
+            }
+        }
+        if ignoreStart {
+            tempMaxInd -= start
+        }
+        if end < start {
+            print("Error in maximum, end must be higher than the start")
+            print(String(format: "Start: %d", start))
+            print(String(format: "End: %d", end))
+        }
+        return (tempMax, tempMaxInd)
+    }
+    
+    func maximum(input: [Double], start: Int, end: Int) -> (Double, Int){
+        var tempMax : Double = 0.0
+        var tempMaxInd : Int = 0
+        for j in stride(from: start, through: end, by: 1) {
+            if tempMax < input[j] {
+                tempMax = input[j]
+                tempMaxInd = j
+            }
+        }
+        if end < start {
+            print("Error in maximum, end must be higher than the start")
+            print(String(format: "Start: %d", start))
+            print(String(format: "End: %d", end))
+        }
+        return (tempMax, tempMaxInd)
+    }
+    
+    func mean(input: [Double], start: Int, end: Int) -> Double{
+        // Returns the mean of input, only including values from start through end
+        var tempSum : Double = 0.0
+        if end >= start {
+            for j in stride(from: start, through: end, by: 1) {
+                tempSum += input[j]
+            }
+            return tempSum / Double(end - start + 1)
+        } else {
+            print("Error in average, end must be higher than start.")
+            print(String(format: "Start: %d", start))
+            print(String(format: "End: %d", end))
+            return 0.0
+        }
+    }
+    
+    func mean(input: UnsafeMutablePointer<Double>, start: Int, end: Int) -> Double{
+        // Returns the mean of input, only including values from start through end
+        var tempSum : Double = 0.0
+        if end >= start {
+            for j in stride(from: start, through: end, by: 1) {
+                tempSum += input[j]
+            }
+            return tempSum / Double(end - start + 1)
+        } else {
+            print("Error in average, end must be higher than start.")
+            print(String(format: "Start: %d", start))
+            print(String(format: "End: %d", end))
+            return 0.0
+        }
+    }
+    
+    func diff(input: [Double], length: Int) -> [Double] {
+        var res : [Double] = []
+        for i in 0..<length - 1 {
+            res.append(input[i+1] - input[i])
+        }
+        // returns an array of length - 1 elements
+        return res
+    }
+    
+    func diff(input: UnsafeMutablePointer<Double>, length: Int) -> [Double] {
+        var res : [Double] = []
+        for i in 0..<length - 1 {
+            res.append(input[i+1] - input[i])
+        }
+        // returns an array of length - 1 elements
+        return res
+    }
+    
+    
+
     
 }
 
