@@ -22,6 +22,7 @@
 		CEC6A40025F7E6010059D105 /* HelpingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */; };
 		CECEDF7925ED0B0D0057653D /* liir.c in Sources */ = {isa = PBXBuildFile; fileRef = CECEDF7825ED0B0D0057653D /* liir.c */; };
 		CECEDF7D25ED0C070057653D /* bwbp.c in Sources */ = {isa = PBXBuildFile; fileRef = CECEDF7C25ED0C070057653D /* bwbp.c */; };
+		CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +52,7 @@
 		CECEDF7825ED0B0D0057653D /* liir.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = liir.c; sourceTree = "<group>"; };
 		CECEDF7B25ED0C070057653D /* bwbp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bwbp.h; sourceTree = "<group>"; };
 		CECEDF7C25ED0C070057653D /* bwbp.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = bwbp.c; sourceTree = "<group>"; };
+		CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraShortAnalysis.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 				CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */,
 				CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */,
 				CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */,
+				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
 				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
 				CEA96C8C25EC04DE00FCD8C5 /* Main.storyboard */,
 				CEA96C8F25EC04E100FCD8C5 /* Assets.xcassets */,
@@ -268,6 +271,7 @@
 				CECEDF7D25ED0C070057653D /* bwbp.c in Sources */,
 				CEC6A40025F7E6010059D105 /* HelpingFunctions.swift in Sources */,
 				CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */,
+				CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */,
 				CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */,
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,
 				CEC1D73025EE8FBB00920197 /* convolve.c in Sources */,

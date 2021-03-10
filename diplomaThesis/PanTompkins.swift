@@ -7,20 +7,26 @@
 
 import Foundation
 
+/// Class for implementation of Pan Tompkins algorithm
 class PanTompkins {
     var input: [CDouble], fs: Double
     init(input: [CDouble], fs: Double) {
         self.input = input
         self.fs = fs
     }
+    
+    /// Calculates R peaks
+    /// - Returns: Array of Int with the locations of peaks, in samples
     func calculateR() -> [Int] {
-        // Implements Pan Tompkins algorithm
+        /**
+        Implements Pan Tompkins algorithm
         
-        // Includes some C++ code, for applying zero-phase filter, and some C code
-        // for calculating butterworth coefficients and implementing 1-d convolution
+        Includes some C++ code, for applying zero-phase filter, and some C code
+        for calculating butterworth coefficients and implementing 1-d convolution
         
-        // Thanks to Sedghamiz. H, for "Matlab Implementation of Pan Tompkins ECG QRS detector.", March 2014.
-        //        https://www.researchgate.net/publication/313673153_Matlab_Implementation_of_Pan_Tompkins_ECG_QRS_detect
+        Thanks to Sedghamiz. H, for "Matlab Implementation of Pan Tompkins ECG QRS detector.", March 2014.
+        https://www.researchgate.net/publication/313673153_Matlab_Implementation_of_Pan_Tompkins_ECG_QRS_detect
+ */
         
         var coeffs : UnsafeMutablePointer<Double> // double array of b and a coeffs
         var aCoeffs : [CDouble] = []  // double array of a coeffs of butterworth filter

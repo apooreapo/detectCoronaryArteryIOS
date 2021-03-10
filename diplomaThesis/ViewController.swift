@@ -126,6 +126,11 @@ class ViewController: UIViewController {
         }
     }
     
+    
+    /// Gets all available ECGs in healthStore.
+    /// - Parameters:
+    ///   - counter: Count of available ECGs
+    ///   - completion: Function that gets triggered upon completion
     func getECGs(counter: Int, completion: @escaping ([(Double,Double)],Date) -> Void) {
         var ecgSamples = [(Double,Double)] ()
         let predicate = HKQuery.predicateForSamples(withStart: Date.distantPast,end: Date.distantFuture,options: .strictEndDate)
@@ -164,6 +169,9 @@ class ViewController: UIViewController {
         //print(ecgSamples.count)
     }
     
+    
+    /// Calculates the count of available ECGs in healthStore.
+    /// - Parameter completion: Function that gets triggered upon completion
     func getECGsCount(completion: @escaping (Int) -> Void) {
         var result : Int = 0
         let ecgQuery = HKSampleQuery(sampleType: HKObjectType.electrocardiogramType(), predicate: nil, limit: HKObjectQueryNoLimit, sortDescriptors: nil){ (query, samples, error) in
@@ -181,6 +189,7 @@ class ViewController: UIViewController {
     
 
     
+    /// Objective-c function that gets triggered when "Analyze ECG" button is pressed.
     @objc func analyzeButtonPressed() {
         // Gets triggered when analyze button is pressed.
         
@@ -191,8 +200,10 @@ class ViewController: UIViewController {
         for i in 0...(sz - 1) {
             selectedECG.append(ecgSamples[self.indices[selected].0][i].0)
         }
-//        panTompkinsAlgorithm(input: selectedECG, fs: fs)
+        // Pan Tompkins analysis for R peaks
+        
         let myPanTompkins = PanTompkins(input: selectedECG, fs: fs)
+        
         let r_locations = myPanTompkins.calculateR()
         var testOut : [(Double, Double)] = []
         for i in 0..<Int(selectedECG.count) {
@@ -200,10 +211,17 @@ class ViewController: UIViewController {
         }
         self.updateCharts(ecgSamples: testOut, animated: false, peaks: r_locations)
         
+        let myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
+        
+        
+        
        
         // fs = 512.414
     }
     
+    
+    /// Creates and saves a smiple csv as "myECG.csv. Used for testing purposes.
+    /// - Parameter recArray: The array of CDoubles to be saved as .csv file
     func createCSVX(from recArray:[CDouble]) {
         
         var strings : [String] = []
@@ -280,6 +298,12 @@ extension ViewController : UIPickerViewDelegate {
 //MARK: - Extension for updating charts
 
 extension ViewController {
+    
+    
+    /// Updates Charts with a new signal.
+    /// - Parameters:
+    ///   - ecgSamples: Our ECG to be shown. Array of tuples: first element represents the value and second the time
+    ///   - animated: If true, the signal appears with a single animation
     func updateCharts(ecgSamples : [(Double,Double)], animated : Bool) {
         if !ecgSamples.isEmpty {
             
@@ -333,6 +357,13 @@ extension ViewController {
         
     }
     
+    
+    
+    /// Updates Charts with a new signal, showing its peaks.
+    /// - Parameters:
+    ///   - ecgSamples: Our ECG to be shown. Array of tuples: first element represents the value and second the time
+    ///   - animated: If true, the signal appears with a single animation
+    ///   - peaks: Array of Int, representing the peaks of the ECG
     func updateCharts(ecgSamples : [(Double,Double)], animated : Bool, peaks: [Int]) {
         if !ecgSamples.isEmpty {
             
