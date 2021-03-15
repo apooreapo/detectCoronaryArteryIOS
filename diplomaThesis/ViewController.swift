@@ -210,8 +210,15 @@ class ViewController: UIViewController {
             testOut.append((Double(selectedECG[i]), Double(i) / fs))
         }
         self.updateCharts(ecgSamples: testOut, animated: false, peaks: r_locations)
-        
-        let myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
+        let lowerRes = interpolate(input: selectedECG, ratio: 8)
+//        var testOut1 : [(Double, Double)] = []
+//        for i in 0..<Int(lowerRes.count) {
+//            testOut1.append((lowerRes[i], Double(8) * Double(i) / fs))
+//        }
+//        self.updateCharts(ecgSamples: testOut1, animated: false)
+//
+        var myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
+        myUltraShortAnalysis.getInThere()
         
         
         

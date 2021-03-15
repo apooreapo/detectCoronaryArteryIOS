@@ -119,7 +119,7 @@ internal func maximum(input: [Double], start: Int, end: Int) -> (Double, Int){
 }
 
 
-/// Calculates the mean value of an array.
+/// Calculates the mean value of an array, from start through end.
 /// - Parameters:
 ///   - input: Array of Doubles to be checked, in the form of array<Double>
 ///   - start: Starting value at which the mean metric is applied
@@ -141,7 +141,7 @@ internal func mean(input: [Double], start: Int, end: Int) -> Double{
     }
 }
 
-/// Calculates the mean value of an array.
+/// Calculates the mean value of an array, from start through end.
 /// - Parameters:
 ///   - input: Array of Doubles to be checked, in the form of UnsafeMutablePointer<Double>
 ///   - start: Starting value at which the mean metric is applied
@@ -153,6 +153,28 @@ internal func mean(input: UnsafeMutablePointer<Double>, start: Int, end: Int) ->
     if end >= start {
         for j in stride(from: start, through: end, by: 1) {
             tempSum += input[j]
+        }
+        return tempSum / Double(end - start + 1)
+    } else {
+        print("Error in average, end must be higher than start.")
+        print(String(format: "Start: %d", start))
+        print(String(format: "End: %d", end))
+        return 0.0
+    }
+}
+
+/// Calculates the mean value of an array, from start through end.
+/// - Parameters:
+///   - input: Array of Ints to be checked, in the form of array<Double>
+///   - start: Starting value at which the mean metric is applied
+///   - end: Ending value at which the mean metric is applied
+/// - Returns: Mean value as Double
+internal func mean(input: [Int], start: Int, end: Int) -> Double{
+    // Returns the mean of input, only including values from start through end
+    var tempSum : Double = 0.0
+    if end >= start {
+        for j in stride(from: start, through: end, by: 1) {
+            tempSum += Double(input[j])
         }
         return tempSum / Double(end - start + 1)
     } else {
@@ -190,4 +212,73 @@ internal func diff(input: UnsafeMutablePointer<Double>, length: Int) -> [Double]
     }
     // returns an array of length - 1 elements
     return res
+}
+
+/// Calculates the successive differences of an array of Ints.
+/// - Parameters:
+///   - input: Array of Ints in the form of array<Int>
+///   - length: Length of input
+/// - Returns: Array of Ints with the differences. Length: length - 1
+internal func diff(input: [Int], length: Int) -> [Int] {
+    var res : [Int] = []
+    for i in 0..<length - 1 {
+        res.append(input[i+1] - input[i])
+    }
+    // returns an array of length - 1 elements
+    return res
+}
+
+
+/// Simple addition of arrays of Doubles.
+/// - Parameters:
+///   - input1: First array of Doubles to be added.
+///   - input2: Second array of Doubles to be added.
+/// - Returns: Array of sum of Doubles representing the sum.
+internal func add(input1: [Double], input2: [Double]) -> [Double] {
+    if input1.count != input2.count {
+        print("Can't add vectors of different length.")
+        return []
+    } else {
+        var output : [Double] = []
+        for i in 0..<input1.count {
+            output.append(input1[i] + input2[i])
+        }
+        return output
+    }
+}
+
+/// Simple subtraction of arrays of Doubles.
+/// - Parameters:
+///   - input1: First array of Doubles to be subtracted.
+///   - input2: Second array of Doubles to be subtracted.
+/// - Returns: Array of sum of Doubles representing the subtraction.
+internal func subtract(input1: [Double], input2: [Double]) -> [Double] {
+    if input1.count != input2.count {
+        print("Can't add vectors of different length.")
+        return []
+    } else {
+        var output : [Double] = []
+        for i in 0..<input1.count {
+            output.append(input1[i] - input2[i])
+        }
+        return output
+    }
+}
+
+
+/// Calculates an array with less resolution.
+/// - Parameters:
+///   - input: The input array of Doubles to be interpolated.
+///   - ratio: The ratio of the interpolation.
+/// - Returns: Interpolated output with lower resolution by a ratio of "ratio".
+internal func interpolate(input: [Double], ratio: Int) -> [Double] {
+    var output : [Double] = []
+    if input.count > 0 && ratio > 0 {
+        for i in stride(from: 0, to: input.count, by: ratio) {
+            output.append(input[i])
+        }
+        return output
+    } else {
+        return output
+    }
 }
