@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		CBF2D8D346627446074260CD /* Pods_diplomaThesis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */; };
-		CE9254B526025C5000A1651D /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9254B426025C5000A1651D /* fft.c */; };
+		CE9254C026026D1B00A1651D /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9254BF26026D1B00A1651D /* fft.c */; };
 		CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */; };
 		CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */; };
 		CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */; };
@@ -32,8 +32,8 @@
 		8000690465D26A04E71F7966 /* Pods-diplomaThesis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.release.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.release.xcconfig"; sourceTree = "<group>"; };
 		A84C288E00C5ED0065186D11 /* Pods-diplomaThesis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.debug.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.debug.xcconfig"; sourceTree = "<group>"; };
 		C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_diplomaThesis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		CE9254B326025C5000A1651D /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fft.h; path = ../../../../../Desktop/Udemy/test/test/fft.h; sourceTree = "<group>"; };
-		CE9254B426025C5000A1651D /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fft.c; path = ../../../../../Desktop/Udemy/test/test/fft.c; sourceTree = "<group>"; };
+		CE9254BE26026D1B00A1651D /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		CE9254BF26026D1B00A1651D /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
 		CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filtfilt.cpp; sourceTree = "<group>"; };
 		CE971DDE25EDA94600D88DC4 /* filtfilt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filtfilt.hpp; sourceTree = "<group>"; };
 		CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = filtfiltWrapper.mm; sourceTree = "<group>"; };
@@ -154,8 +154,8 @@
 				CECEDF7825ED0B0D0057653D /* liir.c */,
 				CECEDF7B25ED0C070057653D /* bwbp.h */,
 				CECEDF7C25ED0C070057653D /* bwbp.c */,
-				CE9254B326025C5000A1651D /* fft.h */,
-				CE9254B426025C5000A1651D /* fft.c */,
+				CE9254BE26026D1B00A1651D /* fft.h */,
+				CE9254BF26026D1B00A1651D /* fft.c */,
 			);
 			path = "C Files";
 			sourceTree = "<group>";
@@ -279,7 +279,7 @@
 				CECEDF7925ED0B0D0057653D /* liir.c in Sources */,
 				CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */,
 				CEA96C8B25EC04DE00FCD8C5 /* ViewController.swift in Sources */,
-				CE9254B526025C5000A1651D /* fft.c in Sources */,
+				CE9254C026026D1B00A1651D /* fft.c in Sources */,
 				CEE6F8A625F90849009E7835 /* Queue.swift in Sources */,
 				CECEDF7D25ED0C070057653D /* bwbp.c in Sources */,
 				CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */,
