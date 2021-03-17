@@ -353,7 +353,7 @@ struct UltraShortAnalysis {
             for i in 0..<sz {
                 for j in (i + 1)..<sz {
                     if dist(xArray[i], xArray[j]) < r {
-                        resultCounter += 2  // Add this twice
+                        resultCounter += 1  // Add this twice
                     }
                 }
             }
@@ -363,7 +363,13 @@ struct UltraShortAnalysis {
         
         let A = phi(data: data, m: m + 1, r: r)
         let B = phi(data: data, m: m, r: r)
-        return -log(Double(A) / Double(B))
+        if A == 0 || B == 0 {
+            print("Sample entropy values must not be zero, error.")
+            return 0
+        } else {
+            return -log(Double(A) / Double(B))
+        }
+        
     }
     
     

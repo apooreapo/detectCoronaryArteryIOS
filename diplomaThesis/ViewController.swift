@@ -68,6 +68,11 @@ class ViewController: UIViewController {
         
         
         var counter = 0
+        var test1: [Double] = [1.0, 2.0, 3.0, 4.0]
+        var output = implement_fft(4, &test1)
+        for i in 0..<2 {
+            print(String(format: "output[%d] = %.5f", i, output![i]))
+        }
         
         let healthKitTypes: Set = [HKObjectType.electrocardiogramType()]
         
