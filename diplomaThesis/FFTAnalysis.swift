@@ -8,6 +8,7 @@
 import Foundation
 
 
+/// The class for implementing FFT and calculate frequency field metrics.
 class FFTAnalysis {
     var input: [CDouble]
     var fs: Double
@@ -23,6 +24,7 @@ class FFTAnalysis {
     lazy var resolution : Double = 1.0 / self.timePeriod // Frequency resolution
     
     
+    // An array containing all the frequencies of the FFT.
     lazy var frequencies : [Double] = {[unowned self] in
         var output: [Double] = []
         for i in 0..<(self.n/2){
@@ -32,7 +34,7 @@ class FFTAnalysis {
         return output
     }()
     
-    
+    // An array containing the transformed Fourier values.
     lazy var fourierTransform : [Double] = {[unowned self] in
         if let maxVal = input.max(){
             for i in 0..<input.count {

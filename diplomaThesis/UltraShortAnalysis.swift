@@ -379,7 +379,7 @@ struct UltraShortAnalysis {
     }
     
     
-
+    
     internal mutating func getInThere() {
         let input1 = [85.0, 80.0, 89.0, 81.0, 80.0]
         let input2 = input1.repeated(count: 64)
@@ -405,6 +405,9 @@ struct UltraShortAnalysis {
         
     }
     
+    
+    /// Calculates temporal and frequency metrics of the Ultra Short input.
+    /// - Parameter printMessage: If true, prints out the results.
     internal mutating func calculateUltraShortMetrics(printMessage: Bool = false) {
         if printMessage {
             print("Starting Ultra Short Analysis...")
@@ -443,6 +446,10 @@ struct UltraShortAnalysis {
         
     }
     
+    /// Calculates an Approximate Entropy of the input, in a window of 5 seconds, starting from (2.5 * counter) sec.
+    /// - Parameters:
+    ///   - counter: startingTime = counter * 2.5, in seconds.
+    ///   - completion: Optional function, for completion.
     internal mutating func calculateAppEn(counter: Int, completion: @escaping ()->Void = {}){
         let window : Double = 5.0
         let start : Double = 2.5 * Double(counter)
@@ -461,6 +468,11 @@ struct UltraShortAnalysis {
         
     }
     
+    
+    /// Calculates a Sample Entropy of the input, in a window of 5 seconds, starting from (2.5 * counter) sec.
+    /// - Parameters:
+    ///   - counter: startingTime = counter * 2.5, in seconds.
+    ///   - completion: Optional function, for completion.
     internal mutating func calculateSampEn(counter: Int, completion: @escaping ()->Void = {}){
         let window : Double = 5.0 // window of 5 seconds
         let start : Double = 2.5 * Double(counter)

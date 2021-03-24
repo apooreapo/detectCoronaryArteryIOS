@@ -35,21 +35,54 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fO6-0r-uUS">
-                                <rect key="frame" x="168" y="429.5" width="78" height="37"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="31"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYh-ee-wtb" customClass="PlainHorizontalProgressBar" customModule="diplomaThesis" customModuleProvider="target">
+                                <rect key="frame" x="87" y="444.5" width="240" height="7"/>
+                                <color key="backgroundColor" systemColor="systemGray3Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="7" id="4xq-b3-Bvf"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="color">
+                                        <color key="value" red="1" green="0.88122037180000001" blue="0.94055024239999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="gradientColor">
+                                        <color key="value" red="1" green="0.90771550130000001" blue="0.94965150369999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="XEU-lU-EH9">
+                                <rect key="frame" x="125" y="375" width="164" height="49"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please be patient" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bF1-xF-euq">
+                                        <rect key="frame" x="16.5" y="0.0" width="131.5" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Analyzing your ECG..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDf-uK-cJ2">
+                                        <rect key="frame" x="0.0" y="28.5" width="164" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="QTa-mz-TpF"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="fO6-0r-uUS" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="1sk-o4-3qn"/>
-                            <constraint firstItem="fO6-0r-uUS" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="NwS-EZ-yiz"/>
+                            <constraint firstItem="XYh-ee-wtb" firstAttribute="top" secondItem="XEU-lU-EH9" secondAttribute="bottom" constant="20.5" id="Bo0-lc-bHn"/>
+                            <constraint firstItem="XYh-ee-wtb" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="Ipx-fC-nel"/>
+                            <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="XYh-ee-wtb" secondAttribute="trailing" constant="87" id="Uew-sy-0lE"/>
+                            <constraint firstItem="XYh-ee-wtb" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="duQ-P1-eGg"/>
+                            <constraint firstItem="XYh-ee-wtb" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="hlF-2h-SOX"/>
+                            <constraint firstItem="XEU-lU-EH9" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="sWl-ny-lkh"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Analyzing ECG" id="CsM-dp-pup"/>
+                    <connections>
+                        <outlet property="progressBar" destination="XYh-ee-wtb" id="eZd-0E-cZo"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZIS-2O-z5O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -77,6 +110,9 @@
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
