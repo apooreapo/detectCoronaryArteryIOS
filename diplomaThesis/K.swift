@@ -11,4 +11,6 @@ import Foundation
 /// A file including all constants in the project.
 struct K {
     static let segueAnalyzeECGIdentifier : String = "analyzeECG"
+    static let basicQueueID : String = "basicQueue"
+    static let helpingQueueID : String = "helpingQueue"
 }

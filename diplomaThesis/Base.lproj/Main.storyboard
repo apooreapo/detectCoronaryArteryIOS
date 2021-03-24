@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="glq-K5-2fo">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
@@ -18,24 +18,25 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="rdp-bq-j0z"/>
                     <connections>
                         <segue destination="Rz6-X8-ufR" kind="show" identifier="analyzeECG" id="ez5-4h-4Zh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-196" y="48"/>
+            <point key="canvasLocation" x="713.04347826086962" y="47.544642857142854"/>
         </scene>
-        <!--AnalyzeECG View Controller-->
+        <!--Analyzing ECG-->
         <scene sceneID="wPO-7u-dSy">
             <objects>
                 <viewController id="Rz6-X8-ufR" customClass="AnalyzeECGViewController" customModule="diplomaThesis" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="0ob-iE-VAN">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hello!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fO6-0r-uUS">
-                                <rect key="frame" x="168" y="402.5" width="78" height="37"/>
+                                <rect key="frame" x="168" y="429.5" width="78" height="37"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="31"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -48,11 +49,29 @@
                             <constraint firstItem="fO6-0r-uUS" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="NwS-EZ-yiz"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="CsM-dp-pup"/>
+                    <navigationItem key="navigationItem" title="Analyzing ECG" id="CsM-dp-pup"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZIS-2O-z5O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="677" y="47"/>
+            <point key="canvasLocation" x="1586.9565217391305" y="46.875"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="0HZ-dD-him">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="glq-K5-2fo" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="K9Z-qn-v24">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="xPs-bf-4bL"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Och-jJ-HnO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-197.10144927536234" y="47.544642857142854"/>
         </scene>
     </scenes>
     <resources>

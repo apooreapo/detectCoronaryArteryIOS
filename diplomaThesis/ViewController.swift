@@ -27,10 +27,11 @@ class ViewController: UIViewController {
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
     var pickerView = UIPickerView()
-    let myQueue = DispatchQueue(label: "myQueue", qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
+    let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+//        self.navigationController?.setToolbarHidden(true, animated: false)
         // add title ECG
         
         contentView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,6 +62,10 @@ class ViewController: UIViewController {
         pickerView.heightAnchor.constraint(equalTo: pickerView.heightAnchor).isActive = true
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        super.viewWillAppear(animated)
+    }
 
     
     override func viewDidLoad() {
@@ -256,7 +261,7 @@ class ViewController: UIViewController {
             let VCdestination = segue.destination as! AnalyzeECGViewController
             VCdestination.selectedECG = rawECG
             VCdestination.fs = rawfs
-            VCdestination.myQueue = myQueue
+            VCdestination.basicQueue = basicQueue
         }
     }
     
