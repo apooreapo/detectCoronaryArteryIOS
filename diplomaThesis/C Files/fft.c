@@ -1482,10 +1482,20 @@ void fft_cosq_backward(FFTCosqTransformer * transformer, FFT_PRECISION* input){
     }
 }
 
+/// The function that is finally used outside the c file for implementing fft.
+/// It returns the magnitude of the transformed signal, as an UnsafeMutablePointer<Double>.
+/// The length of the returned array is n/2.
+/// @param n :Input size
+/// @param input :input, as a pointer to Double
 double * implement_fft(int n, double * input){
     FFTTransformer* transformer = create_fft_transformer(n, FFT_SCALED_OUTPUT);
     fft_forward(transformer, input);
     output = (double*) malloc(n/2 * sizeof(double));
+    //
+    // The algorithm returns the values as described:
+    // The real[0], real[1], im[1], ... real[n/2 - 1], im[n/2 - 1]
+    // That happens because im[0] is always zero, so it is skipped.
+    //
     output[0] = fabs(input[0]);
     for (int i=1; i<n-2; i=i+2) {
         output[i/2+1] = sqrt(input[i]*input[i] + input[i+1]*input[i+1]);

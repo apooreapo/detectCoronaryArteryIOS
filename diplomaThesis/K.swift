@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+
+/// A file including all constants in the project.
+struct K {
+    static let segueAnalyzeECGIdentifier : String = "analyzeECG"
+}

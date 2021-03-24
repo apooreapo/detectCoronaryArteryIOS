@@ -16,6 +16,8 @@ class ViewController: UIViewController {
     var ecgSamples = [[(Double,Double)]] ()
     var ecgDates = [Date] ()
     var indices = [(Int,Int)]()
+    var rawECG : [CDouble] = []
+    var rawfs : Double = 0.0
     
     let healthStore = HKHealthStore()
     lazy var mainTitleLabel = UILabel()
@@ -25,6 +27,7 @@ class ViewController: UIViewController {
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
     var pickerView = UIPickerView()
+    let myQueue = DispatchQueue(label: "myQueue", qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -68,11 +71,13 @@ class ViewController: UIViewController {
         
         
         var counter = 0
-        var test1: [Double] = [1.0, 2.0, 3.0, 4.0]
-        var output = implement_fft(4, &test1)
-        for i in 0..<2 {
-            print(String(format: "output[%d] = %.5f", i, output![i]))
-        }
+//        var test1: [CDouble] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
+//        var output = implement_fft(4, &test1)
+//        for i in 0..<2 {
+//            print(String(format: "output[%d] = %.5f", i, output![i]))
+//        }
+//        let myFFT = FFTAnalysis(input: test1, fs: 10)
+//        myFFT.analyzeFreqs()
         
         let healthKitTypes: Set = [HKObjectType.electrocardiogramType()]
         
@@ -205,30 +210,54 @@ class ViewController: UIViewController {
         for i in 0...(sz - 1) {
             selectedECG.append(ecgSamples[self.indices[selected].0][i].0)
         }
+        rawECG = selectedECG // This is going to be send through segue
+        rawfs = fs
+        
         // Pan Tompkins analysis for R peaks
-        
-        let myPanTompkins = PanTompkins(input: selectedECG, fs: fs)
-        
-        let r_locations = myPanTompkins.calculateR()
-        var testOut : [(Double, Double)] = []
-        for i in 0..<Int(selectedECG.count) {
-            testOut.append((Double(selectedECG[i]), Double(i) / fs))
-        }
-        self.updateCharts(ecgSamples: testOut, animated: false, peaks: r_locations)
-        let lowerRes = interpolate(input: selectedECG, ratio: 8)
+        performSegue(withIdentifier: K.segueAnalyzeECGIdentifier, sender: self)
+//
+//        let myPanTompkins = PanTompkins(input: selectedECG, fs: fs)
+//
+//        let r_locations = myPanTompkins.calculateR()
+//        var testOut : [(Double, Double)] = []
+//        for i in 0..<Int(selectedECG.count) {
+//            testOut.append((Double(selectedECG[i]), Double(i) / fs))
+//        }
+//        self.updateCharts(ecgSamples: testOut, animated: false, peaks: r_locations)
+//        let lowerRes = interpolate(input: selectedECG, ratio: 8)
 //        var testOut1 : [(Double, Double)] = []
 //        for i in 0..<Int(lowerRes.count) {
 //            testOut1.append((lowerRes[i], Double(8) * Double(i) / fs))
 //        }
 //        self.updateCharts(ecgSamples: testOut1, animated: false)
 //
-        var myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
-        myUltraShortAnalysis.getInThere()
+//        var myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
+//        myUltraShortAnalysis.getInThere()
+//        let myFFT = FFTAnalysis(input: selectedECG, fs: fs)
+//        let freqRes = myFFT.calculateFrequencyMetrics()
+//        print(String(format:"HF Energy: %.9f", freqRes.hfEnergy ))
+//        print(String(format:"LF Energy: %.9f", freqRes.lfEnergy))
+//        print(String(format:"HF Peak: %.9f", freqRes.hfPeak))
+//        print(String(format:"LF Peak: %.9f", freqRes.lfPeak))
+//        print(String(format: "HF Percentage: %.9f", freqRes.hfPercentage))
+//        print(String(format: "LF Percentage: %.9f", freqRes.lfPercentage))
+//        print(String(format: "LF/ HF Ratio: %.6f", freqRes.lfhf))
+        
+//        myUltraShortAnalysis.calculateUltraShortMetrics(printMessage: true)
         
         
         
        
         // fs = 512.414
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == K.segueAnalyzeECGIdentifier {
+            let VCdestination = segue.destination as! AnalyzeECGViewController
+            VCdestination.selectedECG = rawECG
+            VCdestination.fs = rawfs
+            VCdestination.myQueue = myQueue
+        }
     }
     
     

@@ -8,7 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		CBF2D8D346627446074260CD /* Pods_diplomaThesis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */; };
+		CE4A3A67260B6978002622A6 /* AnalyzeECGViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */; };
+		CE4A3A6A260B6A33002622A6 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A69260B6A33002622A6 /* K.swift */; };
 		CE9254C026026D1B00A1651D /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = CE9254BF26026D1B00A1651D /* fft.c */; };
+		CE9254C426026E1000A1651D /* FFTAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9254C326026E1000A1651D /* FFTAnalysis.swift */; };
 		CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */; };
 		CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */; };
 		CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */; };
@@ -32,8 +35,11 @@
 		8000690465D26A04E71F7966 /* Pods-diplomaThesis.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.release.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.release.xcconfig"; sourceTree = "<group>"; };
 		A84C288E00C5ED0065186D11 /* Pods-diplomaThesis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.debug.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.debug.xcconfig"; sourceTree = "<group>"; };
 		C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_diplomaThesis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeECGViewController.swift; sourceTree = "<group>"; };
+		CE4A3A69260B6A33002622A6 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
 		CE9254BE26026D1B00A1651D /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
 		CE9254BF26026D1B00A1651D /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = "<group>"; };
+		CE9254C326026E1000A1651D /* FFTAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FFTAnalysis.swift; sourceTree = "<group>"; };
 		CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = filtfilt.cpp; sourceTree = "<group>"; };
 		CE971DDE25EDA94600D88DC4 /* filtfilt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filtfilt.hpp; sourceTree = "<group>"; };
 		CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = filtfiltWrapper.mm; sourceTree = "<group>"; };
@@ -131,9 +137,12 @@
 				CEA96CA125EC070700FCD8C5 /* diplomaThesis.entitlements */,
 				CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */,
 				CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */,
+				CE4A3A69260B6A33002622A6 /* K.swift */,
+				CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */,
 				CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */,
 				CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */,
 				CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */,
+				CE9254C326026E1000A1651D /* FFTAnalysis.swift */,
 				CEE6F8A525F90849009E7835 /* Queue.swift */,
 				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
 				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
@@ -278,13 +287,16 @@
 				CEC6A3FD25F7E3070059D105 /* PanTompkins.swift in Sources */,
 				CECEDF7925ED0B0D0057653D /* liir.c in Sources */,
 				CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */,
+				CE4A3A6A260B6A33002622A6 /* K.swift in Sources */,
 				CEA96C8B25EC04DE00FCD8C5 /* ViewController.swift in Sources */,
 				CE9254C026026D1B00A1651D /* fft.c in Sources */,
+				CE9254C426026E1000A1651D /* FFTAnalysis.swift in Sources */,
 				CEE6F8A625F90849009E7835 /* Queue.swift in Sources */,
 				CECEDF7D25ED0C070057653D /* bwbp.c in Sources */,
 				CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */,
 				CEC6A40025F7E6010059D105 /* HelpingFunctions.swift in Sources */,
 				CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */,
+				CE4A3A67260B6978002622A6 /* AnalyzeECGViewController.swift in Sources */,
 				CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */,
 				CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */,
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,

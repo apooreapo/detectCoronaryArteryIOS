@@ -24,6 +24,19 @@ struct UltraShortAnalysis {
     lazy var normalizedDifferences: [Int] = calculateNormalizedDifferences(diffs: differences)
     lazy var normDiffSize : Int = normalizedDifferences.count
     
+    lazy var normInput : [Double] = {
+        if let max = input.max(){
+            var output : [Double] = []
+            for element in input {
+                output.append(element / max)
+            }
+            return output
+        } else {
+            print("Serious error here, cannot find maximum of input signal for Ultra Short Analysis.")
+            return input
+        }
+    }()
+    
     
     /// Calculates sdrr metric over an array of differences.
     /// - Returns: Standard deviation of all sinus beats in milliseconds.
@@ -285,15 +298,8 @@ struct UltraShortAnalysis {
             sum /= Double(sz)
             return sum
         }
-//        DispatchQueue.global(qos: .userInitiated).async {
-//            let n1 = phi(data: data, m: m + 1, r: r)
-//            let n2 = phi(data: data, m: m, r: r)
-//            print(abs(n1 - n2))
-//        }
         let n1 = phi(data: data, m: m + 1, r: r)
-        print(String(format: "n1 value: %.6f", n1))
         let n2 = phi(data: data, m: m, r: r)
-        print(String(format: "n2 value: %.6f", n2))
         
 //        return abs(phi(data: data, m: m + 1, r: r) - phi(data: data, m: m + 1, r: r))
         return abs(n1 - n2)
@@ -396,6 +402,61 @@ struct UltraShortAnalysis {
         let res2 = sampleEntropy(data: test2, m: 2, r: 0.000004)
         print(String(format: "128 Hz result: %.3f", res1))
         print(String(format: "64 Hz result: %.3f", res2))
+        
+    }
+    
+    internal mutating func calculateUltraShortMetrics(printMessage: Bool = false) {
+        if printMessage {
+            print("Starting Ultra Short Analysis...")
+        }
+        let SDRR = sdrr()
+        let ahr = averageHeartRate()
+        let SDNN = sdnn()
+        let SDSD = sdsd()
+        let pNN50 = pnn50()
+        let RMSSD = rmssd()
+        let HTI = hti()
+        let HRMAXMIN = hrMaxMin()
+        let myFFT = FFTAnalysis(input: input, fs: fs)
+        let fftRes = myFFT.calculateFrequencyMetrics()
+//        DispatchQueue.global(qos: .userInitiated).async {
+//            sdrr()
+//        }
+        if printMessage {
+            print(String(format: "SDRR: %.4f", SDRR))
+            print(String(format: "Average Heart Rate: %.1f", ahr))
+            print(String(format: "SDNN: %.4f", SDNN))
+            print(String(format: "SDSD: %.4f", SDSD))
+            print(String(format: "pNN50: %.4f", pNN50))
+            print(String(format: "RMSSD: %.4f", RMSSD))
+            print(String(format: "HTI: %.4f", HTI))
+            print(String(format: "HRMAXMIN: %.4f", HRMAXMIN))
+            print(String(format:"HF Energy: %.9f", fftRes.hfEnergy ))
+            print(String(format:"LF Energy: %.9f", fftRes.lfEnergy))
+            print(String(format:"HF Peak: %.9f", fftRes.hfPeak))
+            print(String(format:"LF Peak: %.9f", fftRes.lfPeak))
+            print(String(format: "HF Percentage: %.9f", fftRes.hfPercentage))
+            print(String(format: "LF Percentage: %.9f", fftRes.lfPercentage))
+            print(String(format: "LF/ HF Ratio: %.6f", fftRes.lfhf))
+            
+        }
+        
+    }
+    
+    internal mutating func calculateAppEn(counter: Int){
+        let window : Double = 5.0
+        let start : Double = 2.5 * Double(counter)
+        let factor = Int(round(fs / 64.0)) // Downscaled frequency is 64 Hz
+        let startPoint = start * fs
+        var endPoint : Double = (start + window) * fs
+        if endPoint > Double(normInput.count) { // check if ending point exceeds signal limits
+            endPoint = Double(normInput.count)
+        }
+        let currentSig = Array<Double>(normInput[Int(startPoint)..<Int(endPoint)])
+        let downScaledSig = interpolate(input: currentSig, ratio: factor)
+        let res = approximateEntropy(data: downScaledSig, m: 2, r: 0.04)
+        print(String(format: "Approximate entropy for interval %.1f - %.1f is %.4f", start, start + window, res))
+        
         
     }
     
