@@ -450,7 +450,7 @@ struct UltraShortAnalysis {
     /// - Parameters:
     ///   - counter: startingTime = counter * 2.5, in seconds.
     ///   - completion: Optional function, for completion.
-    internal mutating func calculateAppEn(counter: Int, completion: @escaping ()->Void = {}){
+    internal mutating func calculateAppEn(counter: Int, completion: @escaping ()->Void = {}) -> Double {
         let window : Double = 5.0
         let start : Double = 2.5 * Double(counter)
         let factor = Int(round(fs / 64.0)) // Downscaled frequency is 64 Hz
@@ -464,7 +464,7 @@ struct UltraShortAnalysis {
         let res = approximateEntropy(data: downScaledSig, m: 2, r: 0.04)
         print(String(format: "Approximate entropy for interval %.1f - %.1f is %.4f", start, start + window, res))
         completion()
-        
+        return res
         
     }
     
@@ -473,7 +473,7 @@ struct UltraShortAnalysis {
     /// - Parameters:
     ///   - counter: startingTime = counter * 2.5, in seconds.
     ///   - completion: Optional function, for completion.
-    internal mutating func calculateSampEn(counter: Int, completion: @escaping ()->Void = {}){
+    internal mutating func calculateSampEn(counter: Int, completion: @escaping ()->Void = {}) -> Double {
         let window : Double = 5.0 // window of 5 seconds
         let start : Double = 2.5 * Double(counter)
         let factor = Int(round(fs / 64.0)) // Downscaled frequency is 64 Hz
@@ -487,6 +487,7 @@ struct UltraShortAnalysis {
         let res = sampleEntropy(data: downScaledSig, m: 2, r: 0.04)
         print(String(format: "Sample entropy for interval %.1f - %.1f is %.4f", start, start + window, res))
         completion()
+        return res
         
     }
     

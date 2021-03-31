@@ -35,6 +35,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bF1-xF-euq">
+                                <rect key="frame" x="125" y="389.5" width="164" height="41"/>
+                                <string key="text">Please be patient
+Analyzing your ECG...</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XYh-ee-wtb" customClass="PlainHorizontalProgressBar" customModule="diplomaThesis" customModuleProvider="target">
                                 <rect key="frame" x="87" y="444.5" width="240" height="7"/>
                                 <color key="backgroundColor" systemColor="systemGray3Color"/>
@@ -50,38 +58,46 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="XEU-lU-EH9">
-                                <rect key="frame" x="125" y="375" width="164" height="49"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please be patient" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bF1-xF-euq">
-                                        <rect key="frame" x="16.5" y="0.0" width="131.5" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Analyzing your ECG..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hDf-uK-cJ2">
-                                        <rect key="frame" x="0.0" y="28.5" width="164" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="health_test-512" translatesAutoresizingMaskIntoConstraints="NO" id="c7p-fV-G2R">
+                                <rect key="frame" x="87" y="328" width="240" height="240"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="c7p-fV-G2R" secondAttribute="height" multiplier="1:1" id="Ybv-Es-2Sr"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d66-WZ-a2o" userLabel="Results Text">
+                                <rect key="frame" x="0.0" y="593" width="414" height="41"/>
+                                <string key="text">Well Done!
+You showed no signs of CAD.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="QTa-mz-TpF"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="XYh-ee-wtb" firstAttribute="top" secondItem="XEU-lU-EH9" secondAttribute="bottom" constant="20.5" id="Bo0-lc-bHn"/>
+                            <constraint firstItem="c7p-fV-G2R" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="8iu-0B-IX0"/>
+                            <constraint firstItem="d66-WZ-a2o" firstAttribute="top" secondItem="c7p-fV-G2R" secondAttribute="bottom" constant="25" id="Bhy-r5-ixR"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="Ipx-fC-nel"/>
+                            <constraint firstItem="d66-WZ-a2o" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" id="Tun-aH-x7x"/>
                             <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="XYh-ee-wtb" secondAttribute="trailing" constant="87" id="Uew-sy-0lE"/>
+                            <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="c7p-fV-G2R" secondAttribute="trailing" constant="87" id="c2X-aV-l9z"/>
+                            <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="d66-WZ-a2o" secondAttribute="trailing" id="cKf-v9-pPP"/>
+                            <constraint firstItem="d66-WZ-a2o" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="dJn-eG-czi"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="duQ-P1-eGg"/>
+                            <constraint firstItem="c7p-fV-G2R" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="fKc-Ig-Ues"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="hlF-2h-SOX"/>
-                            <constraint firstItem="XEU-lU-EH9" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="sWl-ny-lkh"/>
+                            <constraint firstItem="XYh-ee-wtb" firstAttribute="top" secondItem="bF1-xF-euq" secondAttribute="bottom" constant="14" id="qfK-BI-PdA"/>
+                            <constraint firstItem="bF1-xF-euq" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="tDR-3I-dDW"/>
+                            <constraint firstItem="c7p-fV-G2R" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="wSx-xW-0us"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Analyzing ECG" id="CsM-dp-pup"/>
                     <connections>
+                        <outlet property="loadingText" destination="bF1-xF-euq" id="XPz-bj-PWw"/>
                         <outlet property="progressBar" destination="XYh-ee-wtb" id="eZd-0E-cZo"/>
+                        <outlet property="resultsImageView" destination="c7p-fV-G2R" id="gW5-DW-4mQ"/>
+                        <outlet property="resultsText" destination="d66-WZ-a2o" id="KpI-1p-NsV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZIS-2O-z5O" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -108,6 +124,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="health_test-512" width="256" height="256"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

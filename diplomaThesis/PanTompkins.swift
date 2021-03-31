@@ -170,7 +170,7 @@ class PanTompkins {
                     (y_i, x_i) = maximum(input: outputs1, start: 0, end: rpeaks[i].0)
                     ser_back = 1
                 } else if rpeaks[i].0 >=  n - 1 {
-                    (y_i, x_i) = maximum(input: outputs3, start: rpeaks[i].0 - Int(round(0.15 * fs)), end: Int(n2))
+                    (y_i, x_i) = maximum(input: outputs1, start: rpeaks[i].0 - Int(round(0.15 * fs)), end: Int(n2))
 
                 }
             }
@@ -213,7 +213,7 @@ class PanTompkins {
                     var pks_temp : Double
                     var locs_temp : Int
                     (pks_temp, locs_temp) = maximum(input: outputs3, start: qrs_i[beat_C - 1] + Int(round(0.2 * fs)), end: rpeaks[i].0 - Int(round(0.2 * fs)))
-                    locs_temp = qrs_i[beat_C - 1] + Int(round(02 * fs)) + locs_temp - 1
+                    locs_temp = qrs_i[beat_C - 1] + Int(round(0.2 * fs)) + locs_temp - 1
                     
                     if pks_temp > thr_noise {
                         beat_C += 1
@@ -295,14 +295,14 @@ class PanTompkins {
             
             if noise_level != 0 || sig_level != 0 {
                 thr_sig = noise_level + 0.25 * (abs(sig_level - noise_level))
-                thr_noise *= 0.5
+                thr_noise = 0.5 * thr_sig
             }
             
             // adjust the threshold with SNR for bandpassed signal
             
             if noise_level1 != 0 || sig_level1 != 0 {
                 thr_sig1 = noise_level1 + 0.25 * (abs(sig_level1 - noise_level1))
-                thr_noise1 *= 0.5
+                thr_noise1 = 0.5 * thr_sig1
             }
             
             // take a track of thresholds of smoothed signal
