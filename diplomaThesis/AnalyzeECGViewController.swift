@@ -101,11 +101,27 @@ class AnalyzeECGViewController : UIViewController {
             let inputFeatures = UltraShortFeaturesStruct(SDRR: fast.SDRR, AverageHeartRate: fast.AverageHeartRate, SDNN: fast.SDNN, SDSD: fast.SDSD, pNN50: fast.pNN50, RMSSD: fast.RMSSD, HTI: fast.HTI, HRMaxMin: fast.HRMaxMin, LFEnergy: fast.LFEnergy, LFEnergyPercentage: fast.LFEnergyPercentage, HFEnergy: fast.HFEnergy, HFEnergyPercentage: fast.HFEnergyPercentage, PoincareSD1: fast.PoincareSD1, PoincareSD2: fast.PoincareSD2, PoincareRatio: fast.PoincareRatio, PoincareEllipsisArea: fast.PoincareEllipsisArea, MeanApproximateEntropy: appEn.avg(), StdApproximateEntropy: appEn.std(), MeanSampleEntropy: sampEn.avg(), StdSampleEntropy: sampEn.std(), LFPeak: fast.LFPeak, HFPeak: fast.HFPeak, LFHFRatio: fast.LFHFRatio)
             print("Presenting the features as they are at the start:")
             inputFeatures.printValues()
+            print("Adding to record...")
+            globalTestData.append(inputFeatures.toArray())
+            if globalTestData.count == 38 {
+                self.createCSVX(from: globalTestData, output: "orestis_data.csv")
+            }
             print("Calculating result...")
             let finalResult = self.analyzeUltraShortECGSVM(inputArray: inputFeatures.toArray())
             print("Do I have CAD? : " + finalResult)
             
             DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
+                self.resultsText.numberOfLines = 0
+                if finalResult == "Yes" {
+                    self.resultsImageView.image = UIImage(named: K.UltraShortModel.CADImageName)
+                    self.resultsText.text = K.UltraShortModel.CADResultMessage
+                } else if finalResult == "No" {
+                    self.resultsImageView.image = UIImage(named: K.UltraShortModel.noCADImageName)
+                    self.resultsText.text = K.UltraShortModel.noCADResultMessage
+                } else {
+                    self.resultsImageView.image = UIImage(named: K.UltraShortModel.noResultImageName)
+                    self.resultsText.text = K.UltraShortModel.noResultMessage
+                }
                 self.progressBar.fadeOut()
                 self.loadingText.fadeOut(withDuration: 1.0) {
                     self.resultsImageView.fadeIn()
@@ -153,6 +169,51 @@ class AnalyzeECGViewController : UIViewController {
             
         }
         
+    }
+    
+    func createCSVX(from recArray:[[Double]], output: String) {
+        
+        var strings : [String] = []
+        var csvString : String = ""
+        
+        for item in K.UltraShortModel.input_names_R_style {
+            csvString.append(item + ",")
+        }
+        csvString.removeLast()
+        csvString.append("\n")
+        
+        for dataRecord in recArray {
+            for dataValue in dataRecord {
+                csvString.append(String(format: "%f,", dataValue))
+            }
+            csvString.removeLast()
+            csvString.append("\n")
+        }
+        
+//            for i in 0..<recArray.count {
+//                strings.append(String(format: "%f", recArray[i]))
+//            }
+//        let csvString = strings.joined(separator: ",\n")
+
+
+        let fileManager = FileManager.default
+
+        do {
+
+            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil , create: false )
+
+            let fileURL = path.appendingPathComponent(output)
+
+            try csvString.write(to: fileURL, atomically: true , encoding: .utf8)
+            
+            print("Done writing .csv file!")
+        } catch {
+
+            print("error creating file")
+
+        }
+
+
     }
     
 

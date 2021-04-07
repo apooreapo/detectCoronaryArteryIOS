@@ -9,7 +9,7 @@ import UIKit
 import HealthKit
 import Charts
 
-
+var globalTestData : [[Double]] = []
 
 class ViewController: UIViewController {
     

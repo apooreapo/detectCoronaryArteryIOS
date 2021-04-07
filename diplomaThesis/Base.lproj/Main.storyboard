@@ -58,14 +58,14 @@ Analyzing your ECG...</string>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="health_test-512" translatesAutoresizingMaskIntoConstraints="NO" id="c7p-fV-G2R">
-                                <rect key="frame" x="87" y="328" width="240" height="240"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="health_test-512-question" translatesAutoresizingMaskIntoConstraints="NO" id="c7p-fV-G2R">
+                                <rect key="frame" x="87" y="268" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="c7p-fV-G2R" secondAttribute="height" multiplier="1:1" id="Ybv-Es-2Sr"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d66-WZ-a2o" userLabel="Results Text">
-                                <rect key="frame" x="0.0" y="593" width="414" height="41"/>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d66-WZ-a2o" userLabel="Results Text">
+                                <rect key="frame" x="50" y="533" width="314" height="41"/>
                                 <string key="text">Well Done!
 You showed no signs of CAD.</string>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -79,13 +79,13 @@ You showed no signs of CAD.</string>
                             <constraint firstItem="c7p-fV-G2R" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="8iu-0B-IX0"/>
                             <constraint firstItem="d66-WZ-a2o" firstAttribute="top" secondItem="c7p-fV-G2R" secondAttribute="bottom" constant="25" id="Bhy-r5-ixR"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="Ipx-fC-nel"/>
-                            <constraint firstItem="d66-WZ-a2o" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" id="Tun-aH-x7x"/>
+                            <constraint firstItem="d66-WZ-a2o" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="50" id="Tun-aH-x7x"/>
                             <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="XYh-ee-wtb" secondAttribute="trailing" constant="87" id="Uew-sy-0lE"/>
                             <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="c7p-fV-G2R" secondAttribute="trailing" constant="87" id="c2X-aV-l9z"/>
-                            <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="d66-WZ-a2o" secondAttribute="trailing" id="cKf-v9-pPP"/>
+                            <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="d66-WZ-a2o" secondAttribute="trailing" constant="50" id="cKf-v9-pPP"/>
                             <constraint firstItem="d66-WZ-a2o" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="dJn-eG-czi"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="duQ-P1-eGg"/>
-                            <constraint firstItem="c7p-fV-G2R" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" id="fKc-Ig-Ues"/>
+                            <constraint firstItem="c7p-fV-G2R" firstAttribute="centerY" secondItem="0ob-iE-VAN" secondAttribute="centerY" constant="-60" id="fKc-Ig-Ues"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="hlF-2h-SOX"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="top" secondItem="bF1-xF-euq" secondAttribute="bottom" constant="14" id="qfK-BI-PdA"/>
                             <constraint firstItem="bF1-xF-euq" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="tDR-3I-dDW"/>
@@ -124,7 +124,7 @@ You showed no signs of CAD.</string>
         </scene>
     </scenes>
     <resources>
-        <image name="health_test-512" width="256" height="256"/>
+        <image name="health_test-512-question" width="256" height="256"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -7,6 +7,7 @@ target 'diplomaThesis' do
   use_frameworks!
 
   pod 'Charts'
+  pod 'SwiftyGif'
 
   # Pods for diplomaThesis
 
