@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import CoreML
 
 
 /// The class responsible for handling and showing the ECG analysis.
@@ -50,11 +51,12 @@ class AnalyzeECGViewController : UIViewController {
         // Starting Ultra Short Analysis.
         var myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
         let start = Date() // Count elapsed time
+        var fast = UltraShortFeaturesStruct(SDRR: 0, AverageHeartRate: 0, SDNN: 0, SDSD: 0, pNN50: 0, RMSSD: 0, HTI: 0, HRMaxMin: 0, LFEnergy: 0, LFEnergyPercentage: 0, HFEnergy: 0, HFEnergyPercentage: 0, PoincareSD1: 0, PoincareSD2: 0, PoincareRatio: 0, PoincareEllipsisArea: 0, MeanApproximateEntropy: 0, StdApproximateEntropy: 0, MeanSampleEntropy: 0, StdSampleEntropy: 0, LFPeak: 0, HFPeak: 0, LFHFRatio: 0)
         
         // workItem is a DispatchWorkItem. We use this, so that we can
         // cancel the jobs remaining if user cancels analysis.
         workItem.append(DispatchWorkItem(block: {
-            myUltraShortAnalysis.calculateUltraShortMetrics(printMessage: true)
+            fast = myUltraShortAnalysis.calculateUltraShortMetrics(printMessage: true)
         }))
         
         // Upon calculation, we increment the progress bar. Sample Entropy
@@ -96,6 +98,13 @@ class AnalyzeECGViewController : UIViewController {
             print(String(format: "Mean sample entropy: %.4f", sampEn.avg()))
             print(String(format: "Std of approximate entropy: %.4f", appEn.std()))
             print(String(format: "Std of sample entropy: %.4f", sampEn.std()))
+            let inputFeatures = UltraShortFeaturesStruct(SDRR: fast.SDRR, AverageHeartRate: fast.AverageHeartRate, SDNN: fast.SDNN, SDSD: fast.SDSD, pNN50: fast.pNN50, RMSSD: fast.RMSSD, HTI: fast.HTI, HRMaxMin: fast.HRMaxMin, LFEnergy: fast.LFEnergy, LFEnergyPercentage: fast.LFEnergyPercentage, HFEnergy: fast.HFEnergy, HFEnergyPercentage: fast.HFEnergyPercentage, PoincareSD1: fast.PoincareSD1, PoincareSD2: fast.PoincareSD2, PoincareRatio: fast.PoincareRatio, PoincareEllipsisArea: fast.PoincareEllipsisArea, MeanApproximateEntropy: appEn.avg(), StdApproximateEntropy: appEn.std(), MeanSampleEntropy: sampEn.avg(), StdSampleEntropy: sampEn.std(), LFPeak: fast.LFPeak, HFPeak: fast.HFPeak, LFHFRatio: fast.LFHFRatio)
+            print("Presenting the features as they are at the start:")
+            inputFeatures.printValues()
+            print("Calculating result...")
+            let finalResult = self.analyzeUltraShortECGSVM(inputArray: inputFeatures.toArray())
+            print("Do I have CAD? : " + finalResult)
+            
             DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
                 self.progressBar.fadeOut()
                 self.loadingText.fadeOut(withDuration: 1.0) {
@@ -109,13 +118,41 @@ class AnalyzeECGViewController : UIViewController {
     
     // In case the user cancels the analysis, we want the processes that are left to be terminated, or canceled.
     override func viewWillDisappear(_ animated: Bool) {
-        print("Canceling all tasks and exiting...")
+        print("Canceling all running tasks and exiting...")
         for item in workItem {
             if !item.isCancelled {
                 item.cancel()
             }
         }
         super.viewWillDisappear(animated)
+    }
+    
+    func analyzeUltraShortECGSVM(inputArray: [Double]) -> String {
+//        let ultraShortAnalysis = UltraShortHRV(configuration)
+        if inputArray.count != K.UltraShortModel.input_mean_values.count {
+            // Check if input has right length of data
+            print(String(format: "Error. The input array for Ultra Short Data Analysis SVM model must have exactly %d arguments. Instead it has %d.", K.UltraShortModel.input_mean_values.count, inputArray.count))
+            return K.UltraShortModel.errorResult
+        } else {
+            // Normalize the data by subtracting mean value and dividing by std value
+            var normalizedInput : [Double] = []
+            for i in 0..<inputArray.count {
+                normalizedInput.append((inputArray[i] - K.UltraShortModel.input_mean_values[i]) / K.UltraShortModel.input_std_values[i])
+            }
+            let normalizedFeatures = UltraShortFeaturesStruct(normalizedInput)
+            print("Presenting normalized values:")
+            normalizedFeatures.printValues()
+            guard let ultraShortAnalysis = try? UltraShortHRV(configuration: .init()) else {
+                fatalError("Cannot load model")
+            }
+            let input = UltraShortHRVInput(SDRR: normalizedInput[0], AverageHeartRate: normalizedInput[1], SDNN: normalizedInput[2], SDSD: normalizedInput[3], pNN50: normalizedInput[4], RMSSD: normalizedInput[5], HTI: normalizedInput[6], HRMaxMin: normalizedInput[7], LFEnergy: normalizedInput[8], LFEnergyPercentage: normalizedInput[9], HFEnergy: normalizedInput[10], HFEnergyPercentage: normalizedInput[11], PoincareSD1: normalizedInput[12], PoincareSD2: normalizedInput[13], PoincareRatio: normalizedInput[14], PoincareEllipsisArea: normalizedInput[15], MeanApproximateEntropy: normalizedInput[16], StdApproximateEntropy: normalizedInput[17], MeanSampleEntropy: normalizedInput[18], StdSampleEntropy: normalizedInput[19], LFPeak: normalizedInput[20], HFPeak: normalizedInput[21], LFHFRatio: normalizedInput[22])
+            guard let output = try? ultraShortAnalysis.prediction(input: input) else {
+                fatalError("The SVM model failed to make a prediction. Exiting now...")
+            }
+            return output.HasCAD
+            
+        }
+        
     }
     
 

@@ -31,6 +31,8 @@
 		CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */; };
 		CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */; };
 		CEE6F8A625F90849009E7835 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F8A525F90849009E7835 /* Queue.swift */; };
+		CEF41462261D05B2000CDFFB /* UltraShortHRV.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */; };
+		CEF41465261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,8 @@
 		CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraShortAnalysis.swift; sourceTree = "<group>"; };
 		CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathExtension.swift; sourceTree = "<group>"; };
 		CEE6F8A525F90849009E7835 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
+		CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = UltraShortHRV.mlmodel; sourceTree = "<group>"; };
+		CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraShortFeaturesStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,8 +155,10 @@
 				CE9254C326026E1000A1651D /* FFTAnalysis.swift */,
 				CEE6F8A525F90849009E7835 /* Queue.swift */,
 				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
+				CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */,
 				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
 				CEA96C8C25EC04DE00FCD8C5 /* Main.storyboard */,
+				CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */,
 				CEA96C8F25EC04E100FCD8C5 /* Assets.xcassets */,
 				CEA96C9125EC04E100FCD8C5 /* LaunchScreen.storyboard */,
 				CEA96C9425EC04E100FCD8C5 /* Info.plist */,
@@ -291,12 +297,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEC6A3FD25F7E3070059D105 /* PanTompkins.swift in Sources */,
+				CEF41462261D05B2000CDFFB /* UltraShortHRV.mlmodel in Sources */,
 				CECEDF7925ED0B0D0057653D /* liir.c in Sources */,
 				CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */,
 				CE4A3A6A260B6A33002622A6 /* K.swift in Sources */,
 				CEA96C8B25EC04DE00FCD8C5 /* ViewController.swift in Sources */,
 				CE9254C026026D1B00A1651D /* fft.c in Sources */,
 				CE9254C426026E1000A1651D /* FFTAnalysis.swift in Sources */,
+				CEF41465261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift in Sources */,
 				CEE6F8A625F90849009E7835 /* Queue.swift in Sources */,
 				CECEDF7D25ED0C070057653D /* bwbp.c in Sources */,
 				CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */,

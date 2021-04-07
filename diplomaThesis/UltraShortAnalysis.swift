@@ -201,7 +201,7 @@ struct UltraShortAnalysis {
     private mutating func poincare() -> (sd1: Double, sd2: Double, ratio: Double, area: Double){
         var nn : [Double] = []
         for i in 0..<normDiffSize {
-            nn.append(Double(normalizedDifferences[i]) / self.fs)
+            nn.append(Double(normalizedDifferences[i]) / self.fs * 1000)
         }
         var x1 = nn
         var x2 = nn
@@ -408,7 +408,7 @@ struct UltraShortAnalysis {
     
     /// Calculates temporal and frequency metrics of the Ultra Short input.
     /// - Parameter printMessage: If true, prints out the results.
-    internal mutating func calculateUltraShortMetrics(printMessage: Bool = false) {
+    internal mutating func calculateUltraShortMetrics(printMessage: Bool = false) -> UltraShortFeaturesStruct {
         if printMessage {
             print("Starting Ultra Short Analysis...")
         }
@@ -422,6 +422,7 @@ struct UltraShortAnalysis {
         let HRMAXMIN = hrMaxMin()
         let myFFT = FFTAnalysis(input: input, fs: fs)
         let fftRes = myFFT.calculateFrequencyMetrics()
+        let myPoincare = poincare()
 //        DispatchQueue.global(qos: .userInitiated).async {
 //            sdrr()
 //        }
@@ -441,8 +442,14 @@ struct UltraShortAnalysis {
             print(String(format: "HF Percentage: %.9f", fftRes.hfPercentage))
             print(String(format: "LF Percentage: %.9f", fftRes.lfPercentage))
             print(String(format: "LF/ HF Ratio: %.6f", fftRes.lfhf))
+            print(String(format: "Poincare sd1: %.6f", myPoincare.sd1))
+            print(String(format: "Poincare sd2: %.6f", myPoincare.sd2))
+            print(String(format: "Poincare ellipsis area: %.6f", myPoincare.area))
+            print(String(format: "Poincare ratio: %.6f", myPoincare.ratio))
             
         }
+        let myUltraShortFeaturesStruct = UltraShortFeaturesStruct(SDRR: SDRR, AverageHeartRate: ahr, SDNN: SDNN, SDSD: SDSD, pNN50: pNN50, RMSSD: RMSSD, HTI: HTI, HRMaxMin: HRMAXMIN, LFEnergy: fftRes.lfEnergy, LFEnergyPercentage: fftRes.lfPercentage, HFEnergy: fftRes.hfEnergy, HFEnergyPercentage: fftRes.hfPercentage, PoincareSD1: myPoincare.sd1, PoincareSD2: myPoincare.sd2, PoincareRatio: myPoincare.ratio, PoincareEllipsisArea: myPoincare.area, MeanApproximateEntropy: 0.0, StdApproximateEntropy: 0.0, MeanSampleEntropy: 0.0, StdSampleEntropy: 0.0, LFPeak: fftRes.lfPeak, HFPeak: fftRes.hfPeak, LFHFRatio: fftRes.lfhf)
+        return myUltraShortFeaturesStruct
         
     }
     
