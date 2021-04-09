@@ -21,6 +21,7 @@ class ViewController: UIViewController {
     
     let healthStore = HKHealthStore()
     lazy var mainTitleLabel = UILabel()
+    lazy var loadingHeartImageView = UIImageView()
 //    lazy var currentECGLineChart = LineChartView()
 //    lazy var currentECGLineChart = ScatterChartView()
     lazy var currentECGLineChart = CombinedChartView()
@@ -31,6 +32,16 @@ class ViewController: UIViewController {
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        do {
+            let gif = try UIImage(gifName: "loading.gif")
+            DispatchQueue.main.async {
+                self.loadingHeartImageView.setGifImage(gif, loopCount: -1) // Will loop forever
+                self.loadingHeartImageView.startAnimating()
+            }
+        } catch {
+            print("Error showing gif")
+            self.loadingHeartImageView.isHidden = true
+        }
 //        self.navigationController?.setToolbarHidden(true, animated: false)
         // add title ECG
         
@@ -55,11 +66,18 @@ class ViewController: UIViewController {
         pickerView.translatesAutoresizingMaskIntoConstraints = false
         pickerView.sizeToFit()
         contentView.addSubview(pickerView)
+        contentView.addSubview(loadingHeartImageView)
         pickerView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         pickerView.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -100).isActive = true
         pickerView.topAnchor.constraint(equalTo: mainTitleLabel.bottomAnchor, constant: 0).isActive = true
         
+        
         pickerView.heightAnchor.constraint(equalTo: pickerView.heightAnchor).isActive = true
+        loadingHeartImageView.translatesAutoresizingMaskIntoConstraints = false
+        loadingHeartImageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        loadingHeartImageView.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
+        loadingHeartImageView.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
+        loadingHeartImageView.topAnchor.constraint(equalTo: mainTitleLabel.bottomAnchor, constant: 30).isActive = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -352,6 +370,8 @@ extension ViewController {
     ///   - animated: If true, the signal appears with a single animation
     func updateCharts(ecgSamples : [(Double,Double)], animated : Bool) {
         if !ecgSamples.isEmpty {
+            self.loadingHeartImageView.isHidden = true
+            self.loadingHeartImageView.stopAnimating()
             
             // add line chart with constraints
             

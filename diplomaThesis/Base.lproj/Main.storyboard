@@ -72,13 +72,22 @@ You showed no signs of CAD.</string>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bmr-ai-Sbd">
+                                <rect key="frame" x="182" y="317" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="eoJ-yh-WfD"/>
+                                    <constraint firstAttribute="width" constant="50" id="hYy-y9-578"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="QTa-mz-TpF"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="c7p-fV-G2R" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="8iu-0B-IX0"/>
                             <constraint firstItem="d66-WZ-a2o" firstAttribute="top" secondItem="c7p-fV-G2R" secondAttribute="bottom" constant="25" id="Bhy-r5-ixR"/>
+                            <constraint firstItem="Bmr-ai-Sbd" firstAttribute="centerX" secondItem="0ob-iE-VAN" secondAttribute="centerX" id="HNs-NC-wJc"/>
                             <constraint firstItem="XYh-ee-wtb" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="87" id="Ipx-fC-nel"/>
+                            <constraint firstItem="bF1-xF-euq" firstAttribute="top" secondItem="Bmr-ai-Sbd" secondAttribute="bottom" constant="22.5" id="KTK-Zj-cR5"/>
                             <constraint firstItem="d66-WZ-a2o" firstAttribute="leading" secondItem="QTa-mz-TpF" secondAttribute="leading" constant="50" id="Tun-aH-x7x"/>
                             <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="XYh-ee-wtb" secondAttribute="trailing" constant="87" id="Uew-sy-0lE"/>
                             <constraint firstItem="QTa-mz-TpF" firstAttribute="trailing" secondItem="c7p-fV-G2R" secondAttribute="trailing" constant="87" id="c2X-aV-l9z"/>
@@ -94,6 +103,7 @@ You showed no signs of CAD.</string>
                     </view>
                     <navigationItem key="navigationItem" title="Analyzing ECG" id="CsM-dp-pup"/>
                     <connections>
+                        <outlet property="loadingHeartImageView" destination="Bmr-ai-Sbd" id="sPX-AQ-KIq"/>
                         <outlet property="loadingText" destination="bF1-xF-euq" id="XPz-bj-PWw"/>
                         <outlet property="progressBar" destination="XYh-ee-wtb" id="eZd-0E-cZo"/>
                         <outlet property="resultsImageView" destination="c7p-fV-G2R" id="gW5-DW-4mQ"/>
@@ -115,12 +125,12 @@ You showed no signs of CAD.</string>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="xPs-bf-4bL"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="ypr-Ha-JCt"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Och-jJ-HnO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-197.10144927536234" y="47.544642857142854"/>
+            <point key="canvasLocation" x="-341" y="47"/>
         </scene>
     </scenes>
     <resources>

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import CoreML
+import SwiftyGif
 
 
 /// The class responsible for handling and showing the ECG analysis.
@@ -22,6 +23,8 @@ class AnalyzeECGViewController : UIViewController {
     var totalTasks : Int = 22
     let helpingQueue = DispatchQueue(label: K.helpingQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
+    
+    @IBOutlet weak var loadingHeartImageView: UIImageView!
     
     // The custom progress bar we use.
     @IBOutlet weak var progressBar: PlainHorizontalProgressBar!
@@ -42,6 +45,17 @@ class AnalyzeECGViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        do {
+            let gif = try UIImage(gifName: "loading.gif")
+            DispatchQueue.main.async {
+                self.loadingHeartImageView.setGifImage(gif, loopCount: -1) // Will loop forever
+                self.loadingHeartImageView.startAnimating()
+            }
+        } catch {
+            print("Error showing gif")
+            self.loadingHeartImageView.isHidden = true
+        }
+        
         print(String(format: "Current fs is %.2f and current current ECG count is %d.", fs, selectedECG.count))
         
         // Pan Tompkins algorithm for R peaks detection.
@@ -123,9 +137,11 @@ class AnalyzeECGViewController : UIViewController {
                     self.resultsText.text = K.UltraShortModel.noResultMessage
                 }
                 self.progressBar.fadeOut()
+                self.loadingHeartImageView.fadeOut()
                 self.loadingText.fadeOut(withDuration: 1.0) {
                     self.resultsImageView.fadeIn()
                     self.resultsText.fadeIn()
+                    self.loadingHeartImageView.stopAnimating()
                 }
             })
         }
