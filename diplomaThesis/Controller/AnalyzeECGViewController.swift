@@ -159,6 +159,10 @@ class AnalyzeECGViewController : UIViewController {
         super.viewWillDisappear(animated)
     }
     
+    
+    /// Applies PCA and machine learning algorithm.
+    /// - Parameter inputArray: Array including extracted features.
+    /// - Returns: Answer to question "Do I have CAD?". Possible answers: "Yes", "No", or anything else means error.
     func analyzeUltraShortECGSVM(inputArray: [Double]) -> String {
 //        let ultraShortAnalysis = UltraShortHRV(configuration)
         if inputArray.count != K.UltraShortModel.input_mean_values.count {
@@ -174,17 +178,45 @@ class AnalyzeECGViewController : UIViewController {
             let normalizedFeatures = UltraShortFeaturesStruct(normalizedInput)
             print("Presenting normalized values:")
             normalizedFeatures.printValues()
-            guard let ultraShortAnalysis = try? UltraShortHRV(configuration: .init()) else {
-                fatalError("Cannot load model")
+            // Apply PCA:
+            let pcaInput = applyPCA(inputArray: normalizedInput, pcaFactors: K.UltraShortModel.PCAComponents)
+            if pcaInput.count == 12 {
+                if let ultraShortAnalysis = try? UltraShortHRV_PCA(configuration: .init()){
+                    let input = UltraShortHRV_PCAInput(PC1: pcaInput[0], PC2: pcaInput[1], PC3: pcaInput[2], PC4: pcaInput[3], PC5: pcaInput[4], PC6: pcaInput[5], PC7: pcaInput[6], PC8: pcaInput[7], PC9: pcaInput[8], PC10: pcaInput[9], PC11: pcaInput[10], PC12: pcaInput[11])
+                    if let output = try? ultraShortAnalysis.prediction(input: input){
+                        return output.HasCAD} else {
+                        print("The SVM model failed to make a prediction. Exiting now...")
+                        return K.UltraShortModel.errorResult
+                    }
+                }
+                else {
+                    print("Cannot load model")
+                    return K.UltraShortModel.errorResult
+                }
+            } else {
+                print("Error, the PCA dimensions weren't right.")
+                return K.UltraShortModel.errorResult
             }
-            let input = UltraShortHRVInput(SDRR: normalizedInput[0], AverageHeartRate: normalizedInput[1], SDNN: normalizedInput[2], SDSD: normalizedInput[3], pNN50: normalizedInput[4], RMSSD: normalizedInput[5], HTI: normalizedInput[6], HRMaxMin: normalizedInput[7], LFEnergy: normalizedInput[8], LFEnergyPercentage: normalizedInput[9], HFEnergy: normalizedInput[10], HFEnergyPercentage: normalizedInput[11], PoincareSD1: normalizedInput[12], PoincareSD2: normalizedInput[13], PoincareRatio: normalizedInput[14], PoincareEllipsisArea: normalizedInput[15], MeanApproximateEntropy: normalizedInput[16], StdApproximateEntropy: normalizedInput[17], MeanSampleEntropy: normalizedInput[18], StdSampleEntropy: normalizedInput[19], LFPeak: normalizedInput[20], HFPeak: normalizedInput[21], LFHFRatio: normalizedInput[22])
-            guard let output = try? ultraShortAnalysis.prediction(input: input) else {
-                fatalError("The SVM model failed to make a prediction. Exiting now...")
-            }
-            return output.HasCAD
             
         }
         
+    }
+    
+    func applyPCA(inputArray: [Double], pcaFactors: [[Double]]) -> [Double] {
+        var output : [Double] = []
+        for pcai in pcaFactors {
+            if pcai.count != inputArray.count {
+                print("Error in PCA analysis. Returning an empty array...")
+                break
+            } else {
+                var tempSum: Double = 0.0
+                for i in 0..<pcai.count {
+                    tempSum += inputArray[i] * pcai[i]
+                }
+                output.append(tempSum)
+            }
+        }
+        return output
     }
     
     func createCSVX(from recArray:[[Double]], output: String) {

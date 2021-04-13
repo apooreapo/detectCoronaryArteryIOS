@@ -8,6 +8,13 @@
 import Foundation
 
 
+
+infix operator ^^
+func ^^ (radix: Double, power: Int) -> Double {
+    return pow(Double(radix), Double(power))
+}
+
+
 extension Array where Element: FloatingPoint {
 
     
@@ -16,6 +23,7 @@ extension Array where Element: FloatingPoint {
     func sum() -> Element {
         return self.reduce(0, +)
     }
+    
 
     
     /// Calculates the average of an array.
