@@ -30,6 +30,9 @@ class ViewController: UIViewController {
     var pickerView = UIPickerView()
     let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
+    lazy var errorLabel = UILabel()
+    
+    
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         do {
@@ -78,6 +81,7 @@ class ViewController: UIViewController {
         loadingHeartImageView.widthAnchor.constraint(equalToConstant: 30.0).isActive = true
         loadingHeartImageView.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
         loadingHeartImageView.topAnchor.constraint(equalTo: mainTitleLabel.bottomAnchor, constant: 30).isActive = true
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -92,6 +96,17 @@ class ViewController: UIViewController {
         pickerView.delegate = self
         //view.translatesAutoresizingMaskIntoConstraints = false
         
+        contentView.addSubview(errorLabel)
+        errorLabel.text = "Error here."
+        errorLabel.textAlignment = .center
+        errorLabel.sizeToFit()
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        errorLabel.widthAnchor.constraint(equalTo: contentView.widthAnchor, constant: -100).isActive = true
+        errorLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        errorLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        errorLabel.heightAnchor.constraint(equalToConstant: 100.0).isActive = true
+        errorLabel.isHidden = true
+        
         
         var counter = 0
 //        var test1: [CDouble] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
@@ -101,18 +116,23 @@ class ViewController: UIViewController {
 //        }
 //        let myFFT = FFTAnalysis(input: test1, fs: 10)
 //        myFFT.analyzeFreqs()
-        
         let healthKitTypes: Set = [HKObjectType.electrocardiogramType()]
-        
         healthStore.requestAuthorization(toShare: nil, read: healthKitTypes) { (bool, error) in
             if (bool) {
                 
-                //authorization succesful
+                //authorization completed, maybe successfully or not
                 
                 self.getECGsCount { (ecgsCount) in
 //                    print("Result is \(ecgsCount)")
                     if ecgsCount < 1 {
                         print("You have no ecgs available")
+                        DispatchQueue.main.async {
+                            self.errorLabel.font = UIFont.boldSystemFont(ofSize: 15)
+                            self.errorLabel.numberOfLines = 0
+                            self.errorLabel.text = "You need first to record an ECG with your Apple Watch. Once you do this, return to this screen. If you do have recorder ECGs, please check the app's permissions."
+                            self.errorLabel.isHidden = false
+                            self.pickerView.isHidden = true
+                        }
                         return
                     } else {
                         for i in 0...ecgsCount - 1 {
@@ -155,6 +175,13 @@ class ViewController: UIViewController {
                 
             } else {
                 print("We had an error here: \n\(String(describing: error))")
+                DispatchQueue.main.async {
+                    self.errorLabel.text = "You need to allow this application to read your ECG. Please change the permissions for this app to continue."
+                    self.errorLabel.font = UIFont.boldSystemFont(ofSize: 15)
+                    self.errorLabel.numberOfLines = 0
+                    self.errorLabel.isHidden = false
+                    self.pickerView.isHidden = true
+                }
             }
         }
     }
