@@ -111,6 +111,52 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CE67D0792625B899000C5300 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CE9254C326026E1000A1651D /* FFTAnalysis.swift */,
+				CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */,
+				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
+				CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		CE67D07A2625B8A0000C5300 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				CE4A3A6D260B9E73002622A6 /* PlainHorizontalProgressBar.swift */,
+				CE2346FD2614C24D0037C67F /* UIViewExt.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		CE67D07B2625B8A5000C5300 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */,
+				CE0ECD67261E064600129653 /* GifOpeningViewController.swift */,
+				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		CE67D07F2625B937000C5300 /* Extra files */ = {
+			isa = PBXGroup;
+			children = (
+				CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */,
+				CEA96CA125EC070700FCD8C5 /* diplomaThesis.entitlements */,
+				CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */,
+				CE4A3A69260B6A33002622A6 /* K.swift */,
+				CE82A6942620BBDB003D1A2E /* LaunchScreen.storyboard */,
+				CEA96C8C25EC04DE00FCD8C5 /* Main.storyboard */,
+				CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */,
+				CEE6F8A525F90849009E7835 /* Queue.swift */,
+				CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */,
+			);
+			path = "Extra files";
+			sourceTree = "<group>";
+		};
 		CE971DDC25EDA91C00D88DC4 /* C++ Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -146,24 +192,10 @@
 			children = (
 				CE971DDC25EDA91C00D88DC4 /* C++ Files */,
 				CECEDF7625ED0AD50057653D /* C Files */,
-				CEA96CA125EC070700FCD8C5 /* diplomaThesis.entitlements */,
-				CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */,
-				CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */,
-				CE4A3A69260B6A33002622A6 /* K.swift */,
-				CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */,
-				CE2346FD2614C24D0037C67F /* UIViewExt.swift */,
-				CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */,
-				CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */,
-				CE4A3A6D260B9E73002622A6 /* PlainHorizontalProgressBar.swift */,
-				CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */,
-				CE9254C326026E1000A1651D /* FFTAnalysis.swift */,
-				CE0ECD67261E064600129653 /* GifOpeningViewController.swift */,
-				CEE6F8A525F90849009E7835 /* Queue.swift */,
-				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
-				CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */,
-				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
-				CE82A6942620BBDB003D1A2E /* LaunchScreen.storyboard */,
-				CEA96C8C25EC04DE00FCD8C5 /* Main.storyboard */,
+				CE67D07F2625B937000C5300 /* Extra files */,
+				CE67D0792625B899000C5300 /* Model */,
+				CE67D07A2625B8A0000C5300 /* View */,
+				CE67D07B2625B8A5000C5300 /* Controller */,
 				CE82A6902620B3C8003D1A2E /* loading.gif */,
 				CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */,
 				CEA96C8F25EC04E100FCD8C5 /* Assets.xcassets */,
