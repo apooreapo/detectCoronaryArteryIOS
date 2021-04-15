@@ -11,6 +11,8 @@ import Charts
 
 var globalTestData : [[Double]] = []
 
+
+/// The controller of the starting view of the application. From here the user can navigate to the rest controllers.
 class ViewController: UIViewController {
     
     var ecgSamples = [[(Double,Double)]] ()

@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 import SwiftyGif
 
+
+/// The controller that handles the heart loading gif image.
 class GifOpeningViewController : UIViewController{
     
     @IBOutlet weak var gifImageView: UIImageView!

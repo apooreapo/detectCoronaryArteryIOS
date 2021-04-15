@@ -35,6 +35,9 @@ class AnalyzeECGViewController : UIViewController {
     
     @IBOutlet weak var resultsImageView: UIImageView!
     
+    @IBOutlet weak var learnMoreButton: UIButton!
+    
+    
     
     // Needed in order to set the title, and to set navigation bar visible.
     override func viewWillAppear(_ animated: Bool) {
@@ -138,9 +141,11 @@ class AnalyzeECGViewController : UIViewController {
                 }
                 self.progressBar.fadeOut()
                 self.loadingHeartImageView.fadeOut()
+                self.learnMoreButton.isEnabled = true
                 self.loadingText.fadeOut(withDuration: 1.0) {
                     self.resultsImageView.fadeIn()
                     self.resultsText.fadeIn()
+                    self.learnMoreButton.fadeIn()
                     self.loadingHeartImageView.stopAnimating()
                 }
             })
@@ -262,6 +267,13 @@ class AnalyzeECGViewController : UIViewController {
         }
 
 
+    }
+    
+    
+    /// Action performed when user clicks "Learn More" button.
+    /// - Parameter sender: The sender of the click. Here it has no use.
+    @IBAction func learnMoreButtonPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: K.segueLoadMore, sender: self)
     }
     
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		CBF2D8D346627446074260CD /* Pods_diplomaThesis.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */; };
 		CE0ECD68261E064600129653 /* GifOpeningViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0ECD67261E064600129653 /* GifOpeningViewController.swift */; };
+		CE173EA52628971A0062B73B /* LearnMoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE173EA42628971A0062B73B /* LearnMoreController.swift */; };
 		CE2346FE2614C24D0037C67F /* UIViewExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2346FD2614C24D0037C67F /* UIViewExt.swift */; };
 		CE4A3A67260B6978002622A6 /* AnalyzeECGViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */; };
 		CE4A3A6A260B6A33002622A6 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A69260B6A33002622A6 /* K.swift */; };
@@ -44,6 +45,7 @@
 		A84C288E00C5ED0065186D11 /* Pods-diplomaThesis.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-diplomaThesis.debug.xcconfig"; path = "Target Support Files/Pods-diplomaThesis/Pods-diplomaThesis.debug.xcconfig"; sourceTree = "<group>"; };
 		C2428E16030D459195651A00 /* Pods_diplomaThesis.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_diplomaThesis.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE0ECD67261E064600129653 /* GifOpeningViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GifOpeningViewController.swift; sourceTree = "<group>"; };
+		CE173EA42628971A0062B73B /* LearnMoreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnMoreController.swift; sourceTree = "<group>"; };
 		CE2346FD2614C24D0037C67F /* UIViewExt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewExt.swift; sourceTree = "<group>"; };
 		CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeECGViewController.swift; sourceTree = "<group>"; };
 		CE4A3A69260B6A33002622A6 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */,
 				CE0ECD67261E064600129653 /* GifOpeningViewController.swift */,
 				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
+				CE173EA42628971A0062B73B /* LearnMoreController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -355,6 +358,7 @@
 				CECEDF7D25ED0C070057653D /* bwbp.c in Sources */,
 				CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */,
 				CEC6A40025F7E6010059D105 /* HelpingFunctions.swift in Sources */,
+				CE173EA52628971A0062B73B /* LearnMoreController.swift in Sources */,
 				CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */,
 				CE0ECD68261E064600129653 /* GifOpeningViewController.swift in Sources */,
 				CE67D0852625BC25000C5300 /* UltraShortHRV_PCA.mlmodel in Sources */,
