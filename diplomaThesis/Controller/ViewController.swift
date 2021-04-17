@@ -307,6 +307,7 @@ class ViewController: UIViewController {
         if segue.identifier == K.segueAnalyzeECGIdentifier {
             let VCdestination = segue.destination as! AnalyzeECGViewController
             VCdestination.selectedECG = rawECG
+//            VCdestination.selectedECG = removeAverage(input: rawECG)
             VCdestination.fs = rawfs
             VCdestination.basicQueue = basicQueue
         }
@@ -343,6 +344,19 @@ class ViewController: UIViewController {
         }
 
 
+    }
+    
+    
+    /// Normalizes an array by centering it to 0.
+    /// - Parameter input: Input array of doubles.
+    /// - Returns: Returns the new centered array.
+    func removeAverage(input: [Double]) -> [Double] {
+        let average : Double = input.avg()
+        var result : [Double] = []
+        for rec in input {
+            result.append(rec - average)
+        }
+        return result
     }
 
     

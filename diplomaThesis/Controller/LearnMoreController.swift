@@ -13,7 +13,11 @@ class LearnMoreController: UIViewController {
     
     @IBOutlet weak var button1: UIButton!
     
+    @IBOutlet weak var button1_2: UIButton!
+    
     @IBOutlet weak var button2: UIButton!
+    
+    @IBOutlet weak var button2_2: UIButton!
     
     @IBOutlet weak var button3: UIButton!
     
@@ -25,9 +29,15 @@ class LearnMoreController: UIViewController {
     
     @IBOutlet weak var button7: UIButton!
     
+    @IBOutlet weak var button8: UIButton!
+    
     @IBOutlet weak var textView1: UITextView!
     
+    @IBOutlet weak var textView1_2: UITextView!
+    
     @IBOutlet weak var textView2: UITextView!
+    
+    @IBOutlet weak var textView2_2: UITextView!
     
     @IBOutlet weak var textView3: UITextView!
     
@@ -39,9 +49,15 @@ class LearnMoreController: UIViewController {
     
     @IBOutlet weak var textView7: UITextView!
     
+    @IBOutlet weak var textView8: UITextView!
+    
     @IBOutlet weak var height1: NSLayoutConstraint!
     
+    @IBOutlet weak var height1_2: NSLayoutConstraint!
+    
     @IBOutlet weak var height2: NSLayoutConstraint!
+    
+    @IBOutlet weak var height2_2: NSLayoutConstraint!
     
     @IBOutlet weak var height3: NSLayoutConstraint!
     
@@ -53,6 +69,7 @@ class LearnMoreController: UIViewController {
     
     @IBOutlet weak var height7: NSLayoutConstraint!
     
+    @IBOutlet weak var height8: NSLayoutConstraint!
     
     var txtViews : [UITextView] = []
     var heights : [NSLayoutConstraint] = []
@@ -70,7 +87,7 @@ class LearnMoreController: UIViewController {
                                                               width: tView.frame.size.width,
                                                               height: 0))
         textView.text = strText
-        textView.font = UIFont(name: "Fira Sans", size:  16.0)
+        textView.font = UIFont.systemFont(ofSize: 14.0)
         textView.sizeToFit()
         
         var txt_frame : CGRect! = CGRect()
@@ -79,7 +96,7 @@ class LearnMoreController: UIViewController {
         var size : CGSize! = CGSize()
         size = txt_frame.size
         
-        size.height = 50 + txt_frame.size.height
+        size.height = txt_frame.size.height
         
         return size.height
     }
@@ -87,9 +104,9 @@ class LearnMoreController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        txtViews.append(contentsOf: [textView1, textView2, textView3, textView4, textView5, textView6, textView7])
-        heights.append(contentsOf: [height1, height2, height3, height4, height5, height6, height7])
-        buttons.append(contentsOf: [button1, button2, button3, button4, button5, button6, button7])
+        txtViews.append(contentsOf: [textView1, textView1_2, textView2, textView2_2, textView3, textView4, textView5, textView6, textView7, textView8])
+        heights.append(contentsOf: [height1, height1_2, height2, height2_2, height3, height4, height5, height6, height7, height8])
+        buttons.append(contentsOf: [button1, button1_2, button2, button2_2, button3, button4, button5, button6, button7, button8])
 
     }
     
@@ -108,6 +125,7 @@ class LearnMoreController: UIViewController {
         {
             let height = self.getRowHeightFromText(
                 tView: txtViews[ind])
+            print(height)
             self.heights[ind].constant = height
             UIView.animate(withDuration: 0.5) {
                 self.view.layoutIfNeeded()
