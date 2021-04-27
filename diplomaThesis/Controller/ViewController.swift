@@ -20,6 +20,7 @@ class ViewController: UIViewController {
     var indices = [(Int,Int)]()
     var rawECG : [CDouble] = []
     var rawfs : Double = 0.0
+//    var testMatrix : [[Double]] = []
     
     let healthStore = HKHealthStore()
     lazy var mainTitleLabel = UILabel()
@@ -267,6 +268,16 @@ class ViewController: UIViewController {
         
         // Pan Tompkins analysis for R peaks
         performSegue(withIdentifier: K.segueAnalyzeECGIdentifier, sender: self)
+        
+//        Uncomment below to get the raw data
+//        testMatrix.append(rawECG)
+//        print(testMatrix.count)
+//        if testMatrix.count == 43 {
+//            print("Saving to orestis_full.csv")
+//            createCSVX(from: testMatrix, output: "orestis_rawData.csv")
+//            print("Done getting your data.")
+//        }
+        
 //
 //        let myPanTompkins = PanTompkins(input: selectedECG, fs: fs)
 //
@@ -345,6 +356,52 @@ class ViewController: UIViewController {
 
 
     }
+    
+    func createCSVX(from recArray:[[Double]], output: String) {
+        
+//        var strings : [String] = []
+        var csvString : String = ""
+        
+//        for item in K.UltraShortModel.input_names_R_style {
+//            csvString.append(item + ",")
+//        }
+//        csvString.removeLast()
+//        csvString.append("\n")
+        
+        for dataRecord in recArray {
+            for dataValue in dataRecord {
+                csvString.append(String(format: "%f,", dataValue))
+            }
+            csvString.removeLast()
+            csvString.append("\n")
+        }
+        
+//            for i in 0..<recArray.count {
+//                strings.append(String(format: "%f", recArray[i]))
+//            }
+//        let csvString = strings.joined(separator: ",\n")
+
+
+        let fileManager = FileManager.default
+
+        do {
+
+            let path = try fileManager.url(for: .documentDirectory, in: .allDomainsMask, appropriateFor: nil , create: false )
+
+            let fileURL = path.appendingPathComponent(output)
+
+            try csvString.write(to: fileURL, atomically: true , encoding: .utf8)
+            
+            print("Done writing .csv file!")
+        } catch {
+
+            print("error creating file")
+
+        }
+
+
+    }
+    
     
     
     /// Normalizes an array by centering it to 0.

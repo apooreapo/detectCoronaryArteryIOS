@@ -14,6 +14,11 @@ func ^^ (radix: Double, power: Int) -> Double {
     return pow(Double(radix), Double(power))
 }
 
+extension Array where Element == Double {
+    public var asArrayOfFloat: [Float] {
+        return self.map { return Float($0) }
+    }
+}
 
 extension Array where Element: FloatingPoint {
 

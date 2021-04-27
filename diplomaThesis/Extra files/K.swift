@@ -30,6 +30,7 @@ struct K {
         static let noCADResultMessage : String = "It seems that this ECG shows no signs of Coronary Artery Disease!"
         static let CADResultMessage : String = "Hmm, it seems that this ECG shows some signs of Coronary Artery Disease. Maybe it's time for some broccoli!"
         static let noResultMessage : String = "We seem to have a problem calculating your results. Please try again with another sample."
+        static let badQualityMessage : String = "It seems that the quality of the recording is not that good. Please try again with another recording."
         
         static let PCAComponents : [[Double]] =  [[-0.00986091241,-0.192500288,0.345349517,0.358556894,0.336978092,0.36428995,-0.224509546,0.193388116,0.00350831283,0.00407680422,-0.00513293634,-0.0200800032,0.363568374,0.305595735,-0.0696431141,0.357052566,-0.10234162,-0.0274011116,-0.0893429972,-0.0347229449,0.0376472964,-0.0274739506,-0.00128447743],
         [0.124316943,0.212901508,0.10804906,0.0363460642,-0.00863793474,0.0042194778,-0.00880184495,0.250273427,0.20335052,0.241371189,0.236378896,0.250687848,0.00118641857,0.118041055,0.175610783,0.0551523742,0.380845642,0.365394904,0.369425482,0.421775093,-0.0156886315,-0.0217062006,-0.0602120366],

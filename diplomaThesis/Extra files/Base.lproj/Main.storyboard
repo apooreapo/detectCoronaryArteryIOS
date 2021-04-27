@@ -64,10 +64,8 @@ Analyzing your ECG...</string>
                                     <constraint firstAttribute="width" secondItem="c7p-fV-G2R" secondAttribute="height" multiplier="1:1" id="Ybv-Es-2Sr"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d66-WZ-a2o" userLabel="Results Text">
-                                <rect key="frame" x="50" y="471.66666666666669" width="275" height="40.666666666666686"/>
-                                <string key="text">Well Done!
-You showed no signs of CAD.</string>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You showed no signs of CAD." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="d66-WZ-a2o" userLabel="Results Text">
+                                <rect key="frame" x="50" y="471.66666666666669" width="275" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -80,7 +78,7 @@ You showed no signs of CAD.</string>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jwv-KC-pfW">
-                                <rect key="frame" x="148.66666666666666" y="542.33333333333337" width="78" height="30"/>
+                                <rect key="frame" x="148.66666666666666" y="522" width="78" height="30"/>
                                 <state key="normal" title="Learn More"/>
                                 <connections>
                                     <action selector="learnMoreButtonPressed:" destination="Rz6-X8-ufR" eventType="touchUpInside" id="KvF-DG-0lT"/>
