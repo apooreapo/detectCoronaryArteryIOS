@@ -123,10 +123,10 @@ class AnalyzeECGViewController : UIViewController {
                 print("Presenting the features as they are at the start:")
                 inputFeatures.printValues()
                 print("Adding to record...")
-                globalTestData.append(inputFeatures.toArray())
-                if globalTestData.count == 38 {
-                    self.createCSVX(from: globalTestData, output: "orestis_data.csv")
-                }
+//                globalTestData.append(inputFeatures.toArray())
+//                if globalTestData.count == 38 {
+//                    self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
+//                }
                 print("Calculating result...")
                 let finalResult = self.analyzeUltraShortECGSVM(inputArray: inputFeatures.toArray())
                 print("Do I have CAD? : " + finalResult)
@@ -210,8 +210,8 @@ class AnalyzeECGViewController : UIViewController {
             // Apply PCA:
             let pcaInput = applyPCA(inputArray: normalizedInput, pcaFactors: K.UltraShortModel.PCAComponents)
             if pcaInput.count == 12 {
-                if let ultraShortAnalysis = try? UltraShortHRV_PCA(configuration: .init()){
-                    let input = UltraShortHRV_PCAInput(PC1: pcaInput[0], PC2: pcaInput[1], PC3: pcaInput[2], PC4: pcaInput[3], PC5: pcaInput[4], PC6: pcaInput[5], PC7: pcaInput[6], PC8: pcaInput[7], PC9: pcaInput[8], PC10: pcaInput[9], PC11: pcaInput[10], PC12: pcaInput[11])
+                if let ultraShortAnalysis = try? UltraShortHRV_PCA_filtered(configuration: .init()){
+                    let input = UltraShortHRV_PCA_filteredInput(PC1: pcaInput[0], PC2: pcaInput[1], PC3: pcaInput[2], PC4: pcaInput[3], PC5: pcaInput[4], PC6: pcaInput[5], PC7: pcaInput[6], PC8: pcaInput[7], PC9: pcaInput[8], PC10: pcaInput[9], PC11: pcaInput[10], PC12: pcaInput[11])
                     if let output = try? ultraShortAnalysis.prediction(input: input){
                         return output.HasCAD} else {
                             print("The SVM model failed to make a prediction. Exiting now...")
@@ -389,6 +389,7 @@ class AnalyzeECGViewController : UIViewController {
     /// Action performed when user clicks "Learn More" button.
     /// - Parameter sender: The sender of the click. Here it has no use.
     @IBAction func learnMoreButtonPressed(_ sender: UIButton) {
+//        self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
         performSegue(withIdentifier: K.segueLoadMore, sender: self)
     }
     

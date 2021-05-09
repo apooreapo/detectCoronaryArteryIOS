@@ -14,7 +14,6 @@
 		CE4A3A67260B6978002622A6 /* AnalyzeECGViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */; };
 		CE4A3A6A260B6A33002622A6 /* K.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A69260B6A33002622A6 /* K.swift */; };
 		CE4A3A6E260B9E73002622A6 /* PlainHorizontalProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE4A3A6D260B9E73002622A6 /* PlainHorizontalProgressBar.swift */; };
-		CE67D0852625BC25000C5300 /* UltraShortHRV_PCA.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE67D0842625BC24000C5300 /* UltraShortHRV_PCA.mlmodel */; };
 		CE67D0882625BC2E000C5300 /* log.txt in Resources */ = {isa = PBXBuildFile; fileRef = CE67D0872625BC2E000C5300 /* log.txt */; };
 		CE81EDFA2637878600D76A3D /* checkRRfinal.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE81EDF92637878600D76A3D /* checkRRfinal.mlmodel */; };
 		CE82A6912620B3C8003D1A2E /* loading.gif in Resources */ = {isa = PBXBuildFile; fileRef = CE82A6902620B3C8003D1A2E /* loading.gif */; };
@@ -23,6 +22,7 @@
 		CE9254C426026E1000A1651D /* FFTAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9254C326026E1000A1651D /* FFTAnalysis.swift */; };
 		CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CE971DDD25EDA94600D88DC4 /* filtfilt.cpp */; };
 		CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */; };
+		CE9CA36126485C2100012077 /* UltraShortHRV_PCA_filtered.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CE9CA36026485C2100012077 /* UltraShortHRV_PCA_filtered.mlmodel */; };
 		CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */; };
 		CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */; };
 		CEA96C8B25EC04DE00FCD8C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */; };
@@ -37,7 +37,6 @@
 		CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */; };
 		CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */; };
 		CEE6F8A625F90849009E7835 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F8A525F90849009E7835 /* Queue.swift */; };
-		CEF41462261D05B2000CDFFB /* UltraShortHRV.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */; };
 		CEF41465261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,7 +50,6 @@
 		CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeECGViewController.swift; sourceTree = "<group>"; };
 		CE4A3A69260B6A33002622A6 /* K.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = K.swift; sourceTree = "<group>"; };
 		CE4A3A6D260B9E73002622A6 /* PlainHorizontalProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlainHorizontalProgressBar.swift; sourceTree = "<group>"; };
-		CE67D0842625BC24000C5300 /* UltraShortHRV_PCA.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = UltraShortHRV_PCA.mlmodel; sourceTree = "<group>"; };
 		CE67D0872625BC2E000C5300 /* log.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = log.txt; sourceTree = "<group>"; };
 		CE81EDF92637878600D76A3D /* checkRRfinal.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = checkRRfinal.mlmodel; sourceTree = "<group>"; };
 		CE82A6902620B3C8003D1A2E /* loading.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = loading.gif; sourceTree = "<group>"; };
@@ -63,6 +61,7 @@
 		CE971DDE25EDA94600D88DC4 /* filtfilt.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = filtfilt.hpp; sourceTree = "<group>"; };
 		CE971DE125EDA9AA00D88DC4 /* filtfiltWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = filtfiltWrapper.mm; sourceTree = "<group>"; };
 		CE971DE225EDA9AA00D88DC4 /* filtfiltWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = filtfiltWrapper.h; sourceTree = "<group>"; };
+		CE9CA36026485C2100012077 /* UltraShortHRV_PCA_filtered.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = UltraShortHRV_PCA_filtered.mlmodel; sourceTree = "<group>"; };
 		CEA96C8325EC04DE00FCD8C5 /* diplomaThesis.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = diplomaThesis.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CEA96C8625EC04DE00FCD8C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CEA96C8825EC04DE00FCD8C5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -84,7 +83,6 @@
 		CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraShortAnalysis.swift; sourceTree = "<group>"; };
 		CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathExtension.swift; sourceTree = "<group>"; };
 		CEE6F8A525F90849009E7835 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
-		CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = UltraShortHRV.mlmodel; sourceTree = "<group>"; };
 		CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraShortFeaturesStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -206,8 +204,7 @@
 				CE67D07A2625B8A0000C5300 /* View */,
 				CE67D07B2625B8A5000C5300 /* Controller */,
 				CE82A6902620B3C8003D1A2E /* loading.gif */,
-				CEF41461261D05B2000CDFFB /* UltraShortHRV.mlmodel */,
-				CE67D0842625BC24000C5300 /* UltraShortHRV_PCA.mlmodel */,
+				CE9CA36026485C2100012077 /* UltraShortHRV_PCA_filtered.mlmodel */,
 				CE81EDF92637878600D76A3D /* checkRRfinal.mlmodel */,
 				CE67D0872625BC2E000C5300 /* log.txt */,
 				CEA96C8F25EC04E100FCD8C5 /* Assets.xcassets */,
@@ -349,7 +346,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEC6A3FD25F7E3070059D105 /* PanTompkins.swift in Sources */,
-				CEF41462261D05B2000CDFFB /* UltraShortHRV.mlmodel in Sources */,
+				CE9CA36126485C2100012077 /* UltraShortHRV_PCA_filtered.mlmodel in Sources */,
 				CECEDF7925ED0B0D0057653D /* liir.c in Sources */,
 				CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */,
 				CE4A3A6A260B6A33002622A6 /* K.swift in Sources */,
@@ -365,7 +362,6 @@
 				CE173EA52628971A0062B73B /* LearnMoreController.swift in Sources */,
 				CEA96C8725EC04DE00FCD8C5 /* AppDelegate.swift in Sources */,
 				CE0ECD68261E064600129653 /* GifOpeningViewController.swift in Sources */,
-				CE67D0852625BC25000C5300 /* UltraShortHRV_PCA.mlmodel in Sources */,
 				CE2346FE2614C24D0037C67F /* UIViewExt.swift in Sources */,
 				CE4A3A67260B6978002622A6 /* AnalyzeECGViewController.swift in Sources */,
 				CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */,
