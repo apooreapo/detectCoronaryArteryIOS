@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "intro_first.jpg",
+      "filename" : "tic.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "intro_first-1.jpg",
+      "filename" : "tic-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "intro_first-2.jpg",
+      "filename" : "tic-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
