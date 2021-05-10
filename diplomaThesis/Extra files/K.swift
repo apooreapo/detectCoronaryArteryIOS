@@ -14,6 +14,7 @@ struct K {
     static let segueLoadMore : String = "loadMore"
     static let basicQueueID : String = "basicQueue"
     static let helpingQueueID : String = "helpingQueue"
+    static let ticImageName : String = "tic.png"
     
     struct UltraShortModel {
         static let input_names : [String] = ["SDRR", "AverageHeartRate", "SDNN", "SDSD", "pNN50", "RMSSD", "HTI", "HRMaxMin", "LFEnergy", "LFEnergyPercentage", "HFEnergy", "HFEnergyPerentage", "PoincareSD1", "PoincareSD2", "PoincareRatio", "PoincareEllipsisArea", "MeanApproximateEntropy", "StdApproximateEntropy", "MeanSampleEntropy", "StdSampleEntropy", "LFPeak", "HFPeak", "LFHFRatio"]

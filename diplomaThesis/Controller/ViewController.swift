@@ -8,18 +8,21 @@
 import UIKit
 import HealthKit
 import Charts
+import CoreData
 
 var globalTestData : [[Double]] = []
-
+let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
 /// The controller of the starting view of the application. From here the user can navigate to the rest controllers.
 class ViewController: UIViewController {
     
+    var recordArray : [RecordEntity] = []
     var ecgSamples = [[(Double,Double)]] ()
     var ecgDates = [Date] ()
     var indices = [(Int,Int)]()
     var rawECG : [CDouble] = []
     var rawfs : Double = 0.0
+    var isAnalyzedBefore : Bool = false
 //    var testMatrix : [[Double]] = []
     
     let healthStore = HKHealthStore()
@@ -30,6 +33,9 @@ class ViewController: UIViewController {
     lazy var currentECGLineChart = CombinedChartView()
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
+    lazy var smallResultImageView = UIImageView()
+    var timeInterval1970 : Int64 = Int64(0)
+    var currentRecord : RecordEntity? = nil
     var pickerView = UIPickerView()
     let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
@@ -90,11 +96,14 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         super.viewWillAppear(animated)
+        self.recordArray = loadRecords()
+        
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.recordArray = loadRecords()
         pickerView.dataSource = self
         pickerView.delegate = self
         //view.translatesAutoresizingMaskIntoConstraints = false
@@ -165,7 +174,11 @@ class ViewController: UIViewController {
                                         
                                         // the line below has use only for the first drop of the pickerView. (At the first time
                                         // picker view doesn't "see" as selected the option
-                                        self.updateCharts(ecgSamples: self.ecgSamples[self.indices[0].0], animated: true)
+                                        self.recordArray = self.loadRecords()
+                                        self.timeInterval1970 = Int64(self.ecgDates[self.indices[0].0].timeIntervalSince1970)
+                                        self.currentRecord = self.searchRecord(self.timeInterval1970, self.recordArray)
+                                        self.updateCharts(ecgSamples: self.ecgSamples[self.indices[0].0], animated: true, timeInterval1970: self.timeInterval1970)
+                                        
                                     }
                                 }
                             }
@@ -211,6 +224,7 @@ class ViewController: UIViewController {
                 switch result {
                 case .error(let error):
                     print("error: ", error)
+                    // Fix iiiiiiiiiiiiiiit!!!!!!!!!!!!!!!!!!!!
                     
                 case .measurement(let value):
                     let sample = (value.quantity(for: .appleWatchSimilarToLeadI)!.doubleValue(for: HKUnit.volt()) , value.timeSinceSampleStart)
@@ -321,9 +335,25 @@ class ViewController: UIViewController {
 //            VCdestination.selectedECG = removeAverage(input: rawECG)
             VCdestination.fs = rawfs
             VCdestination.basicQueue = basicQueue
+            VCdestination.currentRecord = self.currentRecord
+            VCdestination.timeInterval1970 = self.timeInterval1970
         }
     }
     
+    
+    /// Searches if a record exists in recordArray, and returns its classification result.
+    /// - Parameters:
+    ///   - itemInt: The key value Int for the search.
+    ///   - inside: The Array<RecordEntity> in which we search.
+    /// - Returns: If the key-value exists, returns its classification result, else, it returns nil.
+    func searchRecord(_ itemInt: Int64, _ inside: [RecordEntity]) -> RecordEntity? {
+        for item in inside {
+            if item.timeInterval1970 == itemInt {
+                return item
+            }
+        }
+        return nil
+    }
     
     /// Creates and saves a smiple csv as "myECG.csv. Used for testing purposes.
     /// - Parameter recArray: The array of CDoubles to be saved as .csv file
@@ -443,7 +473,9 @@ extension ViewController : UIPickerViewDelegate {
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.updateCharts(ecgSamples: self.ecgSamples[self.indices[row].0], animated: false)
+        self.timeInterval1970 = Int64(self.ecgDates[self.indices[row].0].timeIntervalSince1970)
+        self.currentRecord = self.searchRecord(self.timeInterval1970, self.recordArray)
+        self.updateCharts(ecgSamples: self.ecgSamples[self.indices[row].0], animated: false, timeInterval1970: self.timeInterval1970)
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
@@ -468,7 +500,7 @@ extension ViewController {
     /// - Parameters:
     ///   - ecgSamples: Our ECG to be shown. Array of tuples: first element represents the value and second the time
     ///   - animated: If true, the signal appears with a single animation
-    func updateCharts(ecgSamples : [(Double,Double)], animated : Bool) {
+    func updateCharts(ecgSamples : [(Double,Double)], animated : Bool, timeInterval1970: Int64) {
         if !ecgSamples.isEmpty {
             self.loadingHeartImageView.isHidden = true
             self.loadingHeartImageView.stopAnimating()
@@ -487,13 +519,27 @@ extension ViewController {
 //            analyzeButton.setTitleColor(.label, for: .normal)
 //            analyzeButton.showsTouchWhenHighlighted = true
             contentView.addSubview(analyzeButton)
-            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+            analyzeButton.sizeToFit()
+            analyzeButton.centerXAnchor.constraint(equalTo: analyzeButton.superview!.centerXAnchor).isActive = true
+//            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
+//            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
 //            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
             analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 10).isActive = true
             analyzeButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
 //            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
             analyzeButton.addTarget(self, action: #selector(analyzeButtonPressed), for: .touchUpInside)
+            
+            smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
+//            analyzeButton.setTitleColor(.label, for: .normal)
+//            analyzeButton.showsTouchWhenHighlighted = true
+            contentView.addSubview(smallResultImageView)
+            smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(smallResultImageView)
+            smallResultImageView.leftAnchor.constraint(equalTo: analyzeButton.rightAnchor, constant: 14).isActive = true
+            smallResultImageView.centerYAnchor.constraint(equalTo: analyzeButton.centerYAnchor).isActive = true
+//            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
+            smallResultImageView.widthAnchor.constraint(equalTo: analyzeButton.heightAnchor, multiplier: 0.33).isActive = true
+            smallResultImageView.heightAnchor.constraint(equalTo: smallResultImageView.widthAnchor).isActive = true
             
             // customize line chart and add data
             
@@ -519,6 +565,15 @@ extension ViewController {
             }
             
             currentECGLineChart.xAxis.labelPosition = .bottom
+            
+            let searchRecordResult = searchRecord(timeInterval1970, self.recordArray)
+            if searchRecordResult != nil {
+                print(searchRecordResult?.classificationResult)
+                smallResultImageView.image = UIImage(imageLiteralResourceName: K.ticImageName)
+            } else {
+                smallResultImageView.image = nil
+            }
+            
         }
         
     }
@@ -547,13 +602,27 @@ extension ViewController {
 //            analyzeButton.setTitleColor(.label, for: .normal)
 //            analyzeButton.showsTouchWhenHighlighted = true
             contentView.addSubview(analyzeButton)
-            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+            analyzeButton.sizeToFit()
+            analyzeButton.centerXAnchor.constraint(equalTo: analyzeButton.superview!.centerXAnchor).isActive = true
+//            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
+//            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
 //            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
             analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 10).isActive = true
             analyzeButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
 //            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
             analyzeButton.addTarget(self, action: #selector(analyzeButtonPressed), for: .touchUpInside)
+            
+            smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
+//            analyzeButton.setTitleColor(.label, for: .normal)
+//            analyzeButton.showsTouchWhenHighlighted = true
+            contentView.addSubview(smallResultImageView)
+            smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.addSubview(smallResultImageView)
+            smallResultImageView.leftAnchor.constraint(equalTo: analyzeButton.rightAnchor, constant: 14).isActive = true
+            smallResultImageView.centerYAnchor.constraint(equalTo: analyzeButton.centerYAnchor).isActive = true
+//            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
+            smallResultImageView.widthAnchor.constraint(equalTo: analyzeButton.heightAnchor, multiplier: 0.33).isActive = true
+            smallResultImageView.heightAnchor.constraint(equalTo: smallResultImageView.widthAnchor).isActive = true
             
             // customize line chart and add data
             
@@ -590,14 +659,43 @@ extension ViewController {
             if animated {
                 currentECGLineChart.animate(xAxisDuration: 1.0)
             }
-            
             currentECGLineChart.xAxis.labelPosition = .bottom
             
+            let searchRecordResult = searchRecord(timeInterval1970, self.recordArray)
+            if searchRecordResult != nil {
+                smallResultImageView.image = UIImage(imageLiteralResourceName: K.ticImageName)
+            } else {
+                smallResultImageView.image = nil
+            }
         }
-        
     }
 }
 
+//MARK: - Extension for saving and loading coreData.
+
+extension ViewController {
+    func saveRecords() {
+        do {
+            try context.save()
+        } catch {
+            print("Error in saving the data:")
+            print(error)
+        }
+    }
+    
+    func loadRecords() -> [RecordEntity] {
+        let request: NSFetchRequest<RecordEntity> = RecordEntity.fetchRequest()
+        do {
+            let recordArray = try context.fetch(request)
+            return recordArray
+        } catch {
+            print("Error fetching data from context:")
+            print(error)
+            return []
+        }
+    }
+    
+}
 
 
 

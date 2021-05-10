@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import CoreML
 import SwiftyGif
+import CoreData
 
 
 /// The class responsible for handling and showing the ECG analysis.
@@ -17,10 +18,12 @@ class AnalyzeECGViewController : UIViewController {
     // The variables below are passed by the Starting ViewController.
     // However, they need an initial value (or else they would need initializing function).
     var fs: Double = 0.0
+    var currentRecord : RecordEntity? = nil
     var selectedECG : [CDouble] = []
     var basicQueue = DispatchQueue(label: "m1")
     var workItem : [DispatchWorkItem] = []
     var totalTasks : Int = 22
+    var timeInterval1970 : Int64 = Int64(0)
     let helpingQueue = DispatchQueue(label: K.helpingQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
     
@@ -133,16 +136,24 @@ class AnalyzeECGViewController : UIViewController {
                 
                 DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
                     self.resultsText.numberOfLines = 0
-                    if finalResult == "Yes" {
+                    if finalResult == K.UltraShortModel.positiveResult {
                         self.resultsImageView.image = UIImage(named: K.UltraShortModel.CADImageName)
                         self.resultsText.text = K.UltraShortModel.CADResultMessage
-                    } else if finalResult == "No" {
+                    } else if finalResult == K.UltraShortModel.negativeResult {
                         self.resultsImageView.image = UIImage(named: K.UltraShortModel.noCADImageName)
                         self.resultsText.text = K.UltraShortModel.noCADResultMessage
                     } else {
                         self.resultsImageView.image = UIImage(named: K.UltraShortModel.noResultImageName)
                         self.resultsText.text = K.UltraShortModel.noResultMessage
                     }
+                    if let safeRecord = self.currentRecord {
+                        safeRecord.classificationResult = finalResult
+                    } else {
+                        let newRecordEntity = RecordEntity(context: context)
+                        newRecordEntity.timeInterval1970 = self.timeInterval1970
+                        newRecordEntity.classificationResult = finalResult
+                    }
+                    self.saveRecords()
                     self.progressBar.fadeOut()
                     self.loadingHeartImageView.fadeOut()
                     self.learnMoreButton.isEnabled = true
@@ -156,6 +167,13 @@ class AnalyzeECGViewController : UIViewController {
             }
         } else {
             print("BAD QUALITY")
+            if let safeRecord = self.currentRecord {
+                safeRecord.classificationResult = K.UltraShortModel.errorResult
+            } else {
+                let newRecordEntity = RecordEntity(context: context)
+                newRecordEntity.timeInterval1970 = self.timeInterval1970
+                newRecordEntity.classificationResult = K.UltraShortModel.errorResult
+            }
             
             // Show the error graphics
             DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
@@ -382,6 +400,15 @@ class AnalyzeECGViewController : UIViewController {
                 output.append(abs(input1[i] - input2[i]))
             }
             return output.avg()
+        }
+    }
+    
+    func saveRecords() {
+        do {
+            try context.save()
+        } catch {
+            print("Error in saving the data:")
+            print(error)
         }
     }
     

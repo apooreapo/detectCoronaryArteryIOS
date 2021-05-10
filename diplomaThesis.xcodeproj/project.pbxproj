@@ -32,6 +32,7 @@
 		CEC1D73025EE8FBB00920197 /* convolve.c in Sources */ = {isa = PBXBuildFile; fileRef = CEC1D72F25EE8FBB00920197 /* convolve.c */; };
 		CEC6A3FD25F7E3070059D105 /* PanTompkins.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */; };
 		CEC6A40025F7E6010059D105 /* HelpingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */; };
+		CECABB992648A4AF000EDA19 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CECABB972648A4AF000EDA19 /* DataModel.xcdatamodeld */; };
 		CECEDF7925ED0B0D0057653D /* liir.c in Sources */ = {isa = PBXBuildFile; fileRef = CECEDF7825ED0B0D0057653D /* liir.c */; };
 		CECEDF7D25ED0C070057653D /* bwbp.c in Sources */ = {isa = PBXBuildFile; fileRef = CECEDF7C25ED0C070057653D /* bwbp.c */; };
 		CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */; };
@@ -76,6 +77,7 @@
 		CEC1D72F25EE8FBB00920197 /* convolve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = convolve.c; sourceTree = "<group>"; };
 		CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanTompkins.swift; sourceTree = "<group>"; };
 		CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpingFunctions.swift; sourceTree = "<group>"; };
+		CECABB982648A4AF000EDA19 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		CECEDF7725ED0B0D0057653D /* liir.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = liir.h; sourceTree = "<group>"; };
 		CECEDF7825ED0B0D0057653D /* liir.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = liir.c; sourceTree = "<group>"; };
 		CECEDF7B25ED0C070057653D /* bwbp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = bwbp.h; sourceTree = "<group>"; };
@@ -124,6 +126,7 @@
 				CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */,
 				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
 				CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */,
+				CECABB972648A4AF000EDA19 /* DataModel.xcdatamodeld */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				CE4A3A67260B6978002622A6 /* AnalyzeECGViewController.swift in Sources */,
 				CEE6F8A025F8DBB6009E7835 /* UltraShortAnalysis.swift in Sources */,
 				CE971DDF25EDA94600D88DC4 /* filtfilt.cpp in Sources */,
+				CECABB992648A4AF000EDA19 /* DataModel.xcdatamodeld in Sources */,
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,
 				CE4A3A6E260B9E73002622A6 /* PlainHorizontalProgressBar.swift in Sources */,
 				CEC1D73025EE8FBB00920197 /* convolve.c in Sources */,
@@ -581,6 +585,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		CECABB972648A4AF000EDA19 /* DataModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				CECABB982648A4AF000EDA19 /* DataModel.xcdatamodel */,
+			);
+			currentVersion = CECABB982648A4AF000EDA19 /* DataModel.xcdatamodel */;
+			path = DataModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = CEA96C7B25EC04DE00FCD8C5 /* Project object */;
 }
