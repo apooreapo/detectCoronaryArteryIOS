@@ -22,7 +22,6 @@ class ViewController: UIViewController {
     var indices = [(Int,Int)]()
     var rawECG : [CDouble] = []
     var rawfs : Double = 0.0
-    var isAnalyzedBefore : Bool = false
 //    var testMatrix : [[Double]] = []
     
     let healthStore = HKHealthStore()
@@ -33,6 +32,7 @@ class ViewController: UIViewController {
     lazy var currentECGLineChart = CombinedChartView()
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
+    lazy var checkStatisticsButton = UIButton(type: .system)
     lazy var smallResultImageView = UIImageView()
     var timeInterval1970 : Int64 = Int64(0)
     var currentRecord : RecordEntity? = nil
@@ -262,7 +262,30 @@ class ViewController: UIViewController {
         self.healthStore.execute(ecgQuery)
     }
     
-
+    /// Objective-c function that gets triggered when "Check Statistics" button is pressed.
+    @objc func checkStatisticsButtonPressed() {
+        print("Check Statistics!")
+        self.recordArray = loadRecords()
+        let myArray = self.recordArray
+        var myFullCount = 0
+        var myCADCount = 0
+        var myRatio : Float = 0.0
+        if myArray.count < 1 {
+            print(myRatio)
+        } else {
+            for item in myArray {
+                if item.classificationResult == K.UltraShortModel.positiveResult {
+                    myCADCount += 1
+                    myFullCount += 1
+                } else if item.classificationResult == K.UltraShortModel.negativeResult {
+                    myFullCount += 1
+                }
+            }
+            myRatio = Float(myCADCount) / Float(myFullCount)
+            print(myRatio)
+            print(myFullCount)
+        }
+    }
     
 
     
@@ -524,10 +547,25 @@ extension ViewController {
 //            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
 //            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
 //            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
-            analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 10).isActive = true
-            analyzeButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 0).isActive = true
+            analyzeButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
 //            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
             analyzeButton.addTarget(self, action: #selector(analyzeButtonPressed), for: .touchUpInside)
+            
+            checkStatisticsButton.translatesAutoresizingMaskIntoConstraints = false
+            checkStatisticsButton.setTitle("Check Statistics", for: .normal)
+//            analyzeButton.setTitleColor(.label, for: .normal)
+//            analyzeButton.showsTouchWhenHighlighted = true
+            contentView.addSubview(checkStatisticsButton)
+            checkStatisticsButton.sizeToFit()
+            checkStatisticsButton.centerXAnchor.constraint(equalTo: checkStatisticsButton.superview!.centerXAnchor).isActive = true
+//            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
+//            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+//            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
+            checkStatisticsButton.topAnchor.constraint(equalTo: analyzeButton.bottomAnchor, constant: 0).isActive = true
+            checkStatisticsButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+//            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
+            checkStatisticsButton.addTarget(self, action: #selector(checkStatisticsButtonPressed), for: .touchUpInside)
             
             smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
 //            analyzeButton.setTitleColor(.label, for: .normal)
@@ -604,13 +642,25 @@ extension ViewController {
             contentView.addSubview(analyzeButton)
             analyzeButton.sizeToFit()
             analyzeButton.centerXAnchor.constraint(equalTo: analyzeButton.superview!.centerXAnchor).isActive = true
+            analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 0).isActive = true
+            analyzeButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+//            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
+            analyzeButton.addTarget(self, action: #selector(analyzeButtonPressed), for: .touchUpInside)
+            
+            checkStatisticsButton.translatesAutoresizingMaskIntoConstraints = false
+            checkStatisticsButton.setTitle("Check Statistics", for: .normal)
+//            analyzeButton.setTitleColor(.label, for: .normal)
+//            analyzeButton.showsTouchWhenHighlighted = true
+            contentView.addSubview(checkStatisticsButton)
+            checkStatisticsButton.sizeToFit()
+            checkStatisticsButton.centerXAnchor.constraint(equalTo: checkStatisticsButton.superview!.centerXAnchor).isActive = true
 //            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
 //            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
 //            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
-            analyzeButton.topAnchor.constraint(equalTo: currentECGLineChart.bottomAnchor, constant: 10).isActive = true
-            analyzeButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+            checkStatisticsButton.topAnchor.constraint(equalTo: analyzeButton.bottomAnchor, constant: 0).isActive = true
+            checkStatisticsButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
 //            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
-            analyzeButton.addTarget(self, action: #selector(analyzeButtonPressed), for: .touchUpInside)
+            checkStatisticsButton.addTarget(self, action: #selector(checkStatisticsButtonPressed), for: .touchUpInside)
             
             smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
 //            analyzeButton.setTitleColor(.label, for: .normal)
