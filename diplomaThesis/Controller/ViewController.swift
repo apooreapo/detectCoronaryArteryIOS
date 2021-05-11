@@ -22,7 +22,7 @@ class ViewController: UIViewController {
     var indices = [(Int,Int)]()
     var rawECG : [CDouble] = []
     var rawfs : Double = 0.0
-    lazy var myCADStatistics : CADStatistics = CADStatistics(recordArr: recordArray)
+//    lazy var myCADStatistics : CADStatistics = CADStatistics(recordArr: recordArray)
 //    var testMatrix : [[Double]] = []
     
     let healthStore = HKHealthStore()
@@ -267,7 +267,7 @@ class ViewController: UIViewController {
     @objc func checkStatisticsButtonPressed() {
         print("Check Statistics!")
         recordArray = loadRecords()
-        self.myCADStatistics = CADStatistics(recordArr: recordArray)
+//        self.myCADStatistics = CADStatistics(recordArr: recordArray)
         performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
     
@@ -344,14 +344,6 @@ class ViewController: UIViewController {
             VCdestination.basicQueue = basicQueue
 //            VCdestination.currentRecord = self.currentRecord
             VCdestination.timeInterval1970 = self.timeInterval1970
-        } else if segue.identifier == K.segueCheckStatisticsIdentifier {
-            let VCdestination = segue.destination as! CheckStatisticsViewController
-            VCdestination.myFullCount = self.myCADStatistics.getFullCount()
-            VCdestination.myCADCount = self.myCADStatistics.getCADCount()
-            VCdestination.myRatio = self.myCADStatistics.getRatio()
-            VCdestination.myImage = self.myCADStatistics.getFinalImage()
-            VCdestination.myResult = self.myCADStatistics.getResult()
-            VCdestination.myMessage = self.myCADStatistics.getFinalMessage()
         }
     }
     

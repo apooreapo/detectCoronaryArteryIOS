@@ -125,7 +125,6 @@ class LearnMoreController: UIViewController {
         {
             let height = self.getRowHeightFromText(
                 tView: txtViews[ind])
-            print(height)
             self.heights[ind].constant = height
             UIView.animate(withDuration: 0.5) {
                 self.view.layoutIfNeeded()

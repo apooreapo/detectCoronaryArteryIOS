@@ -43,6 +43,13 @@ class CheckStatisticsViewController : UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.title = "Statistics"
+        recordArray = loadRecords()
+        var myStatistics = CADStatistics(recordArr: recordArray)
+        self.myFullCount = myStatistics.getFullCount()
+        self.myCADCount = myStatistics.getCADCount()
+        self.myRatio = myStatistics.getRatio()
+        self.myMessage = myStatistics.getFinalMessage()
+        self.myImage = myStatistics.getFinalImage()
         fullECGsLabel.text = String(format: "%d", myFullCount)
         normalECGsLabel.text = String(format: "%d", myFullCount - myCADCount)
         CADECGsLabel.text = String(format: "%d", myCADCount)

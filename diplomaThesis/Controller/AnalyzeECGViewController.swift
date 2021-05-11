@@ -40,6 +40,7 @@ class AnalyzeECGViewController : UIViewController {
     
     @IBOutlet weak var learnMoreButton: UIButton!
     
+    @IBOutlet weak var checkStatisticsButton: UIButton!
     
     
     // Needed in order to set the title, and to set navigation bar visible.
@@ -158,10 +159,12 @@ class AnalyzeECGViewController : UIViewController {
                     self.progressBar.fadeOut()
                     self.loadingHeartImageView.fadeOut()
                     self.learnMoreButton.isEnabled = true
+                    self.checkStatisticsButton.isEnabled = true
                     self.loadingText.fadeOut(withDuration: 1.0) {
                         self.resultsImageView.fadeIn()
                         self.resultsText.fadeIn()
                         self.learnMoreButton.fadeIn()
+                        self.checkStatisticsButton.fadeIn()
                         self.loadingHeartImageView.stopAnimating()
                     }
                 })
@@ -429,6 +432,10 @@ class AnalyzeECGViewController : UIViewController {
             }
         }
         return nil
+    }
+    
+    @IBAction func checkStatisticsButtonPressed(_ sender: UIButton) {
+        performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
     
     
