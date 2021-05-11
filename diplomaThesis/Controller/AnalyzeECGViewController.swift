@@ -18,7 +18,7 @@ class AnalyzeECGViewController : UIViewController {
     // The variables below are passed by the Starting ViewController.
     // However, they need an initial value (or else they would need initializing function).
     var fs: Double = 0.0
-    var currentRecord : RecordEntity? = nil
+//    var currentRecord : RecordEntity? = nil
     var selectedECG : [CDouble] = []
     var basicQueue = DispatchQueue(label: "m1")
     var workItem : [DispatchWorkItem] = []
@@ -146,7 +146,8 @@ class AnalyzeECGViewController : UIViewController {
                         self.resultsImageView.image = UIImage(named: K.UltraShortModel.noResultImageName)
                         self.resultsText.text = K.UltraShortModel.noResultMessage
                     }
-                    if let safeRecord = self.currentRecord {
+                    let currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
+                    if let safeRecord = currentRecord {
                         safeRecord.classificationResult = finalResult
                     } else {
                         let newRecordEntity = RecordEntity(context: context)
@@ -167,7 +168,8 @@ class AnalyzeECGViewController : UIViewController {
             }
         } else {
             print("BAD QUALITY")
-            if let safeRecord = self.currentRecord {
+            let currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
+            if let safeRecord = currentRecord {
                 safeRecord.classificationResult = K.UltraShortModel.errorResult
             } else {
                 let newRecordEntity = RecordEntity(context: context)
@@ -418,6 +420,15 @@ class AnalyzeECGViewController : UIViewController {
     @IBAction func learnMoreButtonPressed(_ sender: UIButton) {
 //        self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
         performSegue(withIdentifier: K.segueLoadMore, sender: self)
+    }
+    
+    func searchRecord(_ itemInt: Int64, _ inside: [RecordEntity]) -> RecordEntity? {
+        for item in inside {
+            if item.timeInterval1970 == itemInt {
+                return item
+            }
+        }
+        return nil
     }
     
     

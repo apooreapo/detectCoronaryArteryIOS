@@ -39,6 +39,8 @@
 		CEE6F8A325F8F0FC009E7835 /* MathExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */; };
 		CEE6F8A625F90849009E7835 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE6F8A525F90849009E7835 /* Queue.swift */; };
 		CEF41465261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */; };
+		CEF97AC7264AA32400E17863 /* CADStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF97AC6264AA32400E17863 /* CADStatistics.swift */; };
+		CEF97ACA264AA9E400E17863 /* CheckStatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF97AC9264AA9E400E17863 /* CheckStatisticsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +88,8 @@
 		CEE6F8A225F8F0FC009E7835 /* MathExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MathExtension.swift; sourceTree = "<group>"; };
 		CEE6F8A525F90849009E7835 /* Queue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UltraShortFeaturesStruct.swift; sourceTree = "<group>"; };
+		CEF97AC6264AA32400E17863 /* CADStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CADStatistics.swift; sourceTree = "<group>"; };
+		CEF97AC9264AA9E400E17863 /* CheckStatisticsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckStatisticsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +131,7 @@
 				CEE6F89F25F8DBB6009E7835 /* UltraShortAnalysis.swift */,
 				CEF41464261D1EAA000CDFFB /* UltraShortFeaturesStruct.swift */,
 				CECABB972648A4AF000EDA19 /* DataModel.xcdatamodeld */,
+				CEF97AC6264AA32400E17863 /* CADStatistics.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -147,6 +152,7 @@
 				CE0ECD67261E064600129653 /* GifOpeningViewController.swift */,
 				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
 				CE173EA42628971A0062B73B /* LearnMoreController.swift */,
+				CEF97AC9264AA9E400E17863 /* CheckStatisticsViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -349,6 +355,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CEC6A3FD25F7E3070059D105 /* PanTompkins.swift in Sources */,
+				CEF97AC7264AA32400E17863 /* CADStatistics.swift in Sources */,
 				CE9CA36126485C2100012077 /* UltraShortHRV_PCA_filtered.mlmodel in Sources */,
 				CECEDF7925ED0B0D0057653D /* liir.c in Sources */,
 				CE971DE325EDA9AA00D88DC4 /* filtfiltWrapper.mm in Sources */,
@@ -372,6 +379,7 @@
 				CECABB992648A4AF000EDA19 /* DataModel.xcdatamodeld in Sources */,
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,
 				CE4A3A6E260B9E73002622A6 /* PlainHorizontalProgressBar.swift in Sources */,
+				CEF97ACA264AA9E400E17863 /* CheckStatisticsViewController.swift in Sources */,
 				CEC1D73025EE8FBB00920197 /* convolve.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

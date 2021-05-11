@@ -10,18 +10,19 @@ import HealthKit
 import Charts
 import CoreData
 
+var recordArray : [RecordEntity] = []
 var globalTestData : [[Double]] = []
 let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
 
 /// The controller of the starting view of the application. From here the user can navigate to the rest controllers.
 class ViewController: UIViewController {
     
-    var recordArray : [RecordEntity] = []
     var ecgSamples = [[(Double,Double)]] ()
     var ecgDates = [Date] ()
     var indices = [(Int,Int)]()
     var rawECG : [CDouble] = []
     var rawfs : Double = 0.0
+    lazy var myCADStatistics : CADStatistics = CADStatistics(recordArr: recordArray)
 //    var testMatrix : [[Double]] = []
     
     let healthStore = HKHealthStore()
@@ -35,7 +36,7 @@ class ViewController: UIViewController {
     lazy var checkStatisticsButton = UIButton(type: .system)
     lazy var smallResultImageView = UIImageView()
     var timeInterval1970 : Int64 = Int64(0)
-    var currentRecord : RecordEntity? = nil
+//    var currentRecord : RecordEntity? = nil
     var pickerView = UIPickerView()
     let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
@@ -96,14 +97,14 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         super.viewWillAppear(animated)
-        self.recordArray = loadRecords()
+        recordArray = loadRecords()
         
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.recordArray = loadRecords()
+        recordArray = loadRecords()
         pickerView.dataSource = self
         pickerView.delegate = self
         //view.translatesAutoresizingMaskIntoConstraints = false
@@ -174,9 +175,9 @@ class ViewController: UIViewController {
                                         
                                         // the line below has use only for the first drop of the pickerView. (At the first time
                                         // picker view doesn't "see" as selected the option
-                                        self.recordArray = self.loadRecords()
+                                        recordArray = self.loadRecords()
                                         self.timeInterval1970 = Int64(self.ecgDates[self.indices[0].0].timeIntervalSince1970)
-                                        self.currentRecord = self.searchRecord(self.timeInterval1970, self.recordArray)
+//                                        self.currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
                                         self.updateCharts(ecgSamples: self.ecgSamples[self.indices[0].0], animated: true, timeInterval1970: self.timeInterval1970)
                                         
                                     }
@@ -265,26 +266,9 @@ class ViewController: UIViewController {
     /// Objective-c function that gets triggered when "Check Statistics" button is pressed.
     @objc func checkStatisticsButtonPressed() {
         print("Check Statistics!")
-        self.recordArray = loadRecords()
-        let myArray = self.recordArray
-        var myFullCount = 0
-        var myCADCount = 0
-        var myRatio : Float = 0.0
-        if myArray.count < 1 {
-            print(myRatio)
-        } else {
-            for item in myArray {
-                if item.classificationResult == K.UltraShortModel.positiveResult {
-                    myCADCount += 1
-                    myFullCount += 1
-                } else if item.classificationResult == K.UltraShortModel.negativeResult {
-                    myFullCount += 1
-                }
-            }
-            myRatio = Float(myCADCount) / Float(myFullCount)
-            print(myRatio)
-            print(myFullCount)
-        }
+        recordArray = loadRecords()
+        self.myCADStatistics = CADStatistics(recordArr: recordArray)
+        performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
     
 
@@ -358,8 +342,16 @@ class ViewController: UIViewController {
 //            VCdestination.selectedECG = removeAverage(input: rawECG)
             VCdestination.fs = rawfs
             VCdestination.basicQueue = basicQueue
-            VCdestination.currentRecord = self.currentRecord
+//            VCdestination.currentRecord = self.currentRecord
             VCdestination.timeInterval1970 = self.timeInterval1970
+        } else if segue.identifier == K.segueCheckStatisticsIdentifier {
+            let VCdestination = segue.destination as! CheckStatisticsViewController
+            VCdestination.myFullCount = self.myCADStatistics.getFullCount()
+            VCdestination.myCADCount = self.myCADStatistics.getCADCount()
+            VCdestination.myRatio = self.myCADStatistics.getRatio()
+            VCdestination.myImage = self.myCADStatistics.getFinalImage()
+            VCdestination.myResult = self.myCADStatistics.getResult()
+            VCdestination.myMessage = self.myCADStatistics.getFinalMessage()
         }
     }
     
@@ -497,7 +489,7 @@ extension ViewController : UIPickerViewDelegate {
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         self.timeInterval1970 = Int64(self.ecgDates[self.indices[row].0].timeIntervalSince1970)
-        self.currentRecord = self.searchRecord(self.timeInterval1970, self.recordArray)
+//        self.currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
         self.updateCharts(ecgSamples: self.ecgSamples[self.indices[row].0], animated: false, timeInterval1970: self.timeInterval1970)
     }
     
@@ -604,7 +596,7 @@ extension ViewController {
             
             currentECGLineChart.xAxis.labelPosition = .bottom
             
-            let searchRecordResult = searchRecord(timeInterval1970, self.recordArray)
+            let searchRecordResult = searchRecord(timeInterval1970, recordArray)
             if searchRecordResult != nil {
                 print(searchRecordResult?.classificationResult)
                 smallResultImageView.image = UIImage(imageLiteralResourceName: K.ticImageName)
@@ -661,7 +653,7 @@ extension ViewController {
             checkStatisticsButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
 //            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
             checkStatisticsButton.addTarget(self, action: #selector(checkStatisticsButtonPressed), for: .touchUpInside)
-            
+        
             smallResultImageView.translatesAutoresizingMaskIntoConstraints = false
 //            analyzeButton.setTitleColor(.label, for: .normal)
 //            analyzeButton.showsTouchWhenHighlighted = true
@@ -711,7 +703,7 @@ extension ViewController {
             }
             currentECGLineChart.xAxis.labelPosition = .bottom
             
-            let searchRecordResult = searchRecord(timeInterval1970, self.recordArray)
+            let searchRecordResult = searchRecord(timeInterval1970, recordArray)
             if searchRecordResult != nil {
                 smallResultImageView.image = UIImage(imageLiteralResourceName: K.ticImageName)
             } else {

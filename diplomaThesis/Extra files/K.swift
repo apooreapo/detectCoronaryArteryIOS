@@ -11,10 +11,21 @@ import Foundation
 /// A file including all constants in the project.
 struct K {
     static let segueAnalyzeECGIdentifier : String = "analyzeECG"
+    static let segueCheckStatisticsIdentifier : String = "checkStatistics"
     static let segueLoadMore : String = "loadMore"
     static let basicQueueID : String = "basicQueue"
     static let helpingQueueID : String = "helpingQueue"
     static let ticImageName : String = "tic.png"
+    static let CADColorName : String = "CADColor"
+    static let noCADColorName : String = "NoCADColor"
+    static let undefinedColorName : String = "UndefinedCADColor"
+    static let finalCADImageName : String = "cad_final"
+    static let finalNoCADImageName : String = "no_cad_final"
+    static let finalQuestionImageName : String = "question_final"
+    static let finalCADMessage : String = "You show some signs of CAD."
+    static let finalNoCADMessage : String = "You show no signs of CAD!"
+    static let finalUndefinedMessage : String = "The algorithm result is uncertain.\nPlease check some more ECGs."
+    static let finalSmallNumberMessage : String = "The result is undefined.\nPlease check at least 10 ECGs."
     
     struct UltraShortModel {
         static let input_names : [String] = ["SDRR", "AverageHeartRate", "SDNN", "SDSD", "pNN50", "RMSSD", "HTI", "HRMaxMin", "LFEnergy", "LFEnergyPercentage", "HFEnergy", "HFEnergyPerentage", "PoincareSD1", "PoincareSD2", "PoincareRatio", "PoincareEllipsisArea", "MeanApproximateEntropy", "StdApproximateEntropy", "MeanSampleEntropy", "StdSampleEntropy", "LFPeak", "HFPeak", "LFHFRatio"]
@@ -25,6 +36,8 @@ struct K {
         static let positiveResult : String = "Yes"
         static let negativeResult : String = "No"
         static let errorResult : String = "Error"
+        static let smallNumberResult : String = "NumberError"
+    
         static let CADImageName : String = "health_test-512-CAD-veggies"
         static let noCADImageName : String = "health_test-512-noCAD"
         static let noResultImageName : String = "health_test-512-question"
