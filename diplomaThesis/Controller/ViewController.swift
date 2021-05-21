@@ -104,6 +104,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.pickerView.isUserInteractionEnabled = false
         recordArray = loadRecords()
         pickerView.dataSource = self
         pickerView.delegate = self
@@ -169,8 +170,10 @@ class ViewController: UIViewController {
                                         // the first is the sorted indice, and the second is the raw
                                         // ecgSamples[indices[0].0] is the newest ecg
 
-
+                                        
                                         self.pickerView.reloadAllComponents()
+                                        print("Allowing interaction now")
+                                        self.pickerView.isUserInteractionEnabled = true
                                         
                                         
                                         // the line below has use only for the first drop of the pickerView. (At the first time
@@ -225,6 +228,9 @@ class ViewController: UIViewController {
                 switch result {
                 case .error(let error):
                     print("error: ", error)
+                    self.pickerView.isHidden = true
+                    self.loadingHeartImageView.stopAnimating()
+                    self.loadingHeartImageView.isHidden = true
                     // Fix iiiiiiiiiiiiiiit!!!!!!!!!!!!!!!!!!!!
                     
                 case .measurement(let value):
@@ -480,9 +486,11 @@ extension ViewController : UIPickerViewDelegate {
     
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.timeInterval1970 = Int64(self.ecgDates[self.indices[row].0].timeIntervalSince1970)
-//        self.currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
-        self.updateCharts(ecgSamples: self.ecgSamples[self.indices[row].0], animated: false, timeInterval1970: self.timeInterval1970)
+        if ecgDates.count >= 1 {
+            self.timeInterval1970 = Int64(self.ecgDates[self.indices[row].0].timeIntervalSince1970)
+    //        self.currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
+            self.updateCharts(ecgSamples: self.ecgSamples[self.indices[row].0], animated: false, timeInterval1970: self.timeInterval1970)
+        }
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
