@@ -668,7 +668,7 @@ Analyzing your ECGs...</string>
                                 </userDefinedRuntimeAttributes>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check out your statistics." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jc7-HG-mjh" userLabel="Results Text">
-                                <rect key="frame" x="50" y="471.66666666666669" width="275" height="50.333333333333314"/>
+                                <rect key="frame" x="50" y="471.66666666666669" width="275" height="20.333333333333314"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -680,60 +680,46 @@ Analyzing your ECGs...</string>
                                     <constraint firstAttribute="width" constant="50" id="tOM-Tp-KwH"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SCb-0L-kJ8">
-                                <rect key="frame" x="148.66666666666666" y="552" width="77.666666666666657" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="mNa-BK-5Fh"/>
-                                </constraints>
-                                <state key="normal" title="Learn More"/>
-                                <connections>
-                                    <action selector="learnMoreButtonPressed:" destination="7Uh-EX-747" eventType="touchUpInside" id="aDn-kC-Nte"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1UK-3e-V1C">
-                                <rect key="frame" x="132" y="603" width="111" height="0.0"/>
-                                <state key="normal" title="Check Statistics"/>
-                                <connections>
-                                    <action selector="checkStatisticsButtonPressed:" destination="7Uh-EX-747" eventType="touchUpInside" id="eje-93-7hs"/>
-                                </connections>
-                            </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tic_final" translatesAutoresizingMaskIntoConstraints="NO" id="90F-Cz-ZwK">
-                                <rect key="frame" x="110.66666666666667" y="429.66666666666669" width="153.66666666666663" height="153.33333333333331"/>
+                                <rect key="frame" x="123.66666666666669" y="429.66666666666669" width="128" height="128.00000000000006"/>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="128" id="N3P-If-gqu"/>
+                                    <constraint firstAttribute="width" constant="128" id="Ogk-VM-SZy"/>
                                     <constraint firstAttribute="width" secondItem="90F-Cz-ZwK" secondAttribute="height" multiplier="1:1" id="V5s-Pa-3iz"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" alpha="0.0" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="toW-jk-AcN">
+                                <rect key="frame" x="132" y="572.66666666666663" width="111" height="30"/>
+                                <state key="normal" title="Check Statistics"/>
+                                <connections>
+                                    <action selector="checkStatisticsButtonPressed:" destination="7Uh-EX-747" eventType="touchUpInside" id="izf-5y-BMb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="l7p-yf-ieb"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="v74-0s-K0T" firstAttribute="top" secondItem="zw4-Um-RBB" secondAttribute="bottom" constant="14" id="01W-SR-BJS"/>
-                            <constraint firstItem="SCb-0L-kJ8" firstAttribute="leading" secondItem="l7p-yf-ieb" secondAttribute="leading" constant="148.66666666666666" id="3OL-Wz-AVL"/>
                             <constraint firstItem="Jc7-HG-mjh" firstAttribute="top" secondItem="v74-0s-K0T" secondAttribute="bottom" constant="62.000000000000057" id="4vp-5V-KXh"/>
-                            <constraint firstItem="1UK-3e-V1C" firstAttribute="top" secondItem="90F-Cz-ZwK" secondAttribute="bottom" constant="20" id="5Wf-fK-POM"/>
+                            <constraint firstItem="toW-jk-AcN" firstAttribute="top" secondItem="90F-Cz-ZwK" secondAttribute="bottom" constant="15" id="DSp-D4-YPb"/>
                             <constraint firstItem="90F-Cz-ZwK" firstAttribute="top" secondItem="v74-0s-K0T" secondAttribute="bottom" constant="20" id="FlR-CO-pdj"/>
                             <constraint firstItem="gg7-v7-mI9" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="Fzy-vP-IGu"/>
                             <constraint firstItem="l7p-yf-ieb" firstAttribute="trailing" secondItem="v74-0s-K0T" secondAttribute="trailing" constant="87" id="HUp-p7-pwZ"/>
                             <constraint firstItem="zw4-Um-RBB" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="JNt-fJ-Pui"/>
-                            <constraint firstItem="1UK-3e-V1C" firstAttribute="top" secondItem="SCb-0L-kJ8" secondAttribute="bottom" constant="21" id="NUt-MG-1rO"/>
-                            <constraint firstItem="SCb-0L-kJ8" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="PcQ-G8-OkY"/>
                             <constraint firstItem="90F-Cz-ZwK" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="WDw-1n-te6"/>
                             <constraint firstItem="Jc7-HG-mjh" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="Y9R-1g-mr2"/>
                             <constraint firstItem="v74-0s-K0T" firstAttribute="leading" secondItem="l7p-yf-ieb" secondAttribute="leading" constant="87" id="bH3-ID-zO1"/>
                             <constraint firstItem="v74-0s-K0T" firstAttribute="centerY" secondItem="jxP-a6-AfL" secondAttribute="centerY" id="dWC-q8-ehu"/>
-                            <constraint firstItem="l7p-yf-ieb" firstAttribute="bottom" secondItem="1UK-3e-V1C" secondAttribute="bottom" constant="175" id="eab-cc-YjV"/>
-                            <constraint firstItem="SCb-0L-kJ8" firstAttribute="top" secondItem="Jc7-HG-mjh" secondAttribute="bottom" constant="30" id="hTG-yj-ZNd"/>
                             <constraint firstItem="l7p-yf-ieb" firstAttribute="trailing" secondItem="Jc7-HG-mjh" secondAttribute="trailing" constant="50" id="md8-HP-gmH"/>
                             <constraint firstItem="zw4-Um-RBB" firstAttribute="top" secondItem="gg7-v7-mI9" secondAttribute="bottom" constant="22.5" id="rBN-1u-S8r"/>
-                            <constraint firstItem="1UK-3e-V1C" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="tQE-oS-e2H"/>
                             <constraint firstItem="v74-0s-K0T" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="td7-rc-99f"/>
+                            <constraint firstItem="toW-jk-AcN" firstAttribute="centerX" secondItem="jxP-a6-AfL" secondAttribute="centerX" id="vHA-Bx-dTh"/>
                             <constraint firstItem="Jc7-HG-mjh" firstAttribute="leading" secondItem="l7p-yf-ieb" secondAttribute="leading" constant="50" id="wOd-Se-E3W"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Analyzing ECGs" id="wWL-2W-nJd"/>
                     <connections>
-                        <outlet property="checkStatisticsButton" destination="1UK-3e-V1C" id="Q45-Qf-BFd"/>
-                        <outlet property="learnMoreButton" destination="SCb-0L-kJ8" id="oTG-X5-gsE"/>
+                        <outlet property="checkStatisticsButton" destination="toW-jk-AcN" id="7cT-JN-haA"/>
                         <outlet property="loadingHeartImageView" destination="gg7-v7-mI9" id="Vi5-66-Fb7"/>
                         <outlet property="loadingText" destination="zw4-Um-RBB" id="CRo-vC-Dmr"/>
                         <outlet property="progressBar" destination="v74-0s-K0T" id="YaV-UU-GOh"/>

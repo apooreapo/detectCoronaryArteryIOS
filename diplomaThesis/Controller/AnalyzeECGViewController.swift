@@ -263,6 +263,11 @@ class AnalyzeECGViewController : UIViewController {
         
     }
     
+    /// Implementation of Principal Component Analysis Transformation.
+    /// - Parameters:
+    ///   - inputArray: The input data to be transformed through given PCA.
+    ///   - pcaFactors: Array of Doubles including the PCA factors.
+    /// - Returns: The transformed, reduced in dimensions, data.
     func applyPCA(inputArray: [Double], pcaFactors: [[Double]]) -> [Double] {
         var output : [Double] = []
         for pcai in pcaFactors {
@@ -280,6 +285,10 @@ class AnalyzeECGViewController : UIViewController {
         return output
     }
     
+    /// Function for creating .csv with the data of the app.
+    /// - Parameters:
+    ///   - recArray: Array including the data to be written (usually extracted features).
+    ///   - output: The name of the new .csv file.
     func createCSVX(from recArray:[[Double]], output: String) {
         
         var strings : [String] = []
@@ -404,6 +413,11 @@ class AnalyzeECGViewController : UIViewController {
         }
     }
     
+    /// A function that calculates the Mean Absolute Error between two signals of length = 140.
+    /// - Parameters:
+    ///   - input1: The first signal to be compared.
+    ///   - input2: The second signal to be compared.
+    /// - Returns: The Mean Absolute Error metric.
     func calculateMAE(input1: [Float], input2: [Float]) -> Float {
         var output: [Float] = []
         if input1.count != 140 || input2.count != 140 {
@@ -417,6 +431,7 @@ class AnalyzeECGViewController : UIViewController {
         }
     }
     
+    /// Function that saves the current context (in coreData).
     func saveRecords() {
         do {
             try context.save()
@@ -443,6 +458,8 @@ class AnalyzeECGViewController : UIViewController {
         return nil
     }
     
+    /// Redirect to appropriate View.
+    /// - Parameter sender: The sending view.
     @IBAction func checkStatisticsButtonPressed(_ sender: UIButton) {
         performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }

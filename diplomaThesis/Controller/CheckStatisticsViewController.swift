@@ -107,6 +107,9 @@ class CheckStatisticsViewController : UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    
+    /// Saves context of coreData. Used for saving a CoreData Entity.
+    /// - Parameter completion: Function called when saving is completed.
     func saveRecords(completion: @escaping ()->Void = {}) {
         do {
             try context.save()
@@ -117,6 +120,9 @@ class CheckStatisticsViewController : UIViewController {
         }
     }
     
+    
+    /// Loads all the RecordEntities saved in context.
+    /// - Returns: An array including all the RecordEntities in the current context.
     func loadRecords() -> [RecordEntity] {
         let request: NSFetchRequest<RecordEntity> = RecordEntity.fetchRequest()
         do {

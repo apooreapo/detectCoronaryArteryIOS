@@ -371,7 +371,7 @@ class ViewController: UIViewController {
 //            VCdestination.currentRecord = self.currentRecord
             VCdestination.timeInterval1970 = self.timeInterval1970
         } else if segue.identifier == K.segueAnalyzeAllIdentifier {
-            basicQueue.async(group: .none, qos: .userInteractive, flags: .barrier) {
+            basicQueue2.async(group: .none, qos: .userInteractive, flags: .barrier) {
                 let VCdestination = segue.destination as! AnalyzeAllViewController
                 VCdestination.ecgSamples = self.ecgSamples
                 VCdestination.ecgDates = self.ecgDates

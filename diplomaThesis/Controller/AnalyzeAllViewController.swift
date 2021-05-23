@@ -18,13 +18,14 @@ class AnalyzeAllViewController : UIViewController {
     // The variables below are passed by the Starting ViewController.
     // However, they need an initial value (or else they would need initializing function).
     var fs: Double = 0.0
-//    var currentRecord : RecordEntity? = nil
+    //    var currentRecord : RecordEntity? = nil
     var ecgSamples = [[(Double,Double)]] ()
     var ecgDates = [Date] ()
     var indices = [(Int,Int)]()
     var basicQueue = DispatchQueue(label: "m1")
     var basicQueue2 = DispatchQueue(label: "m2")
     var workItemsList : [[DispatchWorkItem]] = []
+    var workItems : [DispatchWorkItem] = []
     var totalTasks : Int = 44
     var timeInterval1970 : Int64 = Int64(0)
     let helpingQueue = DispatchQueue(label: K.helpingQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
@@ -42,9 +43,6 @@ class AnalyzeAllViewController : UIViewController {
     
     @IBOutlet weak var resultsText: UILabel!
     
-
-    @IBOutlet weak var learnMoreButton: UIButton!
-
     @IBOutlet weak var checkStatisticsButton: UIButton!
     
     
@@ -58,7 +56,9 @@ class AnalyzeAllViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        basicQueue2.async(group: .none, qos: .userInitiated, flags: .barrier) {
+        
+        // the work below is added to a workItem
+        let firstItem = DispatchWorkItem(qos: .userInitiated, flags: .barrier) {
             do {
                 let gif = try UIImage(gifName: "loading.gif")
                 DispatchQueue.main.async {
@@ -69,14 +69,12 @@ class AnalyzeAllViewController : UIViewController {
                 print("Error showing gif")
                 self.loadingHeartImageView.isHidden = true
             }
-        }
-        
-        
-        if indices.count < 1 {
-            print("Error passing data between ViewController and AnalyzeAllViewController.")
-            // fix iiiiit
-        } else {
-            basicQueue2.async {
+            if self.indices.count < 1 {
+                print("Error passing data between ViewController and AnalyzeAllViewController.")
+                // fix iiiiit
+            } else {
+                // Number 22 comes from 11 appEns and 11 sampEns, which
+                // are the most time consuming tasks (O(N^2))
                 self.totalTasks = 22 * self.indices.count
                 for ii in 0..<self.indices.count {
                     var selectedECG : [CDouble] = []
@@ -96,19 +94,30 @@ class AnalyzeAllViewController : UIViewController {
                     }
                 }
             }
-//            for ii in 0..<3 {
-            basicQueue.async(group: .none, qos: .default, flags: .barrier) {
-                DispatchQueue.main.async {
-                    self.performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
-                    self.checkStatisticsButton.isEnabled = true
-                    self.checkStatisticsButton.fadeIn()
-                    self.ticImageView.fadeIn()
-                    self.loadingHeartImageView.stopAnimating()
-                    self.loadingText.text = "Your results are ready!"
-                    self.loadingHeartImageView.isHidden = true
+            
+            // We use both queues here so that both queues are finished
+            // in order to start the inner line of code
+            
+            // We are allowed to use basiQueue2 inside basicQueue.
+            // It is a simple way to put a "global" barrier
+            self.basicQueue2.async(group: .none, qos: .default, flags: .barrier) {
+                    self.basicQueue.async(group: .none, qos: .default, flags: .barrier) {
+                    DispatchQueue.main.async {
+                        self.performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
+                        self.checkStatisticsButton.isEnabled = true
+                        self.checkStatisticsButton.fadeIn()
+                        self.ticImageView.fadeIn()
+                        self.loadingHeartImageView.stopAnimating()
+                        self.loadingText.text = "Your results are ready!"
+                        self.loadingHeartImageView.isHidden = true
+                    }
                 }
             }
         }
+        
+        workItems.append(firstItem)
+        basicQueue2.async(execute: firstItem)
+        
         
         
     }
@@ -124,6 +133,12 @@ class AnalyzeAllViewController : UIViewController {
                 if !insideItem.isCancelled {
                     insideItem.cancel()
                 }
+            }
+        }
+        print("Canceling rest running tasks and exiting...")
+        for item in workItems {
+            if !item.isCancelled {
+                item.cancel()
             }
         }
         super.viewWillDisappear(animated)
@@ -192,10 +207,10 @@ class AnalyzeAllViewController : UIViewController {
                 print("Presenting the features as they are at the start:")
                 inputFeatures.printValues()
                 print("Adding to record...")
-//                globalTestData.append(inputFeatures.toArray())
-//                if globalTestData.count == 38 {
-//                    self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
-//                }
+                //                globalTestData.append(inputFeatures.toArray())
+                //                if globalTestData.count == 38 {
+                //                    self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
+                //                }
                 print("Calculating result...")
                 let finalResult = self.analyzeUltraShortECGSVM(inputArray: inputFeatures.toArray())
                 print("Do I have CAD? : " + finalResult)
@@ -222,7 +237,7 @@ class AnalyzeAllViewController : UIViewController {
             for item in currentWorkItem {
                 basicQueue.async(execute: item)
             }
-
+            
             
         } else {
             print("BAD QUALITY")
@@ -281,6 +296,12 @@ class AnalyzeAllViewController : UIViewController {
         
     }
     
+    
+    /// Implementation of Principal Component Analysis Transformation.
+    /// - Parameters:
+    ///   - inputArray: The input data to be transformed through given PCA.
+    ///   - pcaFactors: Array of Doubles including the PCA factors.
+    /// - Returns: The transformed, reduced in dimensions, data.
     func applyPCA(inputArray: [Double], pcaFactors: [[Double]]) -> [Double] {
         var output : [Double] = []
         for pcai in pcaFactors {
@@ -298,6 +319,11 @@ class AnalyzeAllViewController : UIViewController {
         return output
     }
     
+    
+    /// Function for creating .csv with the data of the app.
+    /// - Parameters:
+    ///   - recArray: Array including the data to be written (usually extracted features).
+    ///   - output: The name of the new .csv file.
     func createCSVX(from recArray:[[Double]], output: String) {
         
         var strings : [String] = []
@@ -422,6 +448,12 @@ class AnalyzeAllViewController : UIViewController {
         }
     }
     
+    
+    /// A function that calculates the Mean Absolute Error between two signals of length = 140.
+    /// - Parameters:
+    ///   - input1: The first signal to be compared.
+    ///   - input2: The second signal to be compared.
+    /// - Returns: The Mean Absolute Error metric.
     func calculateMAE(input1: [Float], input2: [Float]) -> Float {
         var output: [Float] = []
         if input1.count != 140 || input2.count != 140 {
@@ -450,6 +482,8 @@ class AnalyzeAllViewController : UIViewController {
         return result
     }
     
+    
+    /// Function that saves the current context (in coreData).
     func saveRecords() {
         do {
             try context.save()
@@ -460,13 +494,11 @@ class AnalyzeAllViewController : UIViewController {
     }
     
     
-    /// Action performed when user clicks "Learn More" button.
-    /// - Parameter sender: The sender of the click. Here it has no use.
-    @IBAction func learnMoreButtonPressed(_ sender: UIButton) {
-//        self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
-        performSegue(withIdentifier: K.segueLoadMore, sender: self)
-    }
-    
+    /// Function that searches for a given RecordEntity inside an array of RecordEntities, given its timeItervalSince1970.
+    /// - Parameters:
+    ///   - itemInt: The timeIntervalSince1970 of the item we are searching.
+    ///   - inside: The array of RecordEntities, inside which we are searching.
+    /// - Returns: The resulting RecordEntity, if found. Else returns nil.
     func searchRecord(_ itemInt: Int64, _ inside: [RecordEntity]) -> RecordEntity? {
         for item in inside {
             if item.timeInterval1970 == itemInt {
@@ -475,19 +507,14 @@ class AnalyzeAllViewController : UIViewController {
         }
         return nil
     }
+
     
+    /// Redirect to appropriate View.
+    /// - Parameter sender: The sending view.
     @IBAction func checkStatisticsButtonPressed(_ sender: UIButton) {
+        print("Checking statisitics")
         performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
-    
-    func waitSomeTime(completion: @escaping ()->Void = {}) {
-        do {
-            sleep(2)
-        }
-        completion()
-    }
-    
-    
     
     
     
