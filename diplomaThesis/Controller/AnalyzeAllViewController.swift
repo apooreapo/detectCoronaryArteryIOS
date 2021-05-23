@@ -1,5 +1,5 @@
 //
-//  AnalyzeECGViewController.swift
+//  AnalyzeAllViewController.swift
 //  diplomaThesis
 //
 //  Created by User on 24/3/21.
@@ -13,35 +13,40 @@ import CoreData
 
 
 /// The class responsible for handling and showing the ECG analysis.
-class AnalyzeECGViewController : UIViewController {
+class AnalyzeAllViewController : UIViewController {
     
     // The variables below are passed by the Starting ViewController.
     // However, they need an initial value (or else they would need initializing function).
     var fs: Double = 0.0
 //    var currentRecord : RecordEntity? = nil
-    var selectedECG : [CDouble] = []
+    var ecgSamples = [[(Double,Double)]] ()
+    var ecgDates = [Date] ()
+    var indices = [(Int,Int)]()
     var basicQueue = DispatchQueue(label: "m1")
     var basicQueue2 = DispatchQueue(label: "m2")
-    var workItem : [DispatchWorkItem] = []
-    var totalTasks : Int = 22
+    var workItemsList : [[DispatchWorkItem]] = []
+    var totalTasks : Int = 44
     var timeInterval1970 : Int64 = Int64(0)
     let helpingQueue = DispatchQueue(label: K.helpingQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
+    @IBOutlet weak var ticImageView: UIImageView!
+    
     
     @IBOutlet weak var loadingHeartImageView: UIImageView!
-    
     // The custom progress bar we use.
+    
     @IBOutlet weak var progressBar: PlainHorizontalProgressBar!
+    
     
     @IBOutlet weak var loadingText: UILabel!
     
     @IBOutlet weak var resultsText: UILabel!
     
-    @IBOutlet weak var resultsImageView: UIImageView!
-    
+
     @IBOutlet weak var learnMoreButton: UIButton!
-    
+
     @IBOutlet weak var checkStatisticsButton: UIButton!
+    
     
     
     // Needed in order to set the title, and to set navigation bar visible.
@@ -53,26 +58,72 @@ class AnalyzeECGViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        do {
-            let gif = try UIImage(gifName: "loading.gif")
-            DispatchQueue.main.async {
-                self.loadingHeartImageView.setGifImage(gif, loopCount: -1) // Will loop forever
-                self.loadingHeartImageView.startAnimating()
+        basicQueue2.async(group: .none, qos: .userInitiated, flags: .barrier) {
+            do {
+                let gif = try UIImage(gifName: "loading.gif")
+                DispatchQueue.main.async {
+                    self.loadingHeartImageView.setGifImage(gif, loopCount: -1) // Will loop forever
+                    self.loadingHeartImageView.startAnimating()
+                }
+            } catch {
+                print("Error showing gif")
+                self.loadingHeartImageView.isHidden = true
             }
-        } catch {
-            print("Error showing gif")
-            self.loadingHeartImageView.isHidden = true
         }
-        implementFullAnalysis()
+        
+        
+        if indices.count < 1 {
+            print("Error passing data between ViewController and AnalyzeAllViewController.")
+            // fix iiiiit
+        } else {
+            basicQueue2.async {
+                self.totalTasks = 22 * self.indices.count
+                for ii in 0..<self.indices.count {
+                    var selectedECG : [CDouble] = []
+                    
+                    let currentTimeInterval1970 = Int64(self.ecgDates[self.indices[ii].0].timeIntervalSince1970)
+                    let currentRecord = self.searchRecord(currentTimeInterval1970, recordArray)
+                    
+                    // if the  record has already been tested, skip it
+                    if currentRecord != nil {
+                        self.progressBar.incrementProgress(22.0 / Float(self.totalTasks))
+                    } else {
+                        let sz = self.ecgSamples[self.indices[ii].0].count
+                        for i in 0...(sz - 1) {
+                            selectedECG.append(self.ecgSamples[self.indices[ii].0][i].0)
+                        }
+                        self.implementFullAnalysis(selectedECG: selectedECG, currentTimeInterval1970: currentTimeInterval1970)
+                    }
+                }
+            }
+//            for ii in 0..<3 {
+            basicQueue.async(group: .none, qos: .default, flags: .barrier) {
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
+                    self.checkStatisticsButton.isEnabled = true
+                    self.checkStatisticsButton.fadeIn()
+                    self.ticImageView.fadeIn()
+                    self.loadingHeartImageView.stopAnimating()
+                    self.loadingText.text = "Your results are ready!"
+                    self.loadingHeartImageView.isHidden = true
+                }
+            }
+        }
+        
         
     }
     
     // In case the user cancels the analysis, we want the processes that are left to be terminated, or canceled.
     override func viewWillDisappear(_ animated: Bool) {
         print("Canceling all running tasks and exiting...")
-        for item in workItem {
-            if !item.isCancelled {
-                item.cancel()
+        print(workItemsList.count)
+        for item in workItemsList {
+            print("HIII")
+            print(item.count)
+            for insideItem in item {
+                if !insideItem.isCancelled {
+                    insideItem.cancel()
+                }
             }
         }
         super.viewWillDisappear(animated)
@@ -80,7 +131,7 @@ class AnalyzeECGViewController : UIViewController {
     
     
     /// The core function, implements full analysis.
-    func implementFullAnalysis() {
+    func implementFullAnalysis(selectedECG: [CDouble], currentTimeInterval1970: Int64) {
         print(String(format: "Current fs is %.2f and current current ECG count is %d.", fs, selectedECG.count))
         
         // Pan Tompkins algorithm for R peaks detection.
@@ -88,7 +139,7 @@ class AnalyzeECGViewController : UIViewController {
         let r_locations = myPanTompkins.calculateR()
         
         // Check if the recording is of high quality or not
-        if isRecordingQualityGood(rPeaks: r_locations) {
+        if isRecordingQualityGood(rPeaks: r_locations, selectedECG: selectedECG) {
             print("GOOD QUALITY")
             
             // Starting Ultra Short Analysis.
@@ -96,9 +147,10 @@ class AnalyzeECGViewController : UIViewController {
             let start = Date() // Count elapsed time
             var fast = UltraShortFeaturesStruct(SDRR: 0, AverageHeartRate: 0, SDNN: 0, SDSD: 0, pNN50: 0, RMSSD: 0, HTI: 0, HRMaxMin: 0, LFEnergy: 0, LFEnergyPercentage: 0, HFEnergy: 0, HFEnergyPercentage: 0, PoincareSD1: 0, PoincareSD2: 0, PoincareRatio: 0, PoincareEllipsisArea: 0, MeanApproximateEntropy: 0, StdApproximateEntropy: 0, MeanSampleEntropy: 0, StdSampleEntropy: 0, LFPeak: 0, HFPeak: 0, LFHFRatio: 0)
             
-            // workItem is a DispatchWorkItem. We use this, so that we can
+            // currentWorkItem is a DispatchWorkItem. We use this, so that we can
             // cancel the jobs remaining if user cancels analysis.
-            workItem.append(DispatchWorkItem(block: {
+            var currentWorkItem : [DispatchWorkItem] = []
+            currentWorkItem.append(DispatchWorkItem(block: {
                 fast = myUltraShortAnalysis.calculateUltraShortMetrics(printMessage: true)
             }))
             
@@ -108,7 +160,7 @@ class AnalyzeECGViewController : UIViewController {
             var sampEn = Array<Double>(repeating: 0.0, count: 11)
             var appEn = Array<Double>(repeating: 0.0, count: 11)
             for i in 0...10 {
-                workItem.append(DispatchWorkItem(block: {
+                currentWorkItem.append(DispatchWorkItem(block: {
                     appEn[i] = myUltraShortAnalysis.calculateAppEn(counter: i) {
                         DispatchQueue.main.sync {
                             self.progressBar.incrementProgress(1.0 / Float(self.totalTasks))
@@ -117,7 +169,7 @@ class AnalyzeECGViewController : UIViewController {
                 }))
             }
             for i in 0...10 {
-                workItem.append(DispatchWorkItem(block: {
+                currentWorkItem.append(DispatchWorkItem(block: {
                     sampEn[i] = myUltraShortAnalysis.calculateSampEn(counter: i) {
                         DispatchQueue.main.sync {
                             self.progressBar.incrementProgress(1.0 / Float(self.totalTasks))
@@ -125,9 +177,11 @@ class AnalyzeECGViewController : UIViewController {
                     }
                 }))
             }
+            // The operation below has a barrier, meaning that it will only start
+            // when all the other operations started before this one have been
+            // completed.
             
-            // the item below has a barrier!
-            workItem.append(DispatchWorkItem(qos: .userInitiated, flags: .barrier, block: {
+            currentWorkItem.append(DispatchWorkItem(qos: .userInitiated, flags: .barrier, block: {
                 print("Analysis completed!")
                 print("Elapsed time: \(0 - start.timeIntervalSinceNow) seconds")
                 print(String(format: "Mean approximate entropy: %.4f", appEn.avg()))
@@ -148,78 +202,42 @@ class AnalyzeECGViewController : UIViewController {
                 
                 DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
                     self.resultsText.numberOfLines = 0
-                    if finalResult == K.UltraShortModel.positiveResult {
-                        self.resultsImageView.image = UIImage(named: K.UltraShortModel.CADImageName)
-                        self.resultsText.text = K.UltraShortModel.CADResultMessage
-                    } else if finalResult == K.UltraShortModel.negativeResult {
-                        self.resultsImageView.image = UIImage(named: K.UltraShortModel.noCADImageName)
-                        self.resultsText.text = K.UltraShortModel.noCADResultMessage
-                    } else {
-                        self.resultsImageView.image = UIImage(named: K.UltraShortModel.noResultImageName)
-                        self.resultsText.text = K.UltraShortModel.noResultMessage
-                    }
-                    let currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
+                    let currentRecord = self.searchRecord(currentTimeInterval1970, recordArray)
                     if let safeRecord = currentRecord {
                         safeRecord.classificationResult = finalResult
                     } else {
                         let newRecordEntity = RecordEntity(context: context)
-                        newRecordEntity.timeInterval1970 = self.timeInterval1970
+                        newRecordEntity.timeInterval1970 = currentTimeInterval1970
                         newRecordEntity.classificationResult = finalResult
                     }
                     self.saveRecords()
-                    self.progressBar.fadeOut()
-                    self.loadingHeartImageView.fadeOut()
-                    self.learnMoreButton.isEnabled = true
-                    self.checkStatisticsButton.isEnabled = true
-                    self.loadingText.fadeOut(withDuration: 1.0) {
-                        self.resultsImageView.fadeIn()
-                        self.resultsText.fadeIn()
-                        self.learnMoreButton.fadeIn()
-                        self.checkStatisticsButton.fadeIn()
-                        self.loadingHeartImageView.stopAnimating()
-                    }
                 })
                 
             }))
             
+            
+            self.workItemsList.append(currentWorkItem)
+            
             // Execute each one of the jobs describe above, asynchronously.
-            for item in workItem {
+            for item in currentWorkItem {
                 basicQueue.async(execute: item)
             }
-            // The last operation has a barrier, meaning that it will only start
-            // when all the other operations started before this one have been
-            // completed.
 
+            
         } else {
             print("BAD QUALITY")
-            let currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
+            self.progressBar.incrementProgress(22.0 / Float(self.totalTasks))
+            let currentRecord = self.searchRecord(currentTimeInterval1970, recordArray)
             if let safeRecord = currentRecord {
                 safeRecord.classificationResult = K.UltraShortModel.errorResult
             } else {
                 let newRecordEntity = RecordEntity(context: context)
-                newRecordEntity.timeInterval1970 = self.timeInterval1970
+                newRecordEntity.timeInterval1970 = currentTimeInterval1970
                 newRecordEntity.classificationResult = K.UltraShortModel.errorResult
             }
             self.saveRecords()
-            
-            // Show the error graphics
-            DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
-                self.resultsText.numberOfLines = 0
-                self.resultsImageView.image = UIImage(named: K.UltraShortModel.noResultImageName)
-                self.resultsText.text = K.UltraShortModel.badQualityMessage
-                self.progressBar.fadeOut()
-                self.loadingHeartImageView.fadeOut()
-//                self.learnMoreButton.isEnabled = true
-                self.loadingText.fadeOut(withDuration: 1.0) {
-                    self.resultsImageView.fadeIn()
-                    self.resultsText.fadeIn()
-//                    self.learnMoreButton.fadeIn()
-                    self.loadingHeartImageView.stopAnimating()
-                }
-            })
         }
     }
-    
     
     /// Applies PCA and machine learning algorithm.
     /// - Parameter inputArray: Array including extracted features.
@@ -328,7 +346,7 @@ class AnalyzeECGViewController : UIViewController {
     
     /// A function that checks if the quality of the recording is good or not. Uses deep learning.
     /// - Parameter rPeaks: The locations of the R peaks.
-    func isRecordingQualityGood(rPeaks: [Int]) -> Bool {
+    func isRecordingQualityGood(rPeaks: [Int], selectedECG: [CDouble]) -> Bool {
         if rPeaks.count > 1 {
             var qualityResults : [Float] = []
             let threshold : Float = 0.0430497 // this is (mean + 2.5 * std)
@@ -417,6 +435,21 @@ class AnalyzeECGViewController : UIViewController {
         }
     }
     
+    
+    /// Finds out which records have not been analyzed yet.
+    /// - Returns: an array of Ints with the indexes of the unanalyzed records
+    func getNotAnalyzedECGsIndexes() -> [Int] {
+        var result : [Int] = []
+        if recordArray.count > 0 {
+            for i in 0..<recordArray.count {
+                if recordArray[i].classificationResult != nil {
+                    result.append(i)
+                }
+            }
+        }
+        return result
+    }
+    
     func saveRecords() {
         do {
             try context.save()
@@ -446,6 +479,15 @@ class AnalyzeECGViewController : UIViewController {
     @IBAction func checkStatisticsButtonPressed(_ sender: UIButton) {
         performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
+    
+    func waitSomeTime(completion: @escaping ()->Void = {}) {
+        do {
+            sleep(2)
+        }
+        completion()
+    }
+    
+    
     
     
     

@@ -30,6 +30,7 @@
 		CEA96C9025EC04E100FCD8C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CEA96C8F25EC04E100FCD8C5 /* Assets.xcassets */; };
 		CEA96CA325EC070700FCD8C5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA96CA225EC070700FCD8C5 /* HealthKit.framework */; };
 		CEC1D73025EE8FBB00920197 /* convolve.c in Sources */ = {isa = PBXBuildFile; fileRef = CEC1D72F25EE8FBB00920197 /* convolve.c */; };
+		CEC549C026580C3F007DF66C /* AnalyzeAllViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC549BF26580C3F007DF66C /* AnalyzeAllViewController.swift */; };
 		CEC6A3FD25F7E3070059D105 /* PanTompkins.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */; };
 		CEC6A40025F7E6010059D105 /* HelpingFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */; };
 		CECABB992648A4AF000EDA19 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = CECABB972648A4AF000EDA19 /* DataModel.xcdatamodeld */; };
@@ -77,6 +78,7 @@
 		CEA96CA525EC084C00FCD8C5 /* diplomaThesis-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "diplomaThesis-Bridging-Header.h"; sourceTree = "<group>"; };
 		CEC1D72E25EE8FBB00920197 /* convolve.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = convolve.h; sourceTree = "<group>"; };
 		CEC1D72F25EE8FBB00920197 /* convolve.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = convolve.c; sourceTree = "<group>"; };
+		CEC549BF26580C3F007DF66C /* AnalyzeAllViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyzeAllViewController.swift; sourceTree = "<group>"; };
 		CEC6A3FC25F7E3070059D105 /* PanTompkins.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanTompkins.swift; sourceTree = "<group>"; };
 		CEC6A3FF25F7E6010059D105 /* HelpingFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpingFunctions.swift; sourceTree = "<group>"; };
 		CECABB982648A4AF000EDA19 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 			isa = PBXGroup;
 			children = (
 				CE4A3A66260B6978002622A6 /* AnalyzeECGViewController.swift */,
+				CEC549BF26580C3F007DF66C /* AnalyzeAllViewController.swift */,
 				CE0ECD67261E064600129653 /* GifOpeningViewController.swift */,
 				CEA96C8A25EC04DE00FCD8C5 /* ViewController.swift */,
 				CE173EA42628971A0062B73B /* LearnMoreController.swift */,
@@ -380,6 +383,7 @@
 				CEA96C8925EC04DE00FCD8C5 /* SceneDelegate.swift in Sources */,
 				CE4A3A6E260B9E73002622A6 /* PlainHorizontalProgressBar.swift in Sources */,
 				CEF97ACA264AA9E400E17863 /* CheckStatisticsViewController.swift in Sources */,
+				CEC549C026580C3F007DF66C /* AnalyzeAllViewController.swift in Sources */,
 				CEC1D73025EE8FBB00920197 /* convolve.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -34,11 +34,13 @@ class ViewController: UIViewController {
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
     lazy var checkStatisticsButton = UIButton(type: .system)
+    lazy var analyzeAllButton = UIButton(type: .system)
     lazy var smallResultImageView = UIImageView()
     var timeInterval1970 : Int64 = Int64(0)
 //    var currentRecord : RecordEntity? = nil
     var pickerView = UIPickerView()
     let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
+    let basicQueue2 = DispatchQueue(label: "m2", qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
     lazy var errorLabel = UILabel()
     
@@ -277,11 +279,29 @@ class ViewController: UIViewController {
         performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
     
+    
+    /// Objective-c function that gets triggered when "Anallyze All" button is pressed.
+    @objc func analyzeAllButtonPressed() {
+        let alert = UIAlertController(title: "Analyze All Recordings", message: "Are you sure you want to analyze all recordings? This may be energy and time consuming.", preferredStyle: .alert)
+        let proceedAction = UIAlertAction(title: "Yes", style: .default) { (action) in
+            let fs = 100 / (self.ecgSamples[0][100].1 - self.ecgSamples[0][0].1)
+            self.rawfs = fs
+            DispatchQueue.main.async(group: .none, qos: .userInteractive, flags: .barrier) {
+                self.performSegue(withIdentifier: K.segueAnalyzeAllIdentifier, sender: self)
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alert.addAction(proceedAction)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
+        
+        
+    }
+    
 
     
     /// Objective-c function that gets triggered when "Analyze ECG" button is pressed.
     @objc func analyzeButtonPressed() {
-        // Gets triggered when analyze button is pressed.
         
         let selected = pickerView.selectedRow(inComponent: 0)
         let sz = ecgSamples[self.indices[selected].0].count
@@ -350,6 +370,15 @@ class ViewController: UIViewController {
             VCdestination.basicQueue = basicQueue
 //            VCdestination.currentRecord = self.currentRecord
             VCdestination.timeInterval1970 = self.timeInterval1970
+        } else if segue.identifier == K.segueAnalyzeAllIdentifier {
+            basicQueue.async(group: .none, qos: .userInteractive, flags: .barrier) {
+                let VCdestination = segue.destination as! AnalyzeAllViewController
+                VCdestination.ecgSamples = self.ecgSamples
+                VCdestination.ecgDates = self.ecgDates
+                VCdestination.indices = self.indices
+                VCdestination.fs = self.rawfs
+                VCdestination.basicQueue = self.basicQueue
+            }
         }
     }
     
@@ -524,10 +553,10 @@ extension ViewController {
             
             currentECGLineChart.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(currentECGLineChart)
-            currentECGLineChart.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-            currentECGLineChart.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+            currentECGLineChart.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
+            currentECGLineChart.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
             currentECGLineChart.topAnchor.constraint(equalTo: pickerView.bottomAnchor, constant: 10).isActive = true
-            currentECGLineChart.heightAnchor.constraint(equalToConstant: view.frame.size.width + -115).isActive = true
+            currentECGLineChart.heightAnchor.constraint(equalToConstant: view.frame.size.width + -135).isActive = true
             
             analyzeButton.translatesAutoresizingMaskIntoConstraints = false
             analyzeButton.setTitle("Analyze ECG", for: .normal)
@@ -551,9 +580,6 @@ extension ViewController {
             contentView.addSubview(checkStatisticsButton)
             checkStatisticsButton.sizeToFit()
             checkStatisticsButton.centerXAnchor.constraint(equalTo: checkStatisticsButton.superview!.centerXAnchor).isActive = true
-//            analyzeButton.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-//            analyzeButton.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
-//            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
             checkStatisticsButton.topAnchor.constraint(equalTo: analyzeButton.bottomAnchor, constant: 0).isActive = true
             checkStatisticsButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
 //            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
@@ -570,6 +596,18 @@ extension ViewController {
 //            analyzeButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: 10).isActive = true
             smallResultImageView.widthAnchor.constraint(equalTo: analyzeButton.heightAnchor, multiplier: 0.33).isActive = true
             smallResultImageView.heightAnchor.constraint(equalTo: smallResultImageView.widthAnchor).isActive = true
+            
+            analyzeAllButton.translatesAutoresizingMaskIntoConstraints = false
+            analyzeAllButton.setTitle("Analyze All", for: .normal)
+//            analyzeButton.setTitleColor(.label, for: .normal)
+//            analyzeButton.showsTouchWhenHighlighted = true
+            contentView.addSubview(analyzeAllButton)
+            analyzeAllButton.sizeToFit()
+            analyzeAllButton.centerXAnchor.constraint(equalTo: analyzeAllButton.superview!.centerXAnchor).isActive = true
+            analyzeAllButton.topAnchor.constraint(equalTo: checkStatisticsButton.bottomAnchor, constant: 0).isActive = true
+            analyzeAllButton.heightAnchor.constraint(equalToConstant: 35).isActive = true
+//            analyzeButton.heightAnchor.constraint(equalToConstant: 30.0)
+            analyzeAllButton.addTarget(self, action: #selector(analyzeAllButtonPressed), for: .touchUpInside)
             
             // customize line chart and add data
             
@@ -622,8 +660,8 @@ extension ViewController {
             
             currentECGLineChart.translatesAutoresizingMaskIntoConstraints = false
             contentView.addSubview(currentECGLineChart)
-            currentECGLineChart.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 20).isActive = true
-            currentECGLineChart.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -20).isActive = true
+            currentECGLineChart.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 30).isActive = true
+            currentECGLineChart.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -30).isActive = true
             currentECGLineChart.topAnchor.constraint(equalTo: pickerView.bottomAnchor, constant: 10).isActive = true
             currentECGLineChart.heightAnchor.constraint(equalToConstant: view.frame.size.width + -115).isActive = true
             
