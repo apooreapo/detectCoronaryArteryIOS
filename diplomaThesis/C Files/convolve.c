@@ -2,8 +2,9 @@
 //  convolve.c
 //  diplomaThesis
 //
-//  Created by User on 2/3/21.
+//  Created by Apostolou Orestis on 2/3/21.
 //
+//  Simple convolution on C. Used in Pan-Tompkins algorithm.
 
 #include "convolve.h"
 

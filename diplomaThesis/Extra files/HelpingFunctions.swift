@@ -2,8 +2,9 @@
 //  HelpingFunctions.swift
 //  diplomaThesis
 //
-//  Created by User on 9/3/21.
+//  Created by Apostolou Orestis on 9/3/21.
 //
+// Some mathematic functions that help us make our life easier.
 
 import Foundation
 

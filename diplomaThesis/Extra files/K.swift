@@ -2,8 +2,9 @@
 //  K.swift
 //  diplomaThesis
 //
-//  Created by User on 24/3/21.
+//  Created by Apostolou Orestis on 24/3/21.
 //
+//  A file including all constants in the project.
 
 import Foundation
 
@@ -43,7 +44,7 @@ struct K {
         static let noCADImageName : String = "health_test-512-noCAD"
         static let noResultImageName : String = "health_test-512-question"
         static let noCADResultMessage : String = "It seems that this ECG shows no signs of Coronary Artery Disease!"
-        static let CADResultMessage : String = "Hmm, it seems that this ECG shows some signs of Coronary Artery Disease. Maybe it's time for some broccoli!"
+        static let CADResultMessage : String = "Hmm, it seems that this ECG shows some signs of Coronary Artery Disease. Please try to repeat the process with more recordings. If this result continues to show up, maybe it's time for some broccoli!"
         static let noResultMessage : String = "We seem to have a problem calculating your results. Please try again with another sample."
         static let badQualityMessage : String = "It seems that the quality of the recording is not that good. Please try again with another recording."
         

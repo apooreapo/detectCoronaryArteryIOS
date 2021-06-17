@@ -2,8 +2,9 @@
 //  HelloWorldWrapper.m
 //  SwiftCPPTest
 //
-//  Created by User on 23/2/21.
+//  Created by Apostolou Orestis on 23/2/21.
 //
+//  This file is necessary for using C++ files on a Swift project.
 
 #import <Foundation/Foundation.h>
 #import "filtfiltWrapper.h"

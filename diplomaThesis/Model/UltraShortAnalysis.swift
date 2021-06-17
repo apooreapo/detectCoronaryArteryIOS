@@ -2,8 +2,11 @@
 //  UltraShortAnalysis.swift
 //  diplomaThesis
 //
-//  Created by User on 10/3/21.
+//  Created by Apostolou Orestis on 10/3/21.
 //
+//  This file implements the features' extraction for each 30-sec ECG.
+//  The most time-consuming extraction is the one regarding sample entropy
+//  and approximate entropy.
 
 import Foundation
 

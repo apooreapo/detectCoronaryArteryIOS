@@ -2,8 +2,14 @@
 //  CADStatistics.swift
 //  diplomaThesis
 //
-//  Created by User on 11/5/21.
+//  Created by Apostolou Orestis on 11/5/21.
 //
+//  This struct manages all the statistics of the user. It counts how many
+//  records you have, how many of them show CAD, how many of them do not
+//  show CAD, what is the final ratio, and what is the final message that
+//  must be shown to the user.
+//
+//  If a user has analyzed less than 10 samples, the result is undefined.
 
 import Foundation
 import UIKit

@@ -2,8 +2,9 @@
 //  UIViewExt.swift
 //  diplomaThesis
 //
-//  Created by User on 31/3/21.
+//  Created by Apostolou Orestis on 31/3/21.
 //
+//  A UIView extension for fading in and out some UIViews.
 
 import Foundation
 import UIKit

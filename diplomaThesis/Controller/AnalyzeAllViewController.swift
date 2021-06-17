@@ -2,8 +2,15 @@
 //  AnalyzeAllViewController.swift
 //  diplomaThesis
 //
-//  Created by User on 24/3/21.
+//  Created by Apostolou Orestis on 24/3/21.
 //
+//  This controller controlls the view presented when a user clicks "analyze
+//  all". It checks which ECG samples have not been analyzed yet, and
+//  analyzes them in the same way that they are analyzed in
+//  AnalyzeECGViewController. The whole process is majorly multithreaded.
+//  We use some barriers to be sure that the parallel actions are performed
+//  correctly. The action of analyzing all ECGs can be time consuming, and
+//  this is why we show an alert when clicking this option.
 
 import Foundation
 import UIKit
@@ -24,9 +31,9 @@ class AnalyzeAllViewController : UIViewController {
     var indices = [(Int,Int)]()
     var basicQueue = DispatchQueue(label: "m1")
     var basicQueue2 = DispatchQueue(label: "m2")
-    var workItemsList : [[DispatchWorkItem]] = []
-    var workItems : [DispatchWorkItem] = []
-    var totalTasks : Int = 44
+    var workItemsList : [[DispatchWorkItem]] = [] // A list of work item lists to be executed
+    var workItems : [DispatchWorkItem] = [] // A list of workItems
+    var totalTasks : Int = 44 // The full count of tasks, 44 is not really used.
     var timeInterval1970 : Int64 = Int64(0)
     let helpingQueue = DispatchQueue(label: K.helpingQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
@@ -204,17 +211,18 @@ class AnalyzeAllViewController : UIViewController {
                 print(String(format: "Std of approximate entropy: %.4f", appEn.std()))
                 print(String(format: "Std of sample entropy: %.4f", sampEn.std()))
                 let inputFeatures = UltraShortFeaturesStruct(SDRR: fast.SDRR, AverageHeartRate: fast.AverageHeartRate, SDNN: fast.SDNN, SDSD: fast.SDSD, pNN50: fast.pNN50, RMSSD: fast.RMSSD, HTI: fast.HTI, HRMaxMin: fast.HRMaxMin, LFEnergy: fast.LFEnergy, LFEnergyPercentage: fast.LFEnergyPercentage, HFEnergy: fast.HFEnergy, HFEnergyPercentage: fast.HFEnergyPercentage, PoincareSD1: fast.PoincareSD1, PoincareSD2: fast.PoincareSD2, PoincareRatio: fast.PoincareRatio, PoincareEllipsisArea: fast.PoincareEllipsisArea, MeanApproximateEntropy: appEn.avg(), StdApproximateEntropy: appEn.std(), MeanSampleEntropy: sampEn.avg(), StdSampleEntropy: sampEn.std(), LFPeak: fast.LFPeak, HFPeak: fast.HFPeak, LFHFRatio: fast.LFHFRatio)
-                print("Presenting the features as they are at the start:")
-                inputFeatures.printValues()
-                print("Adding to record...")
+//                print("Presenting the features as they are at the start:")
+//                inputFeatures.printValues()
+//                print("Adding to record...")
                 //                globalTestData.append(inputFeatures.toArray())
                 //                if globalTestData.count == 38 {
                 //                    self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
                 //                }
-                print("Calculating result...")
+//                print("Calculating result...")
                 let finalResult = self.analyzeUltraShortECGSVM(inputArray: inputFeatures.toArray())
-                print("Do I have CAD? : " + finalResult)
+//                print("Do I have CAD? : " + finalResult)
                 
+                // Now we will update the RecordEntities that we analyzed
                 DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
                     self.resultsText.numberOfLines = 0
                     let currentRecord = self.searchRecord(currentTimeInterval1970, recordArray)
@@ -234,14 +242,18 @@ class AnalyzeAllViewController : UIViewController {
             self.workItemsList.append(currentWorkItem)
             
             // Execute each one of the jobs describe above, asynchronously.
+            // This process is multithreaded, and this is why we use barriers.
+            // By using multithreaded computation we gain need less time
+            // to complete the analysis.
             for item in currentWorkItem {
                 basicQueue.async(execute: item)
             }
             
             
         } else {
-            print("BAD QUALITY")
-            self.progressBar.incrementProgress(22.0 / Float(self.totalTasks))
+            // gets here if the recording has not good quality
+//            print("BAD QUALITY")
+            self.progressBar.incrementProgress(22.0 / Float(self.totalTasks)) // increment full bar
             let currentRecord = self.searchRecord(currentTimeInterval1970, recordArray)
             if let safeRecord = currentRecord {
                 safeRecord.classificationResult = K.UltraShortModel.errorResult
@@ -326,7 +338,7 @@ class AnalyzeAllViewController : UIViewController {
     ///   - output: The name of the new .csv file.
     func createCSVX(from recArray:[[Double]], output: String) {
         
-        var strings : [String] = []
+//        var strings : [String] = []
         var csvString : String = ""
         
         for item in K.UltraShortModel.input_names_R_style {
@@ -370,7 +382,7 @@ class AnalyzeAllViewController : UIViewController {
     }
     
     
-    /// A function that checks if the quality of the recording is good or not. Uses deep learning.
+    /// A function that checks if the quality of the recording is good or not. Uses deep learning. (checkRRfinal.mlmodel)
     /// - Parameter rPeaks: The locations of the R peaks.
     func isRecordingQualityGood(rPeaks: [Int], selectedECG: [CDouble]) -> Bool {
         if rPeaks.count > 1 {
@@ -430,14 +442,14 @@ class AnalyzeAllViewController : UIViewController {
                     }
                 }
             }
-            print(qualityResults)
+//            print(qualityResults)
             var badQuality = 0
             for i in 0..<qualityResults.count {
                 if qualityResults[i] > threshold {
                     badQuality += 1
                 }
             }
-            print(Float(badQuality) / Float(rPeaks.count - 1))
+//            print(Float(badQuality) / Float(rPeaks.count - 1))
             if Float(badQuality) / Float(rPeaks.count - 1) > 0.5 {
                 return false
             } else {

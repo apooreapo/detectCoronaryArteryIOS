@@ -36,6 +36,9 @@
  *
  */
 
+// File used for calculating butterworth coefficients. Used in
+// Pan-Tompkins algorithm.
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

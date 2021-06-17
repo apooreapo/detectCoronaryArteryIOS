@@ -444,7 +444,7 @@ Analyzing your ECG...</string>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" id="9h9-X6-M7W"/>
                                                                 </constraints>
-                                                                <string key="text">The accuracy of the algorithm is close to 88%. The algorithm result, was modified so as to be unbiased to the result. This means that (regarding the testing dataset) a false prediction, could be either a false positive or a false negative with almost equal probability.</string>
+                                                                <string key="text">The accuracy of the algorithm is close to 95%. The algorithm result, was modified so as to be unbiased to the result. This means that (regarding the testing dataset) a false prediction, could be either a false positive or a false negative with almost equal probability. Also, the algorithm was centered around 55%, meaning that this percentage gives equal chances for having CAD or not having.</string>
                                                                 <color key="textColor" systemColor="labelColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -516,7 +516,7 @@ Analyzing your ECG...</string>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" id="ubr-4o-sZv"/>
                                                                 </constraints>
-                                                                <string key="text">A pretty common reason for the algorithm showing a positive result, is to have a low quality recording. If the recording does not seem to have high quality, you should try the process with another ECG. If the recording is of high quality and you have showed any of the mentioned sympotms, it is suggested that you schedule an examination with a doctor. It is emphasized that the use of this algorithm is only supplementary.</string>
+                                                                <string key="text">If you have showed any of the mentioned sympotms, it is suggested that you schedule an examination with a doctor. It is emphasized that the use of this algorithm is only supplementary.</string>
                                                                 <color key="textColor" systemColor="labelColor"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>

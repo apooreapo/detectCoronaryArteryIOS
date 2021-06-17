@@ -2,19 +2,21 @@
 //  CheckStatisticsViewController.swift
 //  diplomaThesis
 //
-//  Created by User on 11/5/21.
+//  Created by Apostolou Orestis on 11/5/21.
 //
 
 import Foundation
 import UIKit
 import CoreData
 
+
+/// This controller handles the presentation of the full results to the user.
 class CheckStatisticsViewController : UIViewController {
     
-    var myFullCount : Int = 0
-    var myCADCount : Int = 0
-    var myRatio : Float = 0.0
-    var myResult : String = "No"
+    var myFullCount : Int = 0 // Count of all non undefined records.
+    var myCADCount : Int = 0 // Count of CAD records.
+    var myRatio : Float = 0.0 // Ratio of CAD records to all non undefined records.
+    var myResult : String = "No" // Final result of having CAD or not.
     var myImage : UIImage = UIImage(named: K.finalQuestionImageName)!
 //    var myBackgroundColor : UIColor = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.0)
     var myMessage : String = K.finalUndefinedMessage
@@ -66,6 +68,9 @@ class CheckStatisticsViewController : UIViewController {
         super.viewWillAppear(animated)
     }
     
+    
+    /// This function deletes all recordings.
+    /// - Parameter sender: The sender view of the action.
     @IBAction func deleteButtonPressed(_ sender: UIButton) {
         let alert = UIAlertController(title: "Delete All Recordings", message: "Are you sure you want to delete all recordings?", preferredStyle: .alert)
         let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { (action) in

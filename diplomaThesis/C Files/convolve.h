@@ -2,8 +2,9 @@
 //  convolve.h
 //  diplomaThesis
 //
-//  Created by User on 2/3/21.
+//  Created by Apostolou Orestis on 2/3/21.
 //
+//  Header for convolve.c file
 
 #ifndef convolve_h
 #define convolve_h

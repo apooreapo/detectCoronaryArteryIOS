@@ -2,8 +2,9 @@
 //  Queue.swift
 //  diplomaThesis
 //
-//  Created by User on 10/3/21.
+//  Created by Apostolou Orestis on 10/3/21.
 //
+//  Queue datatype implementation for Swift.
 
 import Foundation
 

@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  diplomaThesis
 //
-//  Created by User on 28/2/21.
+//  Created by Apostolou Orestis on 28/2/21.
 //
 
 import UIKit

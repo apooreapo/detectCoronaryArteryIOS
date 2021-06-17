@@ -2,8 +2,22 @@
 //  AnalyzeECGViewController.swift
 //  diplomaThesis
 //
-//  Created by User on 24/3/21.
+//  Created by Apostolou Orestis on 24/3/21.
 //
+//  This controller controlls the view presented when a user clicks "analyze
+//  ECG". First of all, it checks whether the result is undefined or not,
+//  by using a Deep Learning model (checkRRfinal.mlmodel) which uses
+//  autoencoders. Then, if the result is not undefined, it extracts all the
+//  features from the 30sec ECG and implements a machine learning model
+//  (UltraShortHRV_PCA_filtered.mlmodel) which classifies the result as
+//  CAD or no CAD. The result then is saved as a RecordEntity and
+//  contributes to the full classification of the User as having CAD or not.
+//  If a user tries to analyze an already analyzed he can do so, but there
+//  is an indication (a tic) showing that this ECG has already been
+//  analyzed, and the result has already been calculated in the final
+//  results.
+//
+
 
 import Foundation
 import UIKit
@@ -19,11 +33,11 @@ class AnalyzeECGViewController : UIViewController {
     // However, they need an initial value (or else they would need initializing function).
     var fs: Double = 0.0
 //    var currentRecord : RecordEntity? = nil
-    var selectedECG : [CDouble] = []
+    var selectedECG : [CDouble] = [] // The selected ECG for analysis.
     var basicQueue = DispatchQueue(label: "m1")
     var basicQueue2 = DispatchQueue(label: "m2")
-    var workItem : [DispatchWorkItem] = []
-    var totalTasks : Int = 22
+    var workItem : [DispatchWorkItem] = [] // A list of work items to be executed.
+    var totalTasks : Int = 22 // The total tasks that are time consuming (11 sampEn, and 11 appEn). This is mainly used for managing the progress bar.
     var timeInterval1970 : Int64 = Int64(0)
     let helpingQueue = DispatchQueue(label: K.helpingQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
     
@@ -68,6 +82,7 @@ class AnalyzeECGViewController : UIViewController {
     }
     
     // In case the user cancels the analysis, we want the processes that are left to be terminated, or canceled.
+    // The only way to do this in swift is to use DispatchWorkItems.
     override func viewWillDisappear(_ animated: Bool) {
         print("Canceling all running tasks and exiting...")
         for item in workItem {
@@ -81,7 +96,7 @@ class AnalyzeECGViewController : UIViewController {
     
     /// The core function, implements full analysis.
     func implementFullAnalysis() {
-        print(String(format: "Current fs is %.2f and current current ECG count is %d.", fs, selectedECG.count))
+//        print(String(format: "Current fs is %.2f and current current ECG count is %d.", fs, selectedECG.count))
         
         // Pan Tompkins algorithm for R peaks detection.
         let myPanTompkins = PanTompkins(input: selectedECG, fs: fs)
@@ -89,7 +104,7 @@ class AnalyzeECGViewController : UIViewController {
         
         // Check if the recording is of high quality or not
         if isRecordingQualityGood(rPeaks: r_locations) {
-            print("GOOD QUALITY")
+//            print("GOOD QUALITY")
             
             // Starting Ultra Short Analysis.
             var myUltraShortAnalysis = UltraShortAnalysis(input: selectedECG, fs: fs, rLocs: r_locations)
@@ -135,16 +150,16 @@ class AnalyzeECGViewController : UIViewController {
                 print(String(format: "Std of approximate entropy: %.4f", appEn.std()))
                 print(String(format: "Std of sample entropy: %.4f", sampEn.std()))
                 let inputFeatures = UltraShortFeaturesStruct(SDRR: fast.SDRR, AverageHeartRate: fast.AverageHeartRate, SDNN: fast.SDNN, SDSD: fast.SDSD, pNN50: fast.pNN50, RMSSD: fast.RMSSD, HTI: fast.HTI, HRMaxMin: fast.HRMaxMin, LFEnergy: fast.LFEnergy, LFEnergyPercentage: fast.LFEnergyPercentage, HFEnergy: fast.HFEnergy, HFEnergyPercentage: fast.HFEnergyPercentage, PoincareSD1: fast.PoincareSD1, PoincareSD2: fast.PoincareSD2, PoincareRatio: fast.PoincareRatio, PoincareEllipsisArea: fast.PoincareEllipsisArea, MeanApproximateEntropy: appEn.avg(), StdApproximateEntropy: appEn.std(), MeanSampleEntropy: sampEn.avg(), StdSampleEntropy: sampEn.std(), LFPeak: fast.LFPeak, HFPeak: fast.HFPeak, LFHFRatio: fast.LFHFRatio)
-                print("Presenting the features as they are at the start:")
-                inputFeatures.printValues()
-                print("Adding to record...")
+//                print("Presenting the features as they are at the start:")
+//                inputFeatures.printValues()
+//                print("Adding to record...")
 //                globalTestData.append(inputFeatures.toArray())
 //                if globalTestData.count == 38 {
 //                    self.createCSVX(from: globalTestData, output: "orestis_data_updated.csv")
 //                }
-                print("Calculating result...")
+//                print("Calculating result...")
                 let finalResult = self.analyzeUltraShortECGSVM(inputArray: inputFeatures.toArray())
-                print("Do I have CAD? : " + finalResult)
+//                print("Do I have CAD? : " + finalResult)
                 
                 DispatchQueue.main.async(group: .none, qos: .userInitiated, flags: .barrier, execute: {
                     self.resultsText.numberOfLines = 0
@@ -158,6 +173,8 @@ class AnalyzeECGViewController : UIViewController {
                         self.resultsImageView.image = UIImage(named: K.UltraShortModel.noResultImageName)
                         self.resultsText.text = K.UltraShortModel.noResultMessage
                     }
+                    
+                    // Now we will update the RecordEntity that we analyzed
                     let currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
                     if let safeRecord = currentRecord {
                         safeRecord.classificationResult = finalResult
@@ -191,7 +208,8 @@ class AnalyzeECGViewController : UIViewController {
             // completed.
 
         } else {
-            print("BAD QUALITY")
+            // gets here if the recording has not good quality
+//            print("BAD QUALITY")
             let currentRecord = self.searchRecord(self.timeInterval1970, recordArray)
             if let safeRecord = currentRecord {
                 safeRecord.classificationResult = K.UltraShortModel.errorResult
@@ -291,7 +309,7 @@ class AnalyzeECGViewController : UIViewController {
     ///   - output: The name of the new .csv file.
     func createCSVX(from recArray:[[Double]], output: String) {
         
-        var strings : [String] = []
+//        var strings : [String] = []
         var csvString : String = ""
         
         for item in K.UltraShortModel.input_names_R_style {

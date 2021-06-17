@@ -2,8 +2,19 @@
 //  PanTompkins.swift
 //  diplomaThesis
 //
-//  Created by User on 9/3/21.
+//  Created by Apostolou Orestis on 9/3/21.
 //
+//  This file implements Pan-Tompkins algorithm.
+//  It is a Swift implementation of the Matlab Code found on
+//   https://www.mathworks.com/matlabcentral/fileexchange/45840-complete-pan-tompkins-implementation-ecg-qrs-detector
+//
+//  Some Matlab built-in functions are not Swift-built-in, so we had to
+//  reconstruct them in C and C++ (matlab's filtfilt, which is a zero-phase
+//  filter is such a function). This is the use of C and C++ files.
+//
+//  The advantage of this version of Pan-Tompkins is that it does not have
+//  an error in the first R peaks, and that it finds exactly the spot of
+//  the peak (without a constant place error).
 
 import Foundation
 

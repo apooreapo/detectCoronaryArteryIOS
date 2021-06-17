@@ -2,8 +2,9 @@
 //  filtfilt.hpp
 //  SwiftCPPTest
 //
-//  Created by User on 1/3/21.
+//  Created by Apostolou Orestis on 1/3/21.
 //
+//  Header for filtfilt.cpp
 
 #ifndef filtfilt_hpp
 #define filtfilt_hpp

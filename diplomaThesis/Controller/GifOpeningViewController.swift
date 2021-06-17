@@ -2,7 +2,7 @@
 //  GifOpeningViewController.swift
 //  diplomaThesis
 //
-//  Created by User on 7/4/21.
+//  Created by Apostolou Orestis on 7/4/21.
 //
 
 import Foundation

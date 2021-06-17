@@ -2,8 +2,9 @@
 //  filtfiltWrapper.h
 //  SwiftCPPTest
 //
-//  Created by User on 23/2/21.
+//  Created by Apostolou Orestis on 23/2/21.
 //
+//  This file is necessary for using C++ files on a Swift project.
 
 #ifndef filtfiltWrapper_h
 #define filtfiltWrapper_h

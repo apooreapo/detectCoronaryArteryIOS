@@ -2,8 +2,9 @@
 //  FFTAnalysis.swift
 //  diplomaThesis
 //
-//  Created by User on 17/3/21.
+//  Created by Apostolou Orestis on 17/3/21.
 //
+//  This file implements the extraction of all Frequency domain features.
 
 import Foundation
 

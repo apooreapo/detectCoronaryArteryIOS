@@ -1,3 +1,13 @@
+//
+//  PlainHorizontalProgressBar.swift
+//  diplomaThesis
+//
+//  Created by Apostolou Orestis on 11/5/21.
+//
+//  A simple animated progress bar, for indicating the progress of something
+//  time consuming to the user.
+
+
 import Foundation
 import UIKit
 

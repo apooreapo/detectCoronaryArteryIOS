@@ -2,8 +2,9 @@
 //  UltraShortFeaturesStruct.swift
 //  diplomaThesis
 //
-//  Created by User on 7/4/21.
+//  Created by Apostolou Orestis on 7/4/21.
 //
+//  A struct including all features of Ultra Short Analysis' features extraction.
 
 import Foundation
 
@@ -91,6 +92,8 @@ struct UltraShortFeaturesStruct {
         }
     }
     
+    /// Converts the struct to an array of doubles.
+    /// - Returns: An array of doubles containing all extracted features.
     func toArray() -> [Double] {
         var output: [Double] = []
         output.append(SDRR)
@@ -119,6 +122,7 @@ struct UltraShortFeaturesStruct {
         return output
     }
     
+    /// Prints all extracted features. Function used mainly for debugging.
     func printValues(){
         for i in 0..<K.UltraShortModel.input_names.count {
             print(String(format: K.UltraShortModel.input_names[i] + ": %.4f", self.toArray()[i]))

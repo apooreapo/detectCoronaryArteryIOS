@@ -4,43 +4,43 @@
 //
 //  Created by Orestis Apostolou on 20/12/20.
 //
+//  This is the Controller managing the opening view of the application.
 
 import UIKit
 import HealthKit
 import Charts
 import CoreData
 
-var recordArray : [RecordEntity] = []
+var recordArray : [RecordEntity] = [] // data struct for managing a 30sec record result
 var globalTestData : [[Double]] = []
-let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext // context for saving permanently the results of the previous analysis
 
 /// The controller of the starting view of the application. From here the user can navigate to the rest controllers.
 class ViewController: UIViewController {
     
-    var ecgSamples = [[(Double,Double)]] ()
-    var ecgDates = [Date] ()
-    var indices = [(Int,Int)]()
-    var rawECG : [CDouble] = []
-    var rawfs : Double = 0.0
-//    lazy var myCADStatistics : CADStatistics = CADStatistics(recordArr: recordArray)
-//    var testMatrix : [[Double]] = []
+    var ecgSamples = [[(Double,Double)]] () // the data of each 30sec ECG - first is x, second is y
+    var ecgDates = [Date] () // the date of each 30sec ECG - used for identifying the record
+    var indices = [(Int,Int)]() // Indices helping identify the sample
+    var rawECG : [CDouble] = [] // The data of one ECG
+    var rawfs : Double = 0.0 // The sampling frequency of one ECG
     
-    let healthStore = HKHealthStore()
+    let healthStore = HKHealthStore() // this var manages all data regarding healthkit in apple
     lazy var mainTitleLabel = UILabel()
     lazy var loadingHeartImageView = UIImageView()
-//    lazy var currentECGLineChart = LineChartView()
-//    lazy var currentECGLineChart = ScatterChartView()
     lazy var currentECGLineChart = CombinedChartView()
     lazy var contentView = UIView()
     lazy var analyzeButton = UIButton(type: .system)
     lazy var checkStatisticsButton = UIButton(type: .system)
     lazy var analyzeAllButton = UIButton(type: .system)
     lazy var smallResultImageView = UIImageView()
+    // timeInterval1970 is a value giving the distance of date to a constant
+    // date in 1970. In this way, we can use the date of an ECG as a primary
+    // key for searching the sample. Also, we avoid possible problems of
+    // using different time zones.
     var timeInterval1970 : Int64 = Int64(0)
-//    var currentRecord : RecordEntity? = nil
     var pickerView = UIPickerView()
-    let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
-    let basicQueue2 = DispatchQueue(label: "m2", qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none)
+    let basicQueue = DispatchQueue(label: K.basicQueueID, qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none) // A queue for executing tasks
+    let basicQueue2 = DispatchQueue(label: "m2", qos: .userInitiated, attributes: .concurrent, autoreleaseFrequency: .never, target: .none) // another queue for executing tasks
     
     lazy var errorLabel = UILabel()
     
@@ -59,6 +59,8 @@ class ViewController: UIViewController {
         }
 //        self.navigationController?.setToolbarHidden(true, animated: false)
         // add title ECG
+        
+        // If you are trying to understand the functionality of the code, please ignore the below, they refer to the design.
         
         contentView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(contentView)
@@ -94,20 +96,28 @@ class ViewController: UIViewController {
         loadingHeartImageView.heightAnchor.constraint(equalToConstant: 30.0).isActive = true
         loadingHeartImageView.topAnchor.constraint(equalTo: mainTitleLabel.bottomAnchor, constant: 30).isActive = true
         
+        // end of code regarding design
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         super.viewWillAppear(animated)
-        recordArray = loadRecords()
+        // Record array stores all the RecordEntities. A RecordEntity, is a
+        // coreData Entity, meaning a dataStruct saving permanently the
+        // results of the analysis of a certain 30sec ECG. A RecordEntity
+        // will save the result of the analysis of an ECG: its date, and
+        // its result, CAD / no CAD / Undefined.
+        recordArray = loadRecords() // load the records stored in coreData
         
     }
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Some code regarding the design of the View
         self.pickerView.isUserInteractionEnabled = false
-        recordArray = loadRecords()
+        recordArray = loadRecords() // load the records stored in coreData
         pickerView.dataSource = self
         pickerView.delegate = self
         //view.translatesAutoresizingMaskIntoConstraints = false
@@ -122,24 +132,25 @@ class ViewController: UIViewController {
         errorLabel.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         errorLabel.heightAnchor.constraint(equalToConstant: 100.0).isActive = true
         errorLabel.isHidden = true
+        // end of design code
         
-        
-        var counter = 0
-//        var test1: [CDouble] = [1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0]
-//        var output = implement_fft(4, &test1)
-//        for i in 0..<2 {
-//            print(String(format: "output[%d] = %.5f", i, output![i]))
-//        }
-//        let myFFT = FFTAnalysis(input: test1, fs: 10)
-//        myFFT.analyzeFreqs()
+        // The process below is multithreaded. We use the threadCounter to
+        // keep the count of how many ECGs have loaded
+        var threadCounter = 0
         let healthKitTypes: Set = [HKObjectType.electrocardiogramType()]
+        // Request Apple to access the Health Data (the ECGs)
         healthStore.requestAuthorization(toShare: nil, read: healthKitTypes) { (bool, error) in
             if (bool) {
                 
-                //authorization completed, maybe successfully or not
+                // Authorization completed, maybe successfully or not.
+                // Apple does not have a way yet to know if auth is
+                // succesfull or not.
+                //
+                // Probably the only reason for failing in auth is not
+                // giving the app the correct permissions for getting access
+                // to your data.
                 
                 self.getECGsCount { (ecgsCount) in
-//                    print("Result is \(ecgsCount)")
                     if ecgsCount < 1 {
                         print("You have no ecgs available")
                         DispatchQueue.main.async {
@@ -156,10 +167,10 @@ class ViewController: UIViewController {
                                 DispatchQueue.main.async {
                                     self.ecgSamples.append(ecgResults)
                                     self.ecgDates.append(ecgDate)
-                                    counter += 1
+                                    threadCounter += 1
                                     
-                                    // the last thread will enter here, meaning all of them are finished
-                                    if counter == ecgsCount {
+                                    // The last thread will enter here, meaning all of them are finished
+                                    if threadCounter == ecgsCount {
                                         
                                         // sort ecgs by newest to oldest
                                         
@@ -233,7 +244,7 @@ class ViewController: UIViewController {
                     self.pickerView.isHidden = true
                     self.loadingHeartImageView.stopAnimating()
                     self.loadingHeartImageView.isHidden = true
-                    // Fix iiiiiiiiiiiiiiit!!!!!!!!!!!!!!!!!!!!
+                    // Fix it!
                     
                 case .measurement(let value):
                     let sample = (value.quantity(for: .appleWatchSimilarToLeadI)!.doubleValue(for: HKUnit.volt()) , value.timeSinceSampleStart)
@@ -244,15 +255,19 @@ class ViewController: UIViewController {
                     DispatchQueue.main.async {
                         completion(ecgSamples,samples[counter].startDate)
                     }
+                @unknown default:
+                    print("Uknown error here")
+                    self.pickerView.isHidden = true
+                    self.loadingHeartImageView.stopAnimating()
+                    self.loadingHeartImageView.isHidden = true
+                    // Fix it!
                 }
             }
             self.healthStore.execute(query)
         }
         
-        
+        // Execute the query above
         self.healthStore.execute(ecgQuery)
-        //print("everything working here")
-        //print(ecgSamples.count)
     }
     
     
@@ -275,7 +290,7 @@ class ViewController: UIViewController {
     @objc func checkStatisticsButtonPressed() {
         print("Check Statistics!")
         recordArray = loadRecords()
-//        self.myCADStatistics = CADStatistics(recordArr: recordArray)
+        // Pressing the button sends you to another View.
         performSegue(withIdentifier: K.segueCheckStatisticsIdentifier, sender: self)
     }
     
@@ -284,7 +299,7 @@ class ViewController: UIViewController {
     @objc func analyzeAllButtonPressed() {
         let alert = UIAlertController(title: "Analyze All Recordings", message: "Are you sure you want to analyze all recordings? This may be energy and time consuming.", preferredStyle: .alert)
         let proceedAction = UIAlertAction(title: "Yes", style: .default) { (action) in
-            let fs = 100 / (self.ecgSamples[0][100].1 - self.ecgSamples[0][0].1)
+            let fs = 100 / (self.ecgSamples[0][100].1 - self.ecgSamples[0][0].1) // Sampling freq is same for all ECGs
             self.rawfs = fs
             DispatchQueue.main.async(group: .none, qos: .userInteractive, flags: .barrier) {
                 self.performSegue(withIdentifier: K.segueAnalyzeAllIdentifier, sender: self)
@@ -294,7 +309,6 @@ class ViewController: UIViewController {
         alert.addAction(proceedAction)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)
-        
         
     }
     
@@ -361,6 +375,11 @@ class ViewController: UIViewController {
         // fs = 512.414
     }
     
+    
+    /// This function precedes the a segue. A segue means a transition from a view to another. It is very important, as it passes the necessary data from a the sending to the receiving view.
+    /// - Parameters:
+    ///   - segue: Type of segue.
+    ///   - sender: The sending view.
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == K.segueAnalyzeECGIdentifier {
             let VCdestination = segue.destination as! AnalyzeECGViewController
@@ -397,7 +416,7 @@ class ViewController: UIViewController {
         return nil
     }
     
-    /// Creates and saves a smiple csv as "myECG.csv. Used for testing purposes.
+    /// Creates and saves a simple csv as "myECG.csv. Used for testing purposes.
     /// - Parameter recArray: The array of CDoubles to be saved as .csv file
     func createCSVX(from recArray:[CDouble]) {
         
@@ -429,6 +448,11 @@ class ViewController: UIViewController {
 
     }
     
+    
+    /// Creates and saves a simple csv as "myECG.csv. Used for testing purposes.
+    /// - Parameters:
+    ///   - recArray: The array of CDoubles to be saved as .csv file
+    ///   - output: The path of the output.
     func createCSVX(from recArray:[[Double]], output: String) {
         
 //        var strings : [String] = []
@@ -636,7 +660,7 @@ extension ViewController {
             
             let searchRecordResult = searchRecord(timeInterval1970, recordArray)
             if searchRecordResult != nil {
-                print(searchRecordResult?.classificationResult)
+//                print(searchRecordResult?.classificationResult)
                 smallResultImageView.image = UIImage(imageLiteralResourceName: K.ticImageName)
             } else {
                 smallResultImageView.image = nil

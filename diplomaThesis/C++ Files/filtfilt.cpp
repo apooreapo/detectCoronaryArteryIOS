@@ -5,6 +5,8 @@
 //
 // Implementation: out = filtfiltWrapper().filter_zero_phase(double *input, int n, double *aCoeffs, int na, double *bCoeffs, int nb, int normalize)
 //
+// This file helps for implementing Pan Tompkins algorithm, in order to
+// calculate efficiently and accurately the R peaks of an ECG
 
 
 #include <vector>
