@@ -11,4 +11,6 @@ Some demos of the application can be found here https://www.youtube.com/watch?v=
 
 For any question regarding the project, you can contact me at orestisapostolou@yahoo.gr.
 
-Apostolou Orestis, June 2021
+Orestis Apostolou, Vasileios Charisis, Georgios Apostolidis, Leontios J. Hadjileontiadis
+
+April 2022
