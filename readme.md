@@ -15,6 +15,14 @@ Orestis Apostolou, Vasileios Charisis, Georgios Apostolidis, Leontios J. Hadjile
 
 April 2022
 
+<p float="left">
+  <img src="https://user-images.githubusercontent.com/35412051/202215476-f707541b-f4b8-4a50-a4ad-bbd3ba7cbe8c.png" width=15% height=15% />
+  <img src="https://user-images.githubusercontent.com/35412051/202215509-6cbb3987-233b-4292-a699-ca6e7cd7569c.png" width=15% height=15% />
+  <img src="https://user-images.githubusercontent.com/35412051/202215528-75208d27-ba50-4073-b1b0-9029c6a3220a.png" width=15% height=15% />
+
+</p>
+
+
 <img src="https://user-images.githubusercontent.com/35412051/202215476-f707541b-f4b8-4a50-a4ad-bbd3ba7cbe8c.png" width=10% height=10%>
 <img src="https://user-images.githubusercontent.com/35412051/202215509-6cbb3987-233b-4292-a699-ca6e7cd7569c.png" width=10% height=10%>
 <img src="https://user-images.githubusercontent.com/35412051/202215528-75208d27-ba50-4073-b1b0-9029c6a3220a.png" width=10% height=10%>
