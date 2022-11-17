@@ -22,6 +22,8 @@ Some demos of the application can be found here https://www.youtube.com/watch?v=
 
 For any question regarding the project, you can contact me at orestisapostolou@yahoo.gr.
 
+Since this is the product of a full Master's diploma thesis, if you want to know more about the project, or understand it better, you can request the full thesis at the above e-mail address.
+
 Orestis Apostolou, Vasileios Charisis, Georgios Apostolidis, Leontios J. Hadjileontiadis
 
 April 2022
