@@ -1,4 +1,4 @@
-#A Method for Detecting Coronary Artery Disease using Noisy Ultrashort Electrocardiogram Recordings - iOS Application
+<h2>A Method for Detecting Coronary Artery Disease using Noisy Ultrashort Electrocardiogram Recordings - iOS Application</h2>
 
 <p float="left">
   <img src="https://user-images.githubusercontent.com/35412051/202215476-f707541b-f4b8-4a50-a4ad-bbd3ba7cbe8c.png" width=20% height=20% />
